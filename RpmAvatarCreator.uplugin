@@ -1,0 +1,37 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1.0",
+	"FriendlyName": "Ready Player Me Avatar Creator",
+	"Description": "Ready Player Me Avatar Creator",
+	"Category": "Runtime",
+	"CreatedBy": "Ready Player Me",
+	"CreatedByURL": "https://readyplayer.me/",
+	"DocsURL": "https://docs.readyplayer.me/integration-guides/unreal-engine-4",
+	"MarketplaceURL": "",
+	"SupportURL": "https://docs.readyplayer.me/integration-guides/unreal-engine-4",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "RpmAvatarCreator",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"Mac",
+				"Linux",
+				"Android",
+				"IOS"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ReadyPlayerMe",
+			"Enabled": true
+		}
+	]
+}
