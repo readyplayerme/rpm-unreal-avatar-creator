@@ -6,7 +6,7 @@ Ready Player Me Avatar Creator is an extension to www.readyplayer.me avatar plat
 
 # Integration
 
-1. Copy the **RpmAvatarCreator** plugin in your project under the **Plugins** folder.
+1. Add **RpmAvatarCreator** plugin as a submodule to your existing project using the following commnad  `git submodule add --name RpmAvatarCreator -- https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator`. Or copy the plugin in your project under the **Plugins** folder and name it **RpmAvatarCreator**.
 2. Enable the **RpmAvatarCreator** plugin from the PluginManager.
 3. Open the **DemoMap** that is located in the `RpmAvatarCreator\Content\Maps` folder.
 4. Run the game.
