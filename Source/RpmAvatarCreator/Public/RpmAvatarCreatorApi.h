@@ -7,9 +7,6 @@
 #include "UObject/NoExportTypes.h"
 #include "RpmAvatarCreatorApi.generated.h"
 
-/**
- * 
- */
 UCLASS(BlueprintType)
 class RPMAVATARCREATOR_API URpmAvatarCreatorApi : public UObject
 {

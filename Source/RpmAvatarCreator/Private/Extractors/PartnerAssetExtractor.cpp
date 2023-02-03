@@ -1,4 +1,4 @@
-// Copyright © 2022++ Ready Player Me
+// Copyright © 2023++ Ready Player Me
 
 #include "PartnerAssetExtractor.h"
 #include "PayloadExtractor.h"
