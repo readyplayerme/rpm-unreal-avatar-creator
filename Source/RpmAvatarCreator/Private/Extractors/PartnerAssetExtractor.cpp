@@ -79,6 +79,18 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 		{
 			Asset.Model = JsonObject->GetStringField("model");
 		}
+		if (JsonObject->HasField("badgeLogo") && JsonObject->GetObjectField("badgeLogo")->HasField("responsiveImage"))
+		{
+			const auto BadgeLogoJson = JsonObject->GetObjectField("badgeLogo");
+			if (BadgeLogoJson->HasField("responsiveImage"))
+			{
+				const auto ResponsiveImageJson = BadgeLogoJson->GetObjectField("responsiveImage");
+				if (ResponsiveImageJson->HasField("src"))
+				{
+					Asset.Badge = ResponsiveImageJson->GetStringField("src");
+				}
+			}
+		}
 		Assets.Add(Asset);
 	}
 	return Assets;

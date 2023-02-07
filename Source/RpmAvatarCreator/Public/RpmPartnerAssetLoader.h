@@ -7,9 +7,6 @@
 #include "RpmAvatarCreatorTypes.h"
 #include "RpmPartnerAssetLoader.generated.h"
 
-/**
- * 
- */
 UCLASS(BlueprintType)
 class RPMAVATARCREATOR_API URpmPartnerAssetLoader : public UObject
 {
@@ -33,6 +30,9 @@ private:
 	UFUNCTION()
 	void OnIconDownloadCompleted(bool bSuccess, int32 Index);
 
+	UFUNCTION()
+	void OnBadgeDownloadCompleted(bool bSuccess, FString Badge);
+
 	void DownloadIcons();
 
 	FPartnerAssetsDownloadCompleted OnPartnerAssetsDownloaded;
@@ -40,6 +40,7 @@ private:
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TSharedPtr<class FBaseRequest> AssetRequest;
 	TMap<int32, TSharedPtr<class FBaseRequest>> IconRequests;
+	TMap<FString, TSharedPtr<class FBaseRequest>> BadgeRequests;
 
 	bool bAssetsReady = false;
 };

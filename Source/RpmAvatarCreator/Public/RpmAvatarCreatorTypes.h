@@ -66,7 +66,13 @@ struct FRpmPartnerAsset
 	FString Model;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	FString Badge;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UTexture2D* IconTexture;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UTexture2D* BadgeTexture;
 
 	FRpmPartnerAsset()
 	{
@@ -74,6 +80,7 @@ struct FRpmPartnerAsset
 		AssetType = ERpmPartnerAssetType::None;
 		Gender = EAvatarGender::Undefined;
 		IconTexture = nullptr;
+		BadgeTexture = nullptr;
 	}
 };
 

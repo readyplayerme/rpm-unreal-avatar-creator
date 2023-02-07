@@ -16,7 +16,7 @@ public:
 	TSharedPtr<FBaseRequest> CreateAssetRequest() const;
 	TSharedPtr<FBaseRequest> CreateAvatarPreviewRequest(const FString& AvatarId) const;
 	TSharedPtr<FBaseRequest> CreateAvatarCreateRequest(const FString& PayloadJson) const;
-	TSharedPtr<FBaseRequest> CreateIconRequest(const FString& IconUrl) const;
+	TSharedPtr<FBaseRequest> CreateImageRequest(const FString& IconUrl) const;
 	TSharedPtr<FBaseRequest> CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const;
 	TSharedPtr<FBaseRequest> CreateSaveAvatarRequest(const FString& AvatarId) const;
 	TSharedPtr<FBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId) const;

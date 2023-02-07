@@ -48,10 +48,20 @@ void URpmPartnerAssetLoader::DownloadIcons()
 	int32 Index = 0;
 	for (const auto& Asset : Assets)
 	{
-		auto IconRequest = RequestFactory->CreateIconRequest(Asset.Icon);
+		auto IconRequest = RequestFactory->CreateImageRequest(Asset.Icon);
 		IconRequests.Add(Index, IconRequest);
 		IconRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetLoader::OnIconDownloadCompleted, Index);
 		IconRequest->Download();
+		if (!Asset.Badge.IsEmpty())
+		{
+			auto BadgeRequest = RequestFactory->CreateImageRequest(Asset.Badge);
+			if (!BadgeRequests.Contains(Asset.Badge))
+			{
+				BadgeRequests.Add(Asset.Badge, BadgeRequest);
+			}
+			BadgeRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetLoader::OnBadgeDownloadCompleted, Asset.Badge);
+			BadgeRequest->Download();
+		}
 		++Index;
 	}
 }
@@ -67,7 +77,33 @@ void URpmPartnerAssetLoader::OnIconDownloadCompleted(bool bSuccess, int32 Index)
 	}
 	Assets[Index].IconTexture = UKismetRenderingLibrary::ImportBufferAsTexture2D(this, IconRequests[Index]->GetContent());
 	IconRequests.Remove(Index);
-	if (IconRequests.Num() == 0)
+	if (IconRequests.Num() == 0 && BadgeRequests.Num() == 0)
+	{
+		bAssetsReady = true;
+		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(true);
+		OnPartnerAssetsDownloaded.Unbind();
+	}
+}
+
+void URpmPartnerAssetLoader::OnBadgeDownloadCompleted(bool bSuccess, FString Badge)
+{
+	if (!bSuccess)
+	{
+		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(false);
+		OnPartnerAssetsDownloaded.Unbind();
+		// Check if we need to stop downloading other assets
+		return;
+	}
+	UTexture2D* Texture = UKismetRenderingLibrary::ImportBufferAsTexture2D(this, BadgeRequests[Badge]->GetContent());
+	for (auto& Asset : Assets)
+	{
+		if (Asset.Badge == Badge)
+		{
+			Asset.BadgeTexture = Texture;
+			BadgeRequests.Remove(Badge);
+		}
+	}
+	if (IconRequests.Num() == 0 && BadgeRequests.Num() == 0)
 	{
 		bAssetsReady = true;
 		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(true);
