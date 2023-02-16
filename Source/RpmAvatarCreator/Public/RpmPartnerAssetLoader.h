@@ -14,7 +14,7 @@ class RPMAVATARCREATOR_API URpmPartnerAssetLoader : public UObject
 
 public:
 	// UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Assets"))
-	void DownloadAssets(TSharedPtr<class FRequestFactory> Factory);
+	void DownloadAssets(TSharedPtr<class FRequestFactory> Factory, EAvatarBodyType BodyType, EAvatarGender Gender);
 
 	UPROPERTY(BlueprintReadOnly, Category="Ready Player Me")
 	TArray<FRpmPartnerAsset> Assets;
@@ -25,22 +25,19 @@ public:
 
 private:
 	UFUNCTION()
-	void OnAssetsDownloadCompleted(bool bSuccess);
+	void OnAssetsDownloadCompleted(bool bSuccess, EAvatarBodyType BodyType, EAvatarGender Gender);
 
 	UFUNCTION()
-	void OnIconDownloadCompleted(bool bSuccess, int32 Index);
+	void OnIconDownloadCompleted(bool bSuccess, FString Icon);
 
-	UFUNCTION()
-	void OnBadgeDownloadCompleted(bool bSuccess, FString Badge);
+	UPROPERTY()
+	TMap<FString, UTexture2D*> ImageMap;
 
-	void DownloadIcons();
+	void DownloadIcons(EAvatarBodyType BodyType, EAvatarGender Gender);
 
 	FPartnerAssetsDownloadCompleted OnPartnerAssetsDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TSharedPtr<class FBaseRequest> AssetRequest;
-	TMap<int32, TSharedPtr<class FBaseRequest>> IconRequests;
-	TMap<FString, TSharedPtr<class FBaseRequest>> BadgeRequests;
-
-	bool bAssetsReady = false;
+	TMap<FString, TSharedPtr<class FBaseRequest>> IconRequests;
 };

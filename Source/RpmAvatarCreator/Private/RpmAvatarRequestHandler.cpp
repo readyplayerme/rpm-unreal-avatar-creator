@@ -31,6 +31,7 @@ FAvatarCreateCompleted& URpmAvatarRequestHandler::GetAvatarCreatedCallback()
 
 void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properties, USkeleton* Skeleton)
 {
+	Mesh = nullptr;
 	AvatarProperties = Properties;
 	TargetSkeleton = Skeleton;
 	CreateAvatarRequest = RequestFactory->CreateAvatarCreateRequest(FPayloadExtractor::MakeCreatePayload(AvatarProperties));

@@ -43,14 +43,11 @@ void URpmAvatarCreatorApi::OnAuthComplete(bool bSuccess)
 
 void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, const FAvatarCreatorFailed& Failed)
 {
-	if (!AssetLoader->AreAssetsReady())
-	{
-		AssetLoader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::AssetsDownloaded, EditorReady, Failed);
-		AssetLoader->DownloadAssets(RequestFactory);
-	}
-
 	AvatarRequestHandler->GetAvatarCreatedCallback().BindUObject(this, &URpmAvatarCreatorApi::AvatarCreated, EditorReady, Failed);
 	AvatarRequestHandler->CreateAvatar(AvatarProperties, TargetSkeleton);
+
+	AssetLoader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::AssetsDownloaded, EditorReady, Failed);
+	AssetLoader->DownloadAssets(RequestFactory, AvatarProperties.BodyType, AvatarProperties.Gender);
 }
 
 void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess, FAvatarEditorReady EditorReady, FAvatarCreatorFailed Failed)
