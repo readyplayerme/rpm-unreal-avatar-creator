@@ -11,10 +11,10 @@ namespace
 {
 	bool IsAssetFiltered(const FRpmPartnerAsset& Asset, EAvatarBodyType BodyType, EAvatarGender Gender)
 	{
-		const bool BodyTypeFiltered = (Asset.AssetType == ERpmPartnerAssetType::Outfit && BodyType == EAvatarBodyType::FullBody) ||
-			Asset.AssetType == ERpmPartnerAssetType::Shirt && BodyType == EAvatarBodyType::HalfBody;
+		const bool BodyTypeFiltered = !((Asset.AssetType == ERpmPartnerAssetType::Outfit && BodyType == EAvatarBodyType::HalfBody) ||
+			(Asset.AssetType == ERpmPartnerAssetType::Shirt && BodyType == EAvatarBodyType::FullBody));
 		const bool GenderFiltered = Asset.Gender == Gender || Asset.Gender == EAvatarGender::Undefined;
-		return BodyTypeFiltered && GenderFiltered && Asset.IconTexture == nullptr;
+		return BodyTypeFiltered && GenderFiltered;
 	}
 }
 
@@ -31,6 +31,11 @@ void URpmPartnerAssetLoader::DownloadAssets(TSharedPtr<FRequestFactory> Factory,
 		AssetRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetLoader::OnAssetsDownloadCompleted, BodyType, Gender);
 		AssetRequest->Download();
 	}
+}
+
+TArray<FRpmPartnerAsset> URpmPartnerAssetLoader::GetFilteredAssets(EAvatarBodyType BodyType, EAvatarGender Gender) const
+{
+	return Assets.FilterByPredicate([BodyType, Gender](const auto& Asset){ return IsAssetFiltered(Asset, BodyType, Gender); });
 }
 
 bool URpmPartnerAssetLoader::AreAssetsReady() const
@@ -66,7 +71,7 @@ void URpmPartnerAssetLoader::DownloadIcons(EAvatarBodyType BodyType, EAvatarGend
 {
 	for (const auto& Asset : Assets)
 	{
-		if (!IsAssetFiltered(Asset, BodyType, Gender))
+		if (IsValid(Asset.IconTexture) || !IsAssetFiltered(Asset, BodyType, Gender))
 		{
 			continue;
 		}

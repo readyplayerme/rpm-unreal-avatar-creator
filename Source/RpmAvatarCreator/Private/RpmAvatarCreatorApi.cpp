@@ -7,6 +7,9 @@
 #include "RpmAuthManager.h"
 #include "RpmAvatarRequestHandler.h"
 #include "Requests/RequestFactory.h"
+#include "ImageUtils.h"
+#include "Serialization/BufferArchive.h"
+#include "Engine/TextureRenderTarget2D.h"
 #include "Utils/PayloadUpdater.h"
 
 URpmAvatarCreatorApi::URpmAvatarCreatorApi()
@@ -15,6 +18,16 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	AuthManager = MakeShared<FRpmAuthManager>();
 	AssetLoader = NewObject<URpmPartnerAssetLoader>();
 	AvatarRequestHandler = NewObject<URpmAvatarRequestHandler>();
+}
+
+void URpmAvatarCreatorApi::SetProfilePhoto(UTextureRenderTarget2D* TextureRenderTarget)
+{
+	FBufferArchive Buffer;
+	bool bSuccess = FImageUtils::ExportRenderTarget2DAsPNG(TextureRenderTarget, Buffer);
+	if (bSuccess)
+	{
+		AvatarProperties.Base64Image = FBase64::Encode(const_cast<uint8*>(Buffer.GetData()), Buffer.Num());
+	}
 }
 
 void URpmAvatarCreatorApi::Authenticate(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
@@ -93,9 +106,9 @@ FRpmAvatarProperties URpmAvatarCreatorApi::GetAvatarProperties() const
 	return AvatarRequestHandler->GetAvatarProperties();
 }
 
-const TArray<FRpmPartnerAsset>& URpmAvatarCreatorApi::GetPartnerAssets() const
+TArray<FRpmPartnerAsset> URpmAvatarCreatorApi::GetFilteredPartnerAssets() const
 {
-	return AssetLoader->Assets;
+	return AssetLoader->GetFilteredAssets(AvatarProperties.BodyType, AvatarProperties.Gender);
 }
 
 void URpmAvatarCreatorApi::BeginDestroy()

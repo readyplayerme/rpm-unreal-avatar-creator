@@ -42,8 +42,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Avatar Properties"))
 	FRpmAvatarProperties GetAvatarProperties() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Partner Assets"))
-	const TArray<FRpmPartnerAsset>& GetPartnerAssets() const;
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Filtered Partner Assets"))
+	TArray<FRpmPartnerAsset> GetFilteredPartnerAssets() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Photo"))
+	void SetProfilePhoto(UTextureRenderTarget2D* TextureRenderTarget);
 
 	virtual void BeginDestroy() override;
 

@@ -33,6 +33,8 @@ void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properti
 {
 	Mesh = nullptr;
 	AvatarProperties = Properties;
+	// TODO: Fix this when the default avatar api is available
+	AvatarProperties.Assets[ERpmPartnerAssetType::Outfit] = AvatarProperties.Gender == EAvatarGender::Feminine ? 109376347 : 109373713;
 	TargetSkeleton = Skeleton;
 	CreateAvatarRequest = RequestFactory->CreateAvatarCreateRequest(FPayloadExtractor::MakeCreatePayload(AvatarProperties));
 	CreateAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnAvatarCreateCompleted);

@@ -121,15 +121,6 @@ FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString
 			AvatarProperties.Assets.Add(Item.Key, AssetId);
 		}
 	}
-	for (const auto& Item : ASSET_TYPE_TO_STRING_MAP)
-	{
-		if (AssetsObject->HasField(Item.Value))
-		{
-			int64 AssetId;
-			FDefaultValueHelper::ParseInt64(AssetsObject->GetStringField(Item.Value), AssetId);
-			AvatarProperties.Assets.Add(Item.Key, AssetId);
-		}
-	}
 	for (const auto& Item : ASSET_COLOR_TO_STRING_MAP)
 	{
 		if (AssetsObject->HasField(Item.Value))
@@ -178,7 +169,10 @@ FString FPayloadExtractor::MakeCreatePayload(const FRpmAvatarProperties& AvatarP
 	DataObject->SetStringField("partner", AvatarProperties.Partner);
 	DataObject->SetStringField("gender",  GenderToString(AvatarProperties.Gender));
 	DataObject->SetStringField("bodyType", BodyTypeToString(AvatarProperties.BodyType));
-
+	if (!AvatarProperties.Base64Image.IsEmpty())
+	{
+		DataObject->SetStringField("base64Image", AvatarProperties.Base64Image);
+	}
 	for (const auto& Item : AvatarProperties.Assets)
 	{
 		AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[Item.Key], FString::FromInt(Item.Value));

@@ -19,6 +19,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Ready Player Me")
 	TArray<FRpmPartnerAsset> Assets;
 
+	TArray<FRpmPartnerAsset> GetFilteredAssets(EAvatarBodyType BodyType, EAvatarGender Gender) const;
+
 	FPartnerAssetsDownloadCompleted& GetPartnerAssetsDownloadCallback();
 
 	bool AreAssetsReady() const;

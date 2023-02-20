@@ -105,6 +105,9 @@ struct FRpmAvatarProperties
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	TMap<ERpmPartnerAssetType, int64> Assets;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	FString Base64Image;
 };
 
 UENUM(BlueprintType)
