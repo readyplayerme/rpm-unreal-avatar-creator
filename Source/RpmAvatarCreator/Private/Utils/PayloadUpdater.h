@@ -8,6 +8,5 @@
 class FPayloadUpdater
 {
 public:
-	static FRpmAvatarProperties MakeAvatarProperties();
 	static bool UpdatePayload(FRpmAvatarProperties& AvatarProperties, ERpmPartnerAssetType AssetType, int64 AssetId);
 };

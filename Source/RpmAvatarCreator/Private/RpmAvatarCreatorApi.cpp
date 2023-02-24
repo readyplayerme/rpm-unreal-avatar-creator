@@ -10,7 +10,6 @@
 #include "ImageUtils.h"
 #include "Serialization/BufferArchive.h"
 #include "Engine/TextureRenderTarget2D.h"
-#include "Utils/PayloadUpdater.h"
 
 URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	: TargetSkeleton(nullptr)
@@ -32,7 +31,7 @@ void URpmAvatarCreatorApi::SetProfilePhoto(UTextureRenderTarget2D* TextureRender
 
 void URpmAvatarCreatorApi::Authenticate(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
 {
-	AvatarProperties = FPayloadUpdater::MakeAvatarProperties();
+	AvatarProperties.Partner = PartnerDomain;
 	OnAuthenticationCompleted = Completed;
 	OnAvatarCreatorFailed = Failed;
 	RequestFactory = MakeShared<FRequestFactory>(PartnerDomain);

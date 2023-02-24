@@ -13,6 +13,32 @@
 static const FString FULLBODY_BONE_NODE = "Armature";
 static const FString HALFBODY_BONE_NODE = "AvatarRoot";
 
+namespace
+{
+	TMap<ERpmPartnerAssetColor, int32> MakeDefaultColors()
+	{
+		return
+		{
+			{ERpmPartnerAssetColor::SkinColor, 5},
+			{ERpmPartnerAssetColor::BeardColor, 0},
+			{ERpmPartnerAssetColor::HairColor, 0},
+			{ERpmPartnerAssetColor::EyebrowColor, 0}
+		};
+	}
+
+	TMap<ERpmPartnerAssetType, int64> MakeDefaultPartnerAssets()
+	{
+		return
+		{
+			{ERpmPartnerAssetType::EyeColor, 9781796},
+			{ERpmPartnerAssetType::HairStyle, 23368535},
+			{ERpmPartnerAssetType::EyebrowStyle, 41308196},
+			{ERpmPartnerAssetType::Shirt, 9247449},
+			{ERpmPartnerAssetType::Outfit, 109373713}
+		};
+	}
+}
+
 URpmAvatarRequestHandler::URpmAvatarRequestHandler()
 	: Mesh(nullptr)
 {
@@ -33,6 +59,9 @@ void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properti
 {
 	Mesh = nullptr;
 	AvatarProperties = Properties;
+	// TODO: Fix this when the default avatar api is available
+	AvatarProperties.Colors = MakeDefaultColors();
+	AvatarProperties.Assets = MakeDefaultPartnerAssets();
 	// TODO: Fix this when the default avatar api is available
 	AvatarProperties.Assets[ERpmPartnerAssetType::Outfit] = AvatarProperties.Gender == EAvatarGender::Feminine ? 109376347 : 109373713;
 	TargetSkeleton = Skeleton;
