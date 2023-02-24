@@ -29,7 +29,6 @@ Additionally we can load an avatar with this url.
 - Add color selection in the avatar editor
 - Add **Chose your avatar** page
 - Add ability to log-in and create a user
-- Add photo and image upload functionality
 - Add shadow for the avatar in the avatar editor
 - Add a sample for the VR
 
