@@ -24,6 +24,18 @@ Additionally we can load an avatar with this url.
 
 ![Screenshot 2023-02-02 141254](https://user-images.githubusercontent.com/3124894/216334568-a64b674c-f9b8-4da7-a74e-4ba3249f8798.png)
 
+## Customization Options
+
+### Use the Sample project
+When spawning the **Avatar Creator** widget, it's possible to configure it with the specified parameters.
+
+### Duplicate The Sample
+The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
+In this case you **will not** be able to get the latest changes of this sample project UI.
+
+### UI From Scratch
+**Avatar Creator** sample uses **AvatarCreatorApi** C++ class for communicating with the **Ready Player Me** Backend. The plugin **Content** can be completely rewritten to suit your project needs, while using the **AvatarCreatorApi** for the communication with the Backend.
+
 ## TODO
 
 - Add color selection in the avatar editor
@@ -31,6 +43,7 @@ Additionally we can load an avatar with this url.
 - Add ability to log-in and create a user
 - Add shadow for the avatar in the avatar editor
 - Add a sample for the VR
+- Add support for editing existing avatars
 
 ## Dependencies
 - Ready Player Me Unreal SDK 
