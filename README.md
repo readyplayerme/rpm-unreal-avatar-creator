@@ -4,15 +4,55 @@
 
 Ready Player Me Avatar Creator is an extension to www.readyplayer.me avatar platform, which helps you create avatars.
 
-# Integration
+Please visit the online documentation and join our public `discord` community.
 
-- Add **RpmAvatarCreator** plugin as a submodule to your existing project using the command below. Alternatively copy the plugin in your project under the **Plugins** folder and name it **RpmAvatarCreator**.
+![](https://i.imgur.com/zGamwPM.png) **[Online Documentation]( https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-sdk )**
+
+![](https://i.imgur.com/FgbNsPN.png) **[Discord Channel]( https://discord.gg/9veRUu2 )**
+
+## Dependencies
+- **ReadyPlayerMe** Unreal SDK, an open source plugin that contains all the core functionality required for loading and displaying avatars.
+  The plugin can be found on GitHub [here](https://github.com/readyplayerme/rpm-unreal-sdk).
+- **glTFRuntime** An open source third party plugin with functionality for downloading and importing assets from GLTF and GLB files.
+  The plugin can be found on GitHub [here](https://github.com/rdeioris/glTFRuntime), but can also be purchased from the Unreal Marketplace.
+
+### Requirements
+
+- Unreal Engine Version 4.27 or higher
+
+## Integration
+
+**Avatar Creator** plugin depends on the **Ready Player Me Unreal SDK**, follow the setup steps in the [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine/quickstart) or the [Readme](https://github.com/readyplayerme/rpm-unreal-sdk/blob/master/README.md) for setting it up before adding the **RpmAvatarCreator** plugin.
+
+### Add RpmAvatarCreator plugin
+
+There are three ways you can add the **RpmAvatarCreator** plugin to your project. Add as submodules, clone the repo, or paste the plugin inside of the **Plugins** folder.
+
+- To add the plugin to your project as a submodules, run the following command in the terminal from your project folder. This is preferred way of setting up the plugin.
+
   ```
    git submodule add --name RpmAvatarCreator -- https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator
   ```
-- Enable the **RpmAvatarCreator** plugin from the PluginManager.
-- Open the **DemoMap** that is located in the `RpmAvatarCreator\Content\Maps` folder.
-- Run the game.
+
+- To clone the plugin into your project, run the following command in the terminal from your project folder.
+
+  ```
+  git clone https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator ; cd Plugins/RpmAvatarCreator ; git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) ; cd ../..
+  ```
+
+- To paste the plugin inside of the Plugins folder, create a **Plugins** folder from the root of your project, download the latest tags of the [RpmAvatarCreator](https://github.com/readyplayerme/rpm-unreal-avatar-creator.git) plugins into it. Rename the **rpm-unreal-avatar-creator** plugin folder to the **RpmAvatarCreator**.
+
+### Update RpmAvatarCreator plugin
+
+To update the plugin paste the following command in the terminal from your project folder. This will fetch and switch the plugin repositories to the latest stable release.
+
+  ```
+  cd Plugins/RpmAvatarCreator ; git fetch --tags ; git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) ; cd ../..
+  ```
+
+## Quick Start
+
+A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
 
 ## Show Avatar Creator
 
@@ -45,15 +85,6 @@ In this case you **will not** be able to get the latest changes of this sample p
 - Add a sample for the VR
 - Add support for editing existing avatars
 
-## Dependencies
-- Ready Player Me Unreal SDK 
-- glTFRuntime (Third party plugin)
-
 ## Links
-**Ready Player Me Unreal SDK**
-- [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine-4)
-- [Download](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine-4/unreal-plugin-download)
-- [Support](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine-4/troubleshooting)
-
-**glTFRuntime**
-- [Documentation](https://github.com/rdeioris/glTFRuntime-docs/blob/master/README.md)
+- [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine)
+- [Support](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine/troubleshooting)
