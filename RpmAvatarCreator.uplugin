@@ -30,6 +30,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "glTFRuntime",
+			"Enabled": true
+		},
+		{
 			"Name": "ReadyPlayerMe",
 			"Enabled": true
 		}
