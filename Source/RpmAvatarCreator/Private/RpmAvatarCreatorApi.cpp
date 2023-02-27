@@ -10,6 +10,7 @@
 #include "ImageUtils.h"
 #include "Serialization/BufferArchive.h"
 #include "Engine/TextureRenderTarget2D.h"
+#include "Misc/Base64.h"
 
 URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	: TargetSkeleton(nullptr)
