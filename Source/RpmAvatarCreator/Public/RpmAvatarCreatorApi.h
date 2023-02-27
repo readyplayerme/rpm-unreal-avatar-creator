@@ -28,7 +28,7 @@ public:
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
-	USkeleton* TargetSkeleton;
+	class USkeleton* TargetSkeleton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	FString PartnerDomain;
