@@ -22,6 +22,11 @@ FString FEndpoints::GetAvatarPublicUrl(const FString& AvatarId)
 	return FString::Format(TEXT("{0}/{1}.glb"), {AVATAR_API_V2_ENDPOINT, AvatarId});
 }
 
+FString FEndpoints::GetAvatarMetadataEndpoint(const FString& AvatarId)
+{
+	return FString::Format(TEXT("{0}/{1}.json"), {AVATAR_API_V2_ENDPOINT, AvatarId});
+}
+
 FString FEndpoints::GetCreateEndpoint()
 {
 	return AVATAR_API_V2_ENDPOINT;

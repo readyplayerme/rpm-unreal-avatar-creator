@@ -12,8 +12,6 @@ public:
 
 	static FRpmAvatarProperties ExtractPayload(const FString& JsonString);
 	
-	static FString ExtractAvatarId(const FString& JsonString);
-	
 	static FString MakeCreatePayload(const FRpmAvatarProperties& AvatarProperties);
 
 	static FString MakeUpdatePayload(ERpmPartnerAssetType AssetType, int64 AssetId);

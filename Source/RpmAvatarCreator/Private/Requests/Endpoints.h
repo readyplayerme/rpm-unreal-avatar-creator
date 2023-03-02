@@ -13,6 +13,8 @@ public:
 
 	static FString GetAvatarPublicUrl(const FString& AvatarId);
 
+	static FString GetAvatarMetadataEndpoint(const FString& AvatarId);
+
 	static FString GetCreateEndpoint();
 
 	static FString GetAvatarPreviewEndpoint(const FString& AvatarId);

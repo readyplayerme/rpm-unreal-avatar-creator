@@ -27,8 +27,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Save Avatar"))
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
-	class USkeleton* TargetSkeleton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me", Meta = (ExposeOnSpawn="true"))
+	class USkeleton* FullBodySkeleton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me", Meta = (ExposeOnSpawn="true"))
+	class USkeleton* HalfBodySkeleton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	FString PartnerDomain;
@@ -55,10 +58,15 @@ private:
 	void OnAuthComplete(bool bSuccess);
 
 	UFUNCTION()
-	void AssetsDownloaded(bool bSuccess, FAvatarEditorReady EditorReady, FAvatarCreatorFailed Failed);
+	void AssetsDownloaded(bool bSuccess);
 
 	UFUNCTION()
-	void AvatarCreated(bool bSuccess, FAvatarEditorReady EditorReady, FAvatarCreatorFailed Failed);
+	void PreviewDownloaded(bool bSuccess);
+
+	UFUNCTION()
+	void PropertiesDownloaded(bool bSuccess);
+
+	void ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarCreatorError Error);
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
 
@@ -74,4 +82,7 @@ private:
 	FAvatarCreatorFailed OnAvatarCreatorFailed;
 
 	FPartnerAssetsDownloadCompleted OnAssetsDownloadCompleted;
+
+	FAvatarEditorReady OnEditorReady;
+	FAvatarCreatorFailed OnEditorFailed;
 };

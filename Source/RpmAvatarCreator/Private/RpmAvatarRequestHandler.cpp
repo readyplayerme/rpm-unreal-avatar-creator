@@ -50,12 +50,25 @@ void URpmAvatarRequestHandler::Initialize(TSharedPtr<FRequestFactory> Factory, c
 	OnPreviewDownloaded = PreviewDownloaded;
 }
 
-FAvatarCreateCompleted& URpmAvatarRequestHandler::GetAvatarCreatedCallback()
+FAvatarCreateCompleted& URpmAvatarRequestHandler::GetAvatarPropertiesDownloadedCallback()
 {
-	return OnAvatarCreated;
+	return OnAvatarPropertiesDownloaded;
 }
 
-void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properties, USkeleton* Skeleton)
+FAvatarPreviewDownloadCompleted& URpmAvatarRequestHandler::GetAvatarPreviewDownloadedCallback()
+{
+	return OnAvatarPreviewDownloaded;
+}
+
+void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarId)
+{
+	AvatarProperties.Id = InAvatarId;
+	AvatarMetadataRequest = RequestFactory->CreateAvatarMetadataRequest(AvatarProperties.Id);
+	AvatarMetadataRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPropertiesRequestCompleted);
+	AvatarMetadataRequest->Download();
+}
+
+void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properties)
 {
 	Mesh = nullptr;
 	AvatarProperties = Properties;
@@ -64,7 +77,6 @@ void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properti
 	AvatarProperties.Assets = MakeDefaultPartnerAssets();
 	// TODO: Fix this when the default avatar api is available
 	AvatarProperties.Assets[ERpmPartnerAssetType::Outfit] = AvatarProperties.Gender == EAvatarGender::Feminine ? 109376347 : 109373713;
-	TargetSkeleton = Skeleton;
 	CreateAvatarRequest = RequestFactory->CreateAvatarCreateRequest(FPayloadExtractor::MakeCreatePayload(AvatarProperties));
 	CreateAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnAvatarCreateCompleted);
 	CreateAvatarRequest->Download();
@@ -83,7 +95,7 @@ void URpmAvatarRequestHandler::UpdateAvatar(ERpmPartnerAssetType AssetType, int6
 		UpdateAvatarRequest->GetCompleteCallback().Unbind();
 		UpdateAvatarRequest->CancelRequest();
 	}
-	UpdateAvatarRequest = RequestFactory->CreateUpdateAvatarRequest(AvatarId, FPayloadExtractor::MakeUpdatePayload(AssetType, AssetId));
+	UpdateAvatarRequest = RequestFactory->CreateUpdateAvatarRequest(AvatarProperties.Id, FPayloadExtractor::MakeUpdatePayload(AssetType, AssetId));
 	UpdateAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnUpdateAvatarCompleted);
 	UpdateAvatarRequest->Download();
 }
@@ -102,7 +114,7 @@ void URpmAvatarRequestHandler::OnUpdateAvatarCompleted(bool bSuccess)
 
 void URpmAvatarRequestHandler::SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed)
 {
-	SaveAvatarRequest = RequestFactory->CreateSaveAvatarRequest(AvatarId);
+	SaveAvatarRequest = RequestFactory->CreateSaveAvatarRequest(AvatarProperties.Id);
 	SaveAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnSaveAvatarCompleted, AvatarSaveCompleted, Failed);
 	SaveAvatarRequest->Download();
 }
@@ -114,23 +126,36 @@ void URpmAvatarRequestHandler::OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveC
 		(void)Failed.ExecuteIfBound(ERpmAvatarCreatorError::AvatarSaveFailure);
 		return;
 	}
-	(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarId));
+	(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarProperties.Id));
+}
+
+void URpmAvatarRequestHandler::DownloadPreview(USkeleton* Skeleton)
+{
+	TargetSkeleton = Skeleton;
+	PreviewAvatarRequest = RequestFactory->CreateAvatarPreviewRequest(AvatarProperties.Id);
+	PreviewAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPreviewDownloadCompleted);
+	PreviewAvatarRequest->Download();
 }
 
 void URpmAvatarRequestHandler::OnAvatarCreateCompleted(bool bSuccess)
 {
-	if (!bSuccess)
+	if (bSuccess)
 	{
-		(void)OnAvatarCreated.ExecuteIfBound(false);
-		OnAvatarCreated.Unbind();
-		return;
+		AvatarProperties = FPayloadExtractor::ExtractPayload(CreateAvatarRequest->GetContentAsString());
 	}
 
-	AvatarId = FPayloadExtractor::ExtractAvatarId(CreateAvatarRequest->GetContentAsString());
-	AvatarProperties = FPayloadExtractor::ExtractPayload(CreateAvatarRequest->GetContentAsString());
-	PreviewAvatarRequest = RequestFactory->CreateAvatarPreviewRequest(AvatarId);
-	PreviewAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPreviewDownloadCompleted);
-	PreviewAvatarRequest->Download();
+	(void)OnAvatarPropertiesDownloaded.ExecuteIfBound(bSuccess);
+	OnAvatarPropertiesDownloaded.Unbind();
+}
+
+void URpmAvatarRequestHandler::OnPropertiesRequestCompleted(bool bSuccess)
+{
+	if (bSuccess)
+	{
+		AvatarProperties = FPayloadExtractor::ExtractPayload(AvatarMetadataRequest->GetContentAsString());
+	}
+	(void)OnAvatarPropertiesDownloaded.ExecuteIfBound(bSuccess);
+	OnAvatarPropertiesDownloaded.Unbind();
 }
 
 void URpmAvatarRequestHandler::OnPreviewDownloadCompleted(bool bSuccess)
@@ -140,8 +165,8 @@ void URpmAvatarRequestHandler::OnPreviewDownloadCompleted(bool bSuccess)
 		LoadGlb(PreviewAvatarRequest->GetContent());
 		bSuccess = Mesh != nullptr;
 	}
-	(void)OnAvatarCreated.ExecuteIfBound(bSuccess);
-	OnAvatarCreated.Unbind();
+	(void)OnAvatarPreviewDownloaded.ExecuteIfBound(bSuccess);
+	OnAvatarPreviewDownloaded.Unbind();
 }
 
 void URpmAvatarRequestHandler::LoadGlb(const TArray<uint8>& Data)

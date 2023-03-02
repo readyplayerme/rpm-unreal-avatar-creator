@@ -36,6 +36,11 @@ TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarPreviewRequest(const FStri
 	return MakeShared<FBaseRequest>(FEndpoints::GetAvatarPreviewEndpoint(AvatarId));
 }
 
+TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarMetadataRequest(const FString& AvatarId) const
+{
+	return MakeShared<FBaseRequest>(FEndpoints::GetAvatarMetadataEndpoint(AvatarId));
+}
+
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarCreateRequest(const FString& PayloadJson) const
 {
 	return MakeShared<FBaseRequest>(FEndpoints::GetCreateEndpoint(), AuthToken, "POST", PayloadJson);

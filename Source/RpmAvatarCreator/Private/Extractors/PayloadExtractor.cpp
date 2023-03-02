@@ -103,6 +103,7 @@ FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString
 	const auto DataObject = JsonObject->GetObjectField("data");
 
 	FRpmAvatarProperties AvatarProperties;
+	AvatarProperties.Id = DataObject->GetStringField("id");
 	AvatarProperties.Partner = DataObject->GetStringField("partner");
 	AvatarProperties.Gender = StringToGender(DataObject->GetStringField("gender"));
 	AvatarProperties.BodyType = StringToBodyType(DataObject->GetStringField("bodyType"));
@@ -130,29 +131,6 @@ FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString
 	}
 
 	return AvatarProperties;
-}
-
-FString FPayloadExtractor::ExtractAvatarId(const FString& JsonString)
-{
-	TSharedPtr<FJsonObject> JsonObject;
-	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
-
-	if (!FJsonSerializer::Deserialize(Reader, JsonObject))
-	{
-		return {};
-	}
-
-	if (!JsonObject->HasField("data"))
-	{
-		return {};
-	}
-
-	const auto DataObject = JsonObject->GetObjectField("data");
-	if (!DataObject->HasField("id"))
-	{
-		return {};
-	}
-	return DataObject->GetStringField("id");
 }
 
 FString FPayloadExtractor::MakeCreatePayload(const FRpmAvatarProperties& AvatarProperties)

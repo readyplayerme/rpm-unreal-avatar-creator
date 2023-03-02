@@ -88,8 +88,10 @@ USTRUCT(BlueprintType)
 struct FRpmAvatarProperties
 {
 	GENERATED_BODY()
-	// "id": "60f8210e8011cfb7d827de46",
 	// "userId": "63b25e67f4eb12000fea504b",
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	FString Id;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Partner;
@@ -116,6 +118,8 @@ enum class ERpmAvatarCreatorError : uint8
 	None,
 	AuthenticationFailure,
 	AssetDownloadFailure,
+	MetadataDownloadFailure,
+	AvatarCreateFailure,
 	AvatarPreviewFailure,
 	AvatarSaveFailure
 };
@@ -129,6 +133,8 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarSaveCompleted, const FString&, Url);
 DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
 
 DECLARE_DELEGATE_OneParam(FAvatarCreateCompleted, bool);
+
+DECLARE_DELEGATE_OneParam(FAvatarPreviewDownloadCompleted, bool);
 
 DECLARE_DELEGATE_OneParam(FPartnerAssetsDownloadCompleted, bool);
 

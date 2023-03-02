@@ -13,7 +13,8 @@
 #include "Misc/Base64.h"
 
 URpmAvatarCreatorApi::URpmAvatarCreatorApi()
-	: TargetSkeleton(nullptr)
+	: FullBodySkeleton(nullptr)
+	, HalfBodySkeleton(nullptr)
 {
 	AuthManager = MakeShared<FRpmAuthManager>();
 	AssetLoader = NewObject<URpmPartnerAssetLoader>();
@@ -54,40 +55,69 @@ void URpmAvatarCreatorApi::OnAuthComplete(bool bSuccess)
 	(void)OnAuthenticationCompleted.ExecuteIfBound();
 }
 
-void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, const FAvatarCreatorFailed& Failed)
+void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess)
 {
-	AvatarRequestHandler->GetAvatarCreatedCallback().BindUObject(this, &URpmAvatarCreatorApi::AvatarCreated, EditorReady, Failed);
-	AvatarRequestHandler->CreateAvatar(AvatarProperties, TargetSkeleton);
+	if (!bSuccess)
+	{
+		const ERpmAvatarCreatorError Error = AvatarProperties.Id.IsEmpty() ?
+			ERpmAvatarCreatorError::MetadataDownloadFailure : ERpmAvatarCreatorError::AvatarCreateFailure;
+		(void)OnEditorFailed.ExecuteIfBound(Error);
+		OnEditorFailed.Clear();
+		OnEditorReady.Clear();
+		return;
+	}
 
-	AssetLoader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::AssetsDownloaded, EditorReady, Failed);
+	AvatarProperties = AvatarRequestHandler->GetAvatarProperties();
+	AvatarRequestHandler->GetAvatarPreviewDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PreviewDownloaded);
+	USkeleton* TargetSkeleton = AvatarProperties.BodyType == EAvatarBodyType::HalfBody ? HalfBodySkeleton : FullBodySkeleton;
+	AvatarRequestHandler->DownloadPreview(TargetSkeleton);
+
+	AssetLoader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::AssetsDownloaded);
 	AssetLoader->DownloadAssets(RequestFactory, AvatarProperties.BodyType, AvatarProperties.Gender);
 }
 
-void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess, FAvatarEditorReady EditorReady, FAvatarCreatorFailed Failed)
+void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, const FAvatarCreatorFailed& Failed)
 {
-	if (!bSuccess)
+	OnEditorReady = EditorReady;
+	OnEditorFailed = Failed;
+
+	if (AvatarProperties.Id.IsEmpty())
 	{
-		(void)Failed.ExecuteIfBound(ERpmAvatarCreatorError::AssetDownloadFailure);
-		return;
+		AvatarRequestHandler->GetAvatarPropertiesDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PropertiesDownloaded);
+		AvatarRequestHandler->CreateAvatar(AvatarProperties);
 	}
-	if (AvatarRequestHandler->Mesh)
+	else
 	{
-		(void)EditorReady.ExecuteIfBound();
-		(void)AvatarRequestHandler->OnPreviewDownloaded.ExecuteIfBound(AvatarRequestHandler->Mesh);
+		AvatarRequestHandler->GetAvatarPropertiesDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PropertiesDownloaded);
+		AvatarRequestHandler->DownloadAvatarProperties(AvatarProperties.Id);
 	}
 }
 
-void URpmAvatarCreatorApi::AvatarCreated(bool bSuccess, FAvatarEditorReady EditorReady, FAvatarCreatorFailed Failed)
+void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess)
+{
+	ExecuteEditorReadyCallback(bSuccess, ERpmAvatarCreatorError::AssetDownloadFailure);
+}
+
+void URpmAvatarCreatorApi::PreviewDownloaded(bool bSuccess)
+{
+	ExecuteEditorReadyCallback(bSuccess, ERpmAvatarCreatorError::AvatarPreviewFailure);
+}
+
+void URpmAvatarCreatorApi::ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarCreatorError Error)
 {
 	if (!bSuccess)
 	{
-		(void)Failed.ExecuteIfBound(ERpmAvatarCreatorError::AvatarPreviewFailure);
+		(void)OnEditorFailed.ExecuteIfBound(Error);
+		OnEditorFailed.Clear();
+		OnEditorReady.Clear();
 		return;
 	}
-	if (AssetLoader->AreAssetsReady())
+	if (AssetLoader->AreAssetsReady() && IsValid(AvatarRequestHandler->Mesh))
 	{
-		(void)EditorReady.ExecuteIfBound();
+		(void)OnEditorReady.ExecuteIfBound();
 		(void)AvatarRequestHandler->OnPreviewDownloaded.ExecuteIfBound(AvatarRequestHandler->Mesh);
+		OnEditorFailed.Clear();
+		OnEditorReady.Clear();
 	}
 }
 
