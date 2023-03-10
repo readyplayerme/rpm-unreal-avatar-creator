@@ -10,6 +10,8 @@ public:
 	static FString GetAuthEndpoint(const FString& Subdomain);
 
 	static FString GetAssetEndpoint(const FString& Subdomain);
+	
+	static FString GetColorEndpoint(const FString& AvatarId);
 
 	static FString GetAvatarPublicUrl(const FString& AvatarId);
 

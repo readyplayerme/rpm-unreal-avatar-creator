@@ -6,6 +6,7 @@
 #include "Templates/SharedPointer.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+#include "Kismet/KismetStringLibrary.h"
 
 namespace
 {
@@ -35,6 +36,48 @@ namespace
 		}
 		return ERpmPartnerAssetType::None;
 	}
+
+	const TMap<ERpmPartnerAssetColor, FString> COLOR_TO_STRING_MAP =
+	{
+		{ERpmPartnerAssetColor::BeardColor, "beard"},
+		{ERpmPartnerAssetColor::EyebrowColor, "eyebrow"},
+		{ERpmPartnerAssetColor::HairColor, "hair"},
+		{ERpmPartnerAssetColor::SkinColor, "skin"},
+	};
+}
+
+TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& JsonString)
+{
+	TArray<FRpmColorPalette> Colors;
+	TSharedPtr<FJsonObject> JsonObject;
+
+	if (!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(JsonString), JsonObject))
+	{
+		return {};
+	}
+
+	if (!JsonObject->HasField("data"))
+	{
+		return {};
+	}
+
+	const auto DataObject = JsonObject->GetObjectField("data");
+
+	for (const auto& Item : COLOR_TO_STRING_MAP)
+	{
+		if (DataObject->HasField(Item.Value))
+		{
+			TArray<FColor> ColorArray;
+			for (const auto ColorItem : DataObject->GetArrayField(Item.Value))
+			{
+				const FString ColorHex = ColorItem->AsString();
+				// const int32 RgbColor = UKismetStringLibrary::Conv_StringToInt(ColorHex.Replace(TEXT("#"), TEXT("")));
+				ColorArray.Add(FColor::FromHex(ColorHex));
+			}
+			Colors.Add(FRpmColorPalette{Item.Key, ColorArray});
+		}
+	}
+	return Colors;
 }
 
 TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& JsonString)

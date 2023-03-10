@@ -15,4 +15,8 @@ public:
 	static FString MakeCreatePayload(const FRpmAvatarProperties& AvatarProperties);
 
 	static FString MakeUpdatePayload(ERpmPartnerAssetType AssetType, int64 AssetId);
+	
+	static FString MakeUpdatePayload(ERpmPartnerAssetColor AssetColor, int32 ColorId);
+
+	static FString MakeUpdatePayload(const TSharedPtr<class FJsonObject> AssetsObject);
 };

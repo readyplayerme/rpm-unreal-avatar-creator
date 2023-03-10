@@ -35,11 +35,22 @@ enum class ERpmPartnerAssetType : uint8
 UENUM(BlueprintType)
 enum class ERpmPartnerAssetColor : uint8
 {
-	// "skinColorHex": "#e9bb98", //replaces v1 skinTone, can't be modified directly, depends on skinColor value
 	SkinColor,
 	HairColor,
 	BeardColor,
 	EyebrowColor
+};
+
+USTRUCT(BlueprintType)
+struct FRpmColorPalette
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	ERpmPartnerAssetColor AssetColor;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	TArray<FColor> RgbColors;
 };
 
 USTRUCT(BlueprintType)
@@ -118,6 +129,7 @@ enum class ERpmAvatarCreatorError : uint8
 	None,
 	AuthenticationFailure,
 	AssetDownloadFailure,
+	ColorDownloadFailure,
 	MetadataDownloadFailure,
 	AvatarCreateFailure,
 	AvatarPreviewFailure,

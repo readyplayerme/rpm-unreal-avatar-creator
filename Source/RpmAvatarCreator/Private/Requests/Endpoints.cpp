@@ -17,6 +17,11 @@ FString FEndpoints::GetAssetEndpoint(const FString& Subdomain)
 	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/assets")});
 }
 
+FString FEndpoints::GetColorEndpoint(const FString& AvatarId)
+{
+	return FString::Format(TEXT("{0}/{1}/colors?type={2}"), {AVATAR_API_V2_ENDPOINT, AvatarId, TEXT("skin,beard,hair,eyebrow")});
+}
+
 FString FEndpoints::GetAvatarPublicUrl(const FString& AvatarId)
 {
 	return FString::Format(TEXT("{0}/{1}.glb"), {AVATAR_API_V2_ENDPOINT, AvatarId});

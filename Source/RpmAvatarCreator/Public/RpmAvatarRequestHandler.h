@@ -21,6 +21,8 @@ public:
 
 	void UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId);
 
+	void UpdateAvatar(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
+
 	void DownloadAvatarProperties(const FString& InAvatarId);
 
 	void DownloadPreview(USkeleton* Skeleton);
@@ -54,6 +56,8 @@ private:
 
 	UFUNCTION()
 	void OnPropertiesRequestCompleted(bool bSuccess);
+
+	void UpdateAvatar(const FString& Payload);
 
 	void LoadGlb(const TArray<uint8>& Data);
 

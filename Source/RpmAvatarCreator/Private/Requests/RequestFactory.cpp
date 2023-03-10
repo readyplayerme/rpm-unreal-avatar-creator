@@ -26,6 +26,11 @@ TSharedPtr<FBaseRequest> FRequestFactory::CreateAssetRequest() const
 	return MakeShared<FBaseRequest>(FEndpoints::GetAssetEndpoint(PartnerDomain), AuthToken);
 }
 
+TSharedPtr<FBaseRequest> FRequestFactory::CreateColorRequest(const FString& AvatarId) const
+{
+	return MakeShared<FBaseRequest>(FEndpoints::GetColorEndpoint(AvatarId), AuthToken);
+}
+
 TSharedPtr<FBaseRequest> FRequestFactory::CreateImageRequest(const FString& IconUrl) const
 {
 	return MakeShared<FBaseRequest>(IconUrl);

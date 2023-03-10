@@ -3,7 +3,8 @@
 
 #include "RpmAvatarCreatorApi.h"
 
-#include "RpmPartnerAssetLoader.h"
+#include "RpmPartnerAssetDownloader.h"
+#include "RpmColorDownloader.h"
 #include "RpmAuthManager.h"
 #include "RpmAvatarRequestHandler.h"
 #include "Requests/RequestFactory.h"
@@ -17,7 +18,8 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	, HalfBodySkeleton(nullptr)
 {
 	AuthManager = MakeShared<FRpmAuthManager>();
-	AssetLoader = NewObject<URpmPartnerAssetLoader>();
+	ColorDownloader = MakeShared<FRpmColorDownloader>();
+	AssetDownloader = NewObject<URpmPartnerAssetDownloader>();
 	AvatarRequestHandler = NewObject<URpmAvatarRequestHandler>();
 }
 
@@ -68,12 +70,16 @@ void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess)
 	}
 
 	AvatarProperties = AvatarRequestHandler->GetAvatarProperties();
+
+	ColorDownloader->GetCompleteCallback().BindUObject(this, &URpmAvatarCreatorApi::ColorsDownloaded);
+	ColorDownloader->DownloadColors(RequestFactory, AvatarProperties.Id);
+
 	AvatarRequestHandler->GetAvatarPreviewDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PreviewDownloaded);
 	USkeleton* TargetSkeleton = AvatarProperties.BodyType == EAvatarBodyType::HalfBody ? HalfBodySkeleton : FullBodySkeleton;
 	AvatarRequestHandler->DownloadPreview(TargetSkeleton);
 
-	AssetLoader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::AssetsDownloaded);
-	AssetLoader->DownloadAssets(RequestFactory, AvatarProperties.BodyType, AvatarProperties.Gender);
+	AssetDownloader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::AssetsDownloaded);
+	AssetDownloader->DownloadAssets(RequestFactory, AvatarProperties.BodyType, AvatarProperties.Gender);
 }
 
 void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, const FAvatarCreatorFailed& Failed)
@@ -81,16 +87,20 @@ void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, 
 	OnEditorReady = EditorReady;
 	OnEditorFailed = Failed;
 
+	AvatarRequestHandler->GetAvatarPropertiesDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PropertiesDownloaded);
 	if (AvatarProperties.Id.IsEmpty())
 	{
-		AvatarRequestHandler->GetAvatarPropertiesDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PropertiesDownloaded);
 		AvatarRequestHandler->CreateAvatar(AvatarProperties);
 	}
 	else
 	{
-		AvatarRequestHandler->GetAvatarPropertiesDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PropertiesDownloaded);
 		AvatarRequestHandler->DownloadAvatarProperties(AvatarProperties.Id);
 	}
+}
+
+void URpmAvatarCreatorApi::ColorsDownloaded(bool bSuccess)
+{
+	ExecuteEditorReadyCallback(bSuccess, ERpmAvatarCreatorError::ColorDownloadFailure);
 }
 
 void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess)
@@ -112,7 +122,7 @@ void URpmAvatarCreatorApi::ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarC
 		OnEditorReady.Clear();
 		return;
 	}
-	if (AssetLoader->AreAssetsReady() && IsValid(AvatarRequestHandler->Mesh))
+	if (AssetDownloader->AreAssetsReady() && IsValid(AvatarRequestHandler->Mesh) && ColorDownloader->GetColors().Num() != 0)
 	{
 		(void)OnEditorReady.ExecuteIfBound();
 		(void)AvatarRequestHandler->OnPreviewDownloaded.ExecuteIfBound(AvatarRequestHandler->Mesh);
@@ -121,9 +131,14 @@ void URpmAvatarCreatorApi::ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarC
 	}
 }
 
-void URpmAvatarCreatorApi::UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId)
+void URpmAvatarCreatorApi::UpdateAvatarAsset(ERpmPartnerAssetType AssetType, int64 AssetId)
 {
 	AvatarRequestHandler->UpdateAvatar(AssetType, AssetId);
+}
+
+void URpmAvatarCreatorApi::UpdateAvatarColor(ERpmPartnerAssetColor AssetColor, int32 ColorIndex)
+{
+	AvatarRequestHandler->UpdateAvatar(AssetColor, ColorIndex);
 }
 
 void URpmAvatarCreatorApi::SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed)
@@ -138,7 +153,12 @@ FRpmAvatarProperties URpmAvatarCreatorApi::GetAvatarProperties() const
 
 TArray<FRpmPartnerAsset> URpmAvatarCreatorApi::GetFilteredPartnerAssets() const
 {
-	return AssetLoader->GetFilteredAssets(AvatarProperties.BodyType, AvatarProperties.Gender);
+	return AssetDownloader->GetFilteredAssets(AvatarProperties.BodyType, AvatarProperties.Gender);
+}
+
+TArray<FRpmColorPalette> URpmAvatarCreatorApi::GetColorPalettes() const
+{
+	return ColorDownloader->GetColors();
 }
 
 void URpmAvatarCreatorApi::BeginDestroy()

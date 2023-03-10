@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "RpmAvatarCreatorTypes.h"
-#include "RpmPartnerAssetLoader.generated.h"
+#include "RpmPartnerAssetDownloader.generated.h"
 
 UCLASS(BlueprintType)
-class RPMAVATARCREATOR_API URpmPartnerAssetLoader : public UObject
+class RPMAVATARCREATOR_API URpmPartnerAssetDownloader : public UObject
 {
 	GENERATED_BODY()
 

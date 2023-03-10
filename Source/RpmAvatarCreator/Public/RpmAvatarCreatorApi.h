@@ -21,8 +21,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Prepare Editor"))
 	void PrepareEditor(const FAvatarEditorReady& EditorReady, const FAvatarCreatorFailed& Failed);
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar"))
-	void UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId);
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar Asset"))
+	void UpdateAvatarAsset(ERpmPartnerAssetType AssetType, int64 AssetId);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar Color"))
+	void UpdateAvatarColor(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Save Avatar"))
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
@@ -48,6 +51,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Filtered Partner Assets"))
 	TArray<FRpmPartnerAsset> GetFilteredPartnerAssets() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Color Palettes"))
+	TArray<FRpmColorPalette> GetColorPalettes() const;
+
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Photo"))
 	void SetProfilePhoto(UTextureRenderTarget2D* TextureRenderTarget);
 
@@ -56,6 +62,9 @@ public:
 private:
 	UFUNCTION()
 	void OnAuthComplete(bool bSuccess);
+
+	UFUNCTION()
+	void ColorsDownloaded(bool bSuccess);
 
 	UFUNCTION()
 	void AssetsDownloaded(bool bSuccess);
@@ -72,8 +81,10 @@ private:
 
 	TSharedPtr<class FRpmAuthManager> AuthManager;
 
+	TSharedPtr<class FRpmColorDownloader> ColorDownloader;
+
 	UPROPERTY()
-	class URpmPartnerAssetLoader* AssetLoader;
+	class URpmPartnerAssetDownloader* AssetDownloader;
 
 	UPROPERTY()
 	class URpmAvatarRequestHandler* AvatarRequestHandler;

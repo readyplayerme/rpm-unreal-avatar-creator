@@ -8,7 +8,6 @@
 #include "Requests/Endpoints.h"
 #include "Extractors/PayloadExtractor.h"
 #include "Utils/GlTFConfigCreator.h"
-#include "Utils/PayloadUpdater.h"
 
 static const FString FULLBODY_BONE_NODE = "Armature";
 static const FString HALFBODY_BONE_NODE = "AvatarRoot";
@@ -72,11 +71,14 @@ void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properti
 {
 	Mesh = nullptr;
 	AvatarProperties = Properties;
-	// TODO: Fix this when the default avatar api is available
-	AvatarProperties.Colors = MakeDefaultColors();
-	AvatarProperties.Assets = MakeDefaultPartnerAssets();
-	// TODO: Fix this when the default avatar api is available
-	AvatarProperties.Assets[ERpmPartnerAssetType::Outfit] = AvatarProperties.Gender == EAvatarGender::Feminine ? 109376347 : 109373713;
+	if (AvatarProperties.Base64Image.IsEmpty())
+	{
+		// TODO: Fix this when the default avatar api is available
+		AvatarProperties.Colors = MakeDefaultColors();
+		AvatarProperties.Assets = MakeDefaultPartnerAssets();
+		// TODO: Fix this when the default avatar api is available
+		AvatarProperties.Assets[ERpmPartnerAssetType::Outfit] = AvatarProperties.Gender == EAvatarGender::Feminine ? 109376347 : 109373713;
+	}
 	CreateAvatarRequest = RequestFactory->CreateAvatarCreateRequest(FPayloadExtractor::MakeCreatePayload(AvatarProperties));
 	CreateAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnAvatarCreateCompleted);
 	CreateAvatarRequest->Download();
@@ -89,13 +91,24 @@ FRpmAvatarProperties URpmAvatarRequestHandler::GetAvatarProperties() const
 
 void URpmAvatarRequestHandler::UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId)
 {
-	FPayloadUpdater::UpdatePayload(AvatarProperties, AssetType, AssetId);
+	AvatarProperties.Assets.FindOrAdd(AssetType) = AssetId;
+	UpdateAvatar(FPayloadExtractor::MakeUpdatePayload(AssetType, AssetId));
+}
+
+void URpmAvatarRequestHandler::UpdateAvatar(ERpmPartnerAssetColor AssetColor, int32 ColorIndex)
+{
+	AvatarProperties.Colors.FindOrAdd(AssetColor) = ColorIndex;
+	UpdateAvatar(FPayloadExtractor::MakeUpdatePayload(AssetColor, ColorIndex));
+}
+
+void URpmAvatarRequestHandler::UpdateAvatar(const FString& Payload)
+{
 	if (UpdateAvatarRequest)
 	{
 		UpdateAvatarRequest->GetCompleteCallback().Unbind();
 		UpdateAvatarRequest->CancelRequest();
 	}
-	UpdateAvatarRequest = RequestFactory->CreateUpdateAvatarRequest(AvatarProperties.Id, FPayloadExtractor::MakeUpdatePayload(AssetType, AssetId));
+	UpdateAvatarRequest = RequestFactory->CreateUpdateAvatarRequest(AvatarProperties.Id, Payload);
 	UpdateAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnUpdateAvatarCompleted);
 	UpdateAvatarRequest->Download();
 }
