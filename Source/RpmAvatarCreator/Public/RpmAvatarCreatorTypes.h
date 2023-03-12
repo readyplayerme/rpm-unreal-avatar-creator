@@ -10,6 +10,7 @@ struct FRpmUserSession
 {
 	FString Id;
 	FString Token;
+	FString Partner;
 };
 
 UENUM(BlueprintType)
@@ -144,10 +145,6 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarSaveCompleted, const FString&, Url);
 
 DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
 
-DECLARE_DELEGATE_OneParam(FAvatarCreateCompleted, bool);
-
-DECLARE_DELEGATE_OneParam(FAvatarPreviewDownloadCompleted, bool);
-
-DECLARE_DELEGATE_OneParam(FPartnerAssetsDownloadCompleted, bool);
+DECLARE_DELEGATE_OneParam(FBaseRequestCompleted, bool);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FPreviewDownloadCompleted, const USkeletalMesh*, SkeletalMesh);

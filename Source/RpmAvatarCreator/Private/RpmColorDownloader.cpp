@@ -14,7 +14,7 @@ void FRpmColorDownloader::DownloadColors(TSharedPtr<FRequestFactory> Factory, co
 	ColorRequest->Download();
 }
 
-FColorDownloadCompleted& FRpmColorDownloader::GetCompleteCallback()
+FBaseRequestCompleted& FRpmColorDownloader::GetCompleteCallback()
 {
 	return OnColorDownloadCompleted;
 }

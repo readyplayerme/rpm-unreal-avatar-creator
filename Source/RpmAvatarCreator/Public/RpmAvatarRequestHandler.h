@@ -25,7 +25,7 @@ public:
 
 	void DownloadAvatarProperties(const FString& InAvatarId);
 
-	void DownloadPreview(USkeleton* Skeleton);
+	void DownloadModel(USkeleton* Skeleton, bool bAvatarExists);
 
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 	
@@ -37,9 +37,9 @@ public:
 	UPROPERTY()
 	FPreviewDownloadCompleted OnPreviewDownloaded;
 
-	FAvatarCreateCompleted& GetAvatarPropertiesDownloadedCallback();
+	FBaseRequestCompleted& GetAvatarPropertiesDownloadedCallback();
 	
-	FAvatarPreviewDownloadCompleted& GetAvatarPreviewDownloadedCallback();
+	FBaseRequestCompleted& GetAvatarPreviewDownloadedCallback();
 
 private:
 	UFUNCTION()
@@ -52,7 +52,7 @@ private:
 	void OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveCompleted AvatarSaveCompleted, FAvatarCreatorFailed Failed);
 
 	UFUNCTION()
-	void OnPreviewDownloadCompleted(bool bSuccess);
+	void OnModelDownloadCompleted(bool bSuccess);
 
 	UFUNCTION()
 	void OnPropertiesRequestCompleted(bool bSuccess);
@@ -66,13 +66,13 @@ private:
 
 	FRpmAvatarProperties AvatarProperties;
 
-	FAvatarCreateCompleted OnAvatarPropertiesDownloaded;
-	FAvatarPreviewDownloadCompleted OnAvatarPreviewDownloaded;
+	FBaseRequestCompleted OnAvatarPropertiesDownloaded;
+	FBaseRequestCompleted OnAvatarPreviewDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TSharedPtr<class FBaseRequest> AvatarMetadataRequest;
 	TSharedPtr<class FBaseRequest> CreateAvatarRequest;
 	TSharedPtr<class FBaseRequest> UpdateAvatarRequest;
 	TSharedPtr<class FBaseRequest> SaveAvatarRequest;
-	TSharedPtr<class FBaseRequest> PreviewAvatarRequest;
+	TSharedPtr<class FBaseRequest> AvatarModelRequest;
 };

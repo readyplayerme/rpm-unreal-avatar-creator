@@ -73,7 +73,7 @@ private:
 	void PreviewDownloaded(bool bSuccess);
 
 	UFUNCTION()
-	void PropertiesDownloaded(bool bSuccess);
+	void PropertiesDownloaded(bool bSuccess, bool bAvatarExists);
 
 	void ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarCreatorError Error);
 
@@ -91,8 +91,6 @@ private:
 
 	FAuthenticationCompleted OnAuthenticationCompleted;
 	FAvatarCreatorFailed OnAvatarCreatorFailed;
-
-	FPartnerAssetsDownloadCompleted OnAssetsDownloadCompleted;
 
 	FAvatarEditorReady OnEditorReady;
 	FAvatarCreatorFailed OnEditorFailed;

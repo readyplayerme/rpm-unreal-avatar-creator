@@ -49,12 +49,12 @@ void URpmAvatarRequestHandler::Initialize(TSharedPtr<FRequestFactory> Factory, c
 	OnPreviewDownloaded = PreviewDownloaded;
 }
 
-FAvatarCreateCompleted& URpmAvatarRequestHandler::GetAvatarPropertiesDownloadedCallback()
+FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPropertiesDownloadedCallback()
 {
 	return OnAvatarPropertiesDownloaded;
 }
 
-FAvatarPreviewDownloadCompleted& URpmAvatarRequestHandler::GetAvatarPreviewDownloadedCallback()
+FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPreviewDownloadedCallback()
 {
 	return OnAvatarPreviewDownloaded;
 }
@@ -142,12 +142,12 @@ void URpmAvatarRequestHandler::OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveC
 	(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarProperties.Id));
 }
 
-void URpmAvatarRequestHandler::DownloadPreview(USkeleton* Skeleton)
+void URpmAvatarRequestHandler::DownloadModel(USkeleton* Skeleton, bool bAvatarExists)
 {
 	TargetSkeleton = Skeleton;
-	PreviewAvatarRequest = RequestFactory->CreateAvatarPreviewRequest(AvatarProperties.Id);
-	PreviewAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPreviewDownloadCompleted);
-	PreviewAvatarRequest->Download();
+	AvatarModelRequest = RequestFactory->CreateAvatarModelRequest(AvatarProperties.Id, !bAvatarExists);
+	AvatarModelRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnModelDownloadCompleted);
+	AvatarModelRequest->Download();
 }
 
 void URpmAvatarRequestHandler::OnAvatarCreateCompleted(bool bSuccess)
@@ -171,11 +171,11 @@ void URpmAvatarRequestHandler::OnPropertiesRequestCompleted(bool bSuccess)
 	OnAvatarPropertiesDownloaded.Unbind();
 }
 
-void URpmAvatarRequestHandler::OnPreviewDownloadCompleted(bool bSuccess)
+void URpmAvatarRequestHandler::OnModelDownloadCompleted(bool bSuccess)
 {
 	if (bSuccess)
 	{
-		LoadGlb(PreviewAvatarRequest->GetContent());
+		LoadGlb(AvatarModelRequest->GetContent());
 		bSuccess = Mesh != nullptr;
 	}
 	(void)OnAvatarPreviewDownloaded.ExecuteIfBound(bSuccess);

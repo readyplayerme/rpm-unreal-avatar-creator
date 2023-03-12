@@ -39,10 +39,17 @@ void URpmAvatarCreatorApi::Authenticate(const FAuthenticationCompleted& Complete
 	OnAuthenticationCompleted = Completed;
 	OnAvatarCreatorFailed = Failed;
 	RequestFactory = MakeShared<FRequestFactory>(PartnerDomain);
-	AuthManager->GetCompleteCallback().BindUObject(this, &URpmAvatarCreatorApi::OnAuthComplete);
-	AuthManager->AuthAnonymous(RequestFactory);
-
 	AvatarRequestHandler->Initialize(RequestFactory, OnPreviewDownloaded);
+
+	if (AuthManager->GetUserSession())
+	{
+		OnAuthComplete(true);
+	}
+	else
+	{
+		AuthManager->GetCompleteCallback().BindUObject(this, &URpmAvatarCreatorApi::OnAuthComplete);
+		AuthManager->AuthAnonymous(RequestFactory);
+	}
 }
 
 void URpmAvatarCreatorApi::OnAuthComplete(bool bSuccess)
@@ -52,20 +59,18 @@ void URpmAvatarCreatorApi::OnAuthComplete(bool bSuccess)
 		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::AuthenticationFailure);
 		return;
 	}
-	const FRpmUserSession Session = AuthManager->GetUserSession();
+	const FRpmUserSession Session = *AuthManager->GetUserSession();
 	RequestFactory->SetAuthToken(Session.Token);
 	(void)OnAuthenticationCompleted.ExecuteIfBound();
 }
 
-void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess)
+void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess, bool bAvatarExists)
 {
 	if (!bSuccess)
 	{
-		const ERpmAvatarCreatorError Error = AvatarProperties.Id.IsEmpty() ?
+		const ERpmAvatarCreatorError Error = bAvatarExists ?
 			ERpmAvatarCreatorError::MetadataDownloadFailure : ERpmAvatarCreatorError::AvatarCreateFailure;
-		(void)OnEditorFailed.ExecuteIfBound(Error);
-		OnEditorFailed.Clear();
-		OnEditorReady.Clear();
+		ExecuteEditorReadyCallback(false, Error);
 		return;
 	}
 
@@ -76,7 +81,7 @@ void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess)
 
 	AvatarRequestHandler->GetAvatarPreviewDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PreviewDownloaded);
 	USkeleton* TargetSkeleton = AvatarProperties.BodyType == EAvatarBodyType::HalfBody ? HalfBodySkeleton : FullBodySkeleton;
-	AvatarRequestHandler->DownloadPreview(TargetSkeleton);
+	AvatarRequestHandler->DownloadModel(TargetSkeleton, bAvatarExists);
 
 	AssetDownloader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::AssetsDownloaded);
 	AssetDownloader->DownloadAssets(RequestFactory, AvatarProperties.BodyType, AvatarProperties.Gender);
@@ -87,7 +92,7 @@ void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, 
 	OnEditorReady = EditorReady;
 	OnEditorFailed = Failed;
 
-	AvatarRequestHandler->GetAvatarPropertiesDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PropertiesDownloaded);
+	AvatarRequestHandler->GetAvatarPropertiesDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PropertiesDownloaded, !AvatarProperties.Id.IsEmpty());
 	if (AvatarProperties.Id.IsEmpty())
 	{
 		AvatarRequestHandler->CreateAvatar(AvatarProperties);

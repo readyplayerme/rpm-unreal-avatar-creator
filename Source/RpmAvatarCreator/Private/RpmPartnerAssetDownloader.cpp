@@ -43,7 +43,7 @@ bool URpmPartnerAssetDownloader::AreAssetsReady() const
 	return IconRequests.Num() == 0 && !AssetRequest.IsValid();
 }
 
-FPartnerAssetsDownloadCompleted& URpmPartnerAssetDownloader::GetPartnerAssetsDownloadCallback()
+FBaseRequestCompleted& URpmPartnerAssetDownloader::GetPartnerAssetsDownloadCallback()
 {
 	return OnPartnerAssetsDownloaded;
 }

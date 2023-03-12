@@ -36,9 +36,9 @@ TSharedPtr<FBaseRequest> FRequestFactory::CreateImageRequest(const FString& Icon
 	return MakeShared<FBaseRequest>(IconUrl);
 }
 
-TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarPreviewRequest(const FString& AvatarId) const
+TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarModelRequest(const FString& AvatarId, bool bIsPreview) const
 {
-	return MakeShared<FBaseRequest>(FEndpoints::GetAvatarPreviewEndpoint(AvatarId));
+	return MakeShared<FBaseRequest>(FEndpoints::GetAvatarModelEndpoint(AvatarId, bIsPreview));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarMetadataRequest(const FString& AvatarId) const

@@ -19,7 +19,7 @@ public:
 
 	static FString GetCreateEndpoint();
 
-	static FString GetAvatarPreviewEndpoint(const FString& AvatarId);
+	static FString GetAvatarModelEndpoint(const FString& AvatarId, bool bIsPreview);
 
 	static FString GetUpdateAvatarEndpoint(const FString& AvatarId);
 
