@@ -16,7 +16,6 @@ struct FRpmUserSession
 UENUM(BlueprintType)
 enum class ERpmPartnerAssetType : uint8
 {
-	None,
 	BeardStyle,
 	EyeColor,
 	EyeShape,
@@ -89,7 +88,7 @@ struct FRpmPartnerAsset
 	FRpmPartnerAsset()
 	{
 		Id = 0;
-		AssetType = ERpmPartnerAssetType::None;
+		AssetType = ERpmPartnerAssetType::FaceShape;
 		Gender = EAvatarGender::Undefined;
 		IconTexture = nullptr;
 		BadgeTexture = nullptr;

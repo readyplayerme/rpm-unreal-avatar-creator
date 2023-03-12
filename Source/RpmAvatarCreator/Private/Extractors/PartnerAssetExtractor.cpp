@@ -28,15 +28,6 @@ namespace
 		{"shirt", ERpmPartnerAssetType::Shirt}
 	};
 
-	ERpmPartnerAssetType ConvertAssetType(const FString& AssetType)
-	{
-		if (STRING_TO_ASSET_TYPES_MAP.Contains(AssetType))
-		{
-			return STRING_TO_ASSET_TYPES_MAP[AssetType];
-		}
-		return ERpmPartnerAssetType::None;
-	}
-
 	const TMap<ERpmPartnerAssetColor, FString> COLOR_TO_STRING_MAP =
 	{
 		{ERpmPartnerAssetColor::BeardColor, "beard"},
@@ -94,6 +85,15 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 	{
 		FRpmPartnerAsset Asset;
 		const auto JsonObject = JsonValue->AsObject();
+		if (JsonObject->HasField("assetType"))
+		{
+			const FString AssetTypeStr = JsonObject->GetStringField("assetType");
+			if (!STRING_TO_ASSET_TYPES_MAP.Contains(AssetTypeStr))
+			{
+				continue;
+			}
+			Asset.AssetType = STRING_TO_ASSET_TYPES_MAP[AssetTypeStr];
+		}
 		if (JsonObject->HasField("id"))
 		{
 			Asset.Id = JsonObject->GetIntegerField("id");
@@ -101,10 +101,6 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 		if (JsonObject->HasField("name"))
 		{
 			Asset.Name = JsonObject->GetStringField("name");
-		}
-		if (JsonObject->HasField("assetType"))
-		{
-			Asset.AssetType = ConvertAssetType(JsonObject->GetStringField("assetType"));
 		}
 		if (JsonObject->HasField("gender"))
 		{
