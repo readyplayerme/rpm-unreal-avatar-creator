@@ -103,6 +103,7 @@ FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString
 	const auto DataObject = JsonObject->GetObjectField("data");
 
 	FRpmAvatarProperties AvatarProperties;
+	AvatarProperties.Id = DataObject->GetStringField("id");
 	AvatarProperties.Partner = DataObject->GetStringField("partner");
 	AvatarProperties.Gender = StringToGender(DataObject->GetStringField("gender"));
 	AvatarProperties.BodyType = StringToBodyType(DataObject->GetStringField("bodyType"));
@@ -130,29 +131,6 @@ FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString
 	}
 
 	return AvatarProperties;
-}
-
-FString FPayloadExtractor::ExtractAvatarId(const FString& JsonString)
-{
-	TSharedPtr<FJsonObject> JsonObject;
-	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
-
-	if (!FJsonSerializer::Deserialize(Reader, JsonObject))
-	{
-		return {};
-	}
-
-	if (!JsonObject->HasField("data"))
-	{
-		return {};
-	}
-
-	const auto DataObject = JsonObject->GetObjectField("data");
-	if (!DataObject->HasField("id"))
-	{
-		return {};
-	}
-	return DataObject->GetStringField("id");
 }
 
 FString FPayloadExtractor::MakeCreatePayload(const FRpmAvatarProperties& AvatarProperties)
@@ -190,19 +168,15 @@ FString FPayloadExtractor::MakeCreatePayload(const FRpmAvatarProperties& AvatarP
 	return OutputJsonString;
 }
 
-FString FPayloadExtractor::MakeUpdatePayload(ERpmPartnerAssetType AssetType, int64 AssetId)
+FString FPayloadExtractor::MakeUpdatePayload(const TSharedPtr<FJsonObject> AssetsObject)
 {
 	FString OutputJsonString;
 
 	const TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
-	const TSharedPtr<FJsonObject> AssetsObject = MakeShared<FJsonObject>();
 
 	JsonObject->SetObjectField("data", DataObject);
 	DataObject->SetObjectField("assets", AssetsObject);
-
-	const FString AssetIdStr = AssetId != 0 ? FString::FromInt(AssetId) : "";
-	AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[AssetType], AssetIdStr);
 
 	const auto Writer = TJsonWriterFactory<>::Create(&OutputJsonString);
 	if (!FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer))
@@ -211,3 +185,18 @@ FString FPayloadExtractor::MakeUpdatePayload(ERpmPartnerAssetType AssetType, int
 	}
 	return OutputJsonString;
 }
+FString FPayloadExtractor::MakeUpdatePayload(ERpmPartnerAssetType AssetType, int64 AssetId)
+{
+	const TSharedPtr<FJsonObject> AssetsObject = MakeShared<FJsonObject>();
+	const FString AssetIdStr = AssetId != 0 ? FString::FromInt(AssetId) : "";
+	AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[AssetType], AssetIdStr);
+	return MakeUpdatePayload(AssetsObject);
+}
+
+FString FPayloadExtractor::MakeUpdatePayload(ERpmPartnerAssetColor AssetColor, int32 ColorId)
+{
+	const TSharedPtr<FJsonObject> AssetsObject = MakeShared<FJsonObject>();
+	AssetsObject->SetNumberField(ASSET_COLOR_TO_STRING_MAP[AssetColor], ColorId);
+	return MakeUpdatePayload(AssetsObject);
+}
+

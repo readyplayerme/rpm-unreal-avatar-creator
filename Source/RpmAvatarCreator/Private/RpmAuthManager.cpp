@@ -13,7 +13,7 @@ void FRpmAuthManager::AuthAnonymous(TSharedPtr<FRequestFactory> Factory)
 	AuthRequest->Download();
 }
 
-FAuthCompleted& FRpmAuthManager::GetCompleteCallback()
+FBaseRequestCompleted& FRpmAuthManager::GetCompleteCallback()
 {
 	return OnAuthCompleted;
 }
@@ -23,18 +23,12 @@ void FRpmAuthManager::DownloadCompleted(bool bSuccess)
 	if (bSuccess)
 	{
 		UserSession = FUserSessionExtractor::ExtractUserSession(AuthRequest->GetContentAsString());
-		if (UserSession)
-		{
-			(void)OnAuthCompleted.ExecuteIfBound(true);
-			OnAuthCompleted.Unbind();
-			return;
-		}
 	}
-	(void)OnAuthCompleted.ExecuteIfBound(false);
+	(void)OnAuthCompleted.ExecuteIfBound(bSuccess && UserSession.IsSet());
 	OnAuthCompleted.Unbind();
 }
 
-FRpmUserSession FRpmAuthManager::GetUserSession() const
+TOptional<FRpmUserSession> FRpmAuthManager::GetUserSession() const
 {
-	return *UserSession;
+	return UserSession;
 }
