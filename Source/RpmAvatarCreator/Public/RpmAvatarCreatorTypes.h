@@ -51,6 +51,11 @@ struct FRpmColorPalette
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	TArray<FColor> RgbColors;
+
+	FRpmColorPalette()
+	{
+		AssetColor = ERpmPartnerAssetColor::SkinColor;
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -121,6 +126,12 @@ struct FRpmAvatarProperties
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Base64Image;
+
+	FRpmAvatarProperties()
+	{
+		Gender = EAvatarGender::Undefined;
+		BodyType = EAvatarBodyType::Undefined;
+	}
 };
 
 UENUM(BlueprintType)
