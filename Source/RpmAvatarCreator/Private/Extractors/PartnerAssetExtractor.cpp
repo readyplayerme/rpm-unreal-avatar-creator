@@ -6,7 +6,6 @@
 #include "Templates/SharedPointer.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
-#include "Kismet/KismetStringLibrary.h"
 
 namespace
 {
@@ -62,10 +61,12 @@ TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& Js
 			for (const auto ColorItem : DataObject->GetArrayField(Item.Value))
 			{
 				const FString ColorHex = ColorItem->AsString();
-				// const int32 RgbColor = UKismetStringLibrary::Conv_StringToInt(ColorHex.Replace(TEXT("#"), TEXT("")));
 				ColorArray.Add(FColor::FromHex(ColorHex));
 			}
-			Colors.Add(FRpmColorPalette{Item.Key, ColorArray});
+			FRpmColorPalette Palette;
+			Palette.AssetColor = Item.Key;
+			Palette.RgbColors = ColorArray;
+			Colors.Add(Palette);
 		}
 	}
 	return Colors;
