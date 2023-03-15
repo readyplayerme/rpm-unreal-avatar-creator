@@ -12,6 +12,16 @@ FString FEndpoints::GetAuthEndpoint(const FString& Subdomain)
 	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/users")});
 }
 
+FString FEndpoints::GetSendCodeEndpoint(const FString& Subdomain)
+{
+	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/auth/start")});
+}
+
+FString FEndpoints::GetConfirmCodeEndpoint(const FString& Subdomain)
+{
+	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/auth/login")});
+}
+
 FString FEndpoints::GetAssetEndpoint(const FString& Subdomain)
 {
 	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/assets")});

@@ -6,14 +6,24 @@
 #include "CoreMinimal.h"
 #include "Endpoints.h"
 
-FRequestFactory::FRequestFactory(const FString& Domain)
-	: PartnerDomain(Domain)
+void FRequestFactory::SetPartnerDomain(const FString& Domain)
 {
+	PartnerDomain = Domain;
 }
 
 void FRequestFactory::SetAuthToken(const FString& Token)
 {
 	AuthToken = Token;
+}
+
+TSharedPtr<FBaseRequest> FRequestFactory::CreateSendCodeRequest(const FString& PayloadJson) const
+{
+	return MakeShared<FBaseRequest>(FEndpoints::GetSendCodeEndpoint(PartnerDomain), "", "POST", PayloadJson);
+}
+
+TSharedPtr<FBaseRequest> FRequestFactory::CreateConfirmCodeRequest(const FString& PayloadJson) const
+{
+	return MakeShared<FBaseRequest>(FEndpoints::GetConfirmCodeEndpoint(PartnerDomain), "", "POST", PayloadJson);
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAuthRequest() const

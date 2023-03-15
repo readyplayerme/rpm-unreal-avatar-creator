@@ -8,18 +8,26 @@
 class RPMAVATARCREATOR_API FRpmAuthManager : public TSharedFromThis<FRpmAuthManager>
 {
 public:
-	void AuthAnonymous(TSharedPtr<class FRequestFactory> RequestFactory);
+	FRpmAuthManager(TSharedPtr<class FRequestFactory> RequestFactory);
+	void SendActivationCode(const FString& Email, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+	void ConfirmActivationCode(const FString& Code, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+	void AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+	void Logout();
 	TOptional<FRpmUserSession> GetUserSession() const;
 
-	FBaseRequestCompleted& GetCompleteCallback();
-
 private:
-	void DownloadCompleted(bool bSuccess);
+	void AuthAnonymousCompleted(bool bSuccess);
+	void SendActivationCodeCompleted(bool bSuccess);
+	void ConfirmActivationCodeCompleted(bool bSuccess);
 
-	FBaseRequestCompleted OnAuthCompleted;
-
-private:
+	void SaveUserSession() const;
+	void LoadUserSession();
+	
 	TSharedPtr<class FRequestFactory> RequestFactory;
+	TOptional<FRpmUserData> UserData;
 	TOptional<FRpmUserSession> UserSession;
 	TSharedPtr<class FBaseRequest> AuthRequest;
+
+	FAuthenticationCompleted OnAuthenticationCompleted;
+	FAvatarCreatorFailed OnAvatarCreatorFailed;
 };

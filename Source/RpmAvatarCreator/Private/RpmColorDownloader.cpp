@@ -5,10 +5,14 @@
 #include "Extractors/PartnerAssetExtractor.h"
 #include "Requests/RequestFactory.h"
 
-void FRpmColorDownloader::DownloadColors(TSharedPtr<FRequestFactory> Factory, const FString& AvatarId)
+FRpmColorDownloader::FRpmColorDownloader(TSharedPtr<class FRequestFactory> RequestFactory)
+	: RequestFactory(RequestFactory)
+{
+}
+
+void FRpmColorDownloader::DownloadColors(const FString& AvatarId)
 {
 	Colors.Empty();
-	RequestFactory = Factory;
 	ColorRequest = RequestFactory->CreateColorRequest(AvatarId);
 	ColorRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmColorDownloader::DownloadCompleted);
 	ColorRequest->Download();

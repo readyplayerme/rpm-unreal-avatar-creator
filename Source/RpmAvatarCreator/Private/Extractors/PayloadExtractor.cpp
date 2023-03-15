@@ -163,7 +163,7 @@ FString FPayloadExtractor::MakeCreatePayload(const FRpmAvatarProperties& AvatarP
 	const auto Writer = TJsonWriterFactory<>::Create(&OutputJsonString);
 	if (!FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer))
 	{
-		// UE_LOG(LogReadyPlayerMe, Warning, TEXT("Failed to create a valid url"));
+		UE_LOG(LogRpmAvatarCreator, Warning, TEXT("Failed to create a valid metadata json"));
 	}
 	return OutputJsonString;
 }
@@ -181,7 +181,7 @@ FString FPayloadExtractor::MakeUpdatePayload(const TSharedPtr<FJsonObject> Asset
 	const auto Writer = TJsonWriterFactory<>::Create(&OutputJsonString);
 	if (!FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer))
 	{
-		// UE_LOG(LogReadyPlayerMe, Warning, TEXT("Failed to create a valid url"));
+		UE_LOG(LogRpmAvatarCreator, Warning, TEXT("Failed to create a valid update payload json"));
 	}
 	return OutputJsonString;
 }

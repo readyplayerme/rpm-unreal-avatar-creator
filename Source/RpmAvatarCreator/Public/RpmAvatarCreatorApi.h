@@ -15,8 +15,23 @@ class RPMAVATARCREATOR_API URpmAvatarCreatorApi : public UObject
 public:
 	URpmAvatarCreatorApi();
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Authenticate"))
-	void Authenticate(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Partner Domain"))
+	void SetPartnerDomain(const FString& PartnerDomain);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Preview Downloaded Delegate"))
+	void SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Is User Authenticated"))
+	bool IsUserAuthenticated() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Authenticate Anonymous"))
+	void AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Send Activation Code"))
+	void SendActivationCode(const FString& Email, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Confirm Activation Code"))
+	void ConfirmActivationCode(const FString& Code, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Prepare Editor"))
 	void PrepareEditor(const FAvatarEditorReady& EditorReady, const FAvatarCreatorFailed& Failed);
@@ -37,13 +52,7 @@ public:
 	class USkeleton* HalfBodySkeleton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
-	FString PartnerDomain;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	FRpmAvatarProperties AvatarProperties;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
-	FPreviewDownloadCompleted OnPreviewDownloaded;
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Avatar Properties"))
 	FRpmAvatarProperties GetAvatarProperties() const;
@@ -60,9 +69,6 @@ public:
 	virtual void BeginDestroy() override;
 
 private:
-	UFUNCTION()
-	void OnAuthComplete(bool bSuccess);
-
 	UFUNCTION()
 	void ColorsDownloaded(bool bSuccess);
 
@@ -88,9 +94,6 @@ private:
 
 	UPROPERTY()
 	class URpmAvatarRequestHandler* AvatarRequestHandler;
-
-	FAuthenticationCompleted OnAuthenticationCompleted;
-	FAvatarCreatorFailed OnAvatarCreatorFailed;
 
 	FAvatarEditorReady OnEditorReady;
 	FAvatarCreatorFailed OnEditorFailed;

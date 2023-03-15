@@ -18,7 +18,12 @@ namespace
 	}
 }
 
-void URpmPartnerAssetDownloader::DownloadAssets(TSharedPtr<FRequestFactory> Factory, EAvatarBodyType BodyType, EAvatarGender Gender)
+void URpmPartnerAssetDownloader::SetRequestFactory(TSharedPtr<class FRequestFactory> Factory)
+{
+	RequestFactory = Factory;
+}
+
+void URpmPartnerAssetDownloader::DownloadAssets(EAvatarBodyType BodyType, EAvatarGender Gender)
 {
 	if (Assets.Num() != 0)
 	{
@@ -26,7 +31,6 @@ void URpmPartnerAssetDownloader::DownloadAssets(TSharedPtr<FRequestFactory> Fact
 	}
 	else
 	{
-		RequestFactory = Factory;
 		AssetRequest = RequestFactory->CreateAssetRequest();
 		AssetRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnAssetsDownloadCompleted, BodyType, Gender);
 		AssetRequest->Download();

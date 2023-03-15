@@ -8,10 +8,12 @@
 class FRequestFactory : public FBaseRequest
 {
 public:
-	FRequestFactory(const FString& Domain);
+	void SetPartnerDomain(const FString& Domain);
 
 	void SetAuthToken(const FString& Token);
 
+	TSharedPtr<FBaseRequest> CreateSendCodeRequest(const FString& PayloadJson) const;
+	TSharedPtr<FBaseRequest> CreateConfirmCodeRequest(const FString& PayloadJson) const;
 	TSharedPtr<FBaseRequest> CreateAuthRequest() const;
 	TSharedPtr<FBaseRequest> CreateAssetRequest() const;
 	TSharedPtr<FBaseRequest> CreateColorRequest(const FString& AvatarId) const;
@@ -24,6 +26,6 @@ public:
 	TSharedPtr<FBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId) const;
 
 private:
-	const FString PartnerDomain;
+	FString PartnerDomain;
 	FString AuthToken;
 };

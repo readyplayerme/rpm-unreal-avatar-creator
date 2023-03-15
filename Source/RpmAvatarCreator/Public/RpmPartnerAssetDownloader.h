@@ -13,7 +13,9 @@ class RPMAVATARCREATOR_API URpmPartnerAssetDownloader : public UObject
 	GENERATED_BODY()
 
 public:
-	void DownloadAssets(TSharedPtr<class FRequestFactory> Factory, EAvatarBodyType BodyType, EAvatarGender Gender);
+	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
+
+	void DownloadAssets(EAvatarBodyType BodyType, EAvatarGender Gender);
 
 	UPROPERTY()
 	TArray<FRpmPartnerAsset> Assets;

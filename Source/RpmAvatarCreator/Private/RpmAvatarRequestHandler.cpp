@@ -43,10 +43,9 @@ URpmAvatarRequestHandler::URpmAvatarRequestHandler()
 {
 }
 
-void URpmAvatarRequestHandler::Initialize(TSharedPtr<FRequestFactory> Factory, const FPreviewDownloadCompleted& PreviewDownloaded)
+void URpmAvatarRequestHandler::SetRequestFactory(TSharedPtr<class FRequestFactory> Factory)
 {
 	RequestFactory = Factory;
-	OnPreviewDownloaded = PreviewDownloaded;
 }
 
 FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPropertiesDownloadedCallback()

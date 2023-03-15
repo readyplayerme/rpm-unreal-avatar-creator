@@ -8,6 +8,10 @@ class FEndpoints
 {
 public:
 	static FString GetAuthEndpoint(const FString& Subdomain);
+	
+	static FString GetSendCodeEndpoint(const FString& Subdomain);
+	
+	static FString GetConfirmCodeEndpoint(const FString& Subdomain);
 
 	static FString GetAssetEndpoint(const FString& Subdomain);
 	

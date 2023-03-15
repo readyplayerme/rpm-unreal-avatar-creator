@@ -15,7 +15,7 @@ class RPMAVATARCREATOR_API URpmAvatarRequestHandler : public UObject
 public:
 	URpmAvatarRequestHandler();
 
-	void Initialize(TSharedPtr<class FRequestFactory> RequestFactory, const FPreviewDownloadCompleted& PreviewDownloaded);
+	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
 
 	void CreateAvatar(const FRpmAvatarProperties& Properties);
 

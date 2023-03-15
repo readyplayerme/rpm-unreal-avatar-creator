@@ -6,10 +6,42 @@
 
 #include "RpmAvatarCreatorTypes.generated.h"
 
-struct FRpmUserSession
+struct FRpmUserData
 {
 	FString Id;
 	FString Token;
+	FString Partner;
+	FString Name;
+	FString Email;
+	FString RefreshToken;
+};
+
+// {
+// 	"data": {
+// 		"campaigns": [],
+// 		"assets": [],
+// 		"wallets": [],
+// 		"_id": "640f4d4ea452ff36c4622d0c",
+// 		"externalId": "5772c5ea-5229-430e-a77c-d1e8ec3cec1e",
+// 		"name": "yuri_901",
+// 		"email": "yuri+901@wolf3d.io",
+// 		"createdAt": "2023-03-13T16:20:30.409Z",
+// 		"token": "eyJhbGciOiJIU...",
+// 		"refreshToken": "wDzueLoeW5yFfY...",
+// 		"settings": {
+// 			"isPasswordUpdated": true,
+// 			"isEmailVerified": true,
+// 			"isEmailVerifiedOrInGracePeriod": true
+// 		}
+// 	}
+// }
+
+struct FRpmUserSession
+{
+	bool bIsAnonymous;
+	FString Id;
+	FString Token;
+	FString RefreshToken;
 	FString Partner;
 };
 
@@ -104,7 +136,6 @@ USTRUCT(BlueprintType)
 struct FRpmAvatarProperties
 {
 	GENERATED_BODY()
-	// "userId": "63b25e67f4eb12000fea504b",
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Id;
@@ -158,3 +189,5 @@ DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
 DECLARE_DELEGATE_OneParam(FBaseRequestCompleted, bool);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FPreviewDownloadCompleted, const USkeletalMesh*, SkeletalMesh);
+
+DECLARE_LOG_CATEGORY_EXTERN(LogRpmAvatarCreator, Log, All);
