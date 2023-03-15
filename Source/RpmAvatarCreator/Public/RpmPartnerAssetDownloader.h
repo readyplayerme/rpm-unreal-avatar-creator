@@ -5,23 +5,22 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "RpmAvatarCreatorTypes.h"
-#include "RpmPartnerAssetLoader.generated.h"
+#include "RpmPartnerAssetDownloader.generated.h"
 
 UCLASS(BlueprintType)
-class RPMAVATARCREATOR_API URpmPartnerAssetLoader : public UObject
+class RPMAVATARCREATOR_API URpmPartnerAssetDownloader : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	// UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Assets"))
 	void DownloadAssets(TSharedPtr<class FRequestFactory> Factory, EAvatarBodyType BodyType, EAvatarGender Gender);
 
-	UPROPERTY(BlueprintReadOnly, Category="Ready Player Me")
+	UPROPERTY()
 	TArray<FRpmPartnerAsset> Assets;
 
 	TArray<FRpmPartnerAsset> GetFilteredAssets(EAvatarBodyType BodyType, EAvatarGender Gender) const;
 
-	FPartnerAssetsDownloadCompleted& GetPartnerAssetsDownloadCallback();
+	FBaseRequestCompleted& GetPartnerAssetsDownloadCallback();
 
 	bool AreAssetsReady() const;
 
@@ -37,7 +36,7 @@ private:
 
 	void DownloadIcons(EAvatarBodyType BodyType, EAvatarGender Gender);
 
-	FPartnerAssetsDownloadCompleted OnPartnerAssetsDownloaded;
+	FBaseRequestCompleted OnPartnerAssetsDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TSharedPtr<class FBaseRequest> AssetRequest;

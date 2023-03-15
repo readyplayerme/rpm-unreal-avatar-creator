@@ -1,7 +1,7 @@
 // Copyright © 2023++ Ready Player Me
 
 
-#include "RpmPartnerAssetLoader.h"
+#include "RpmPartnerAssetDownloader.h"
 
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Requests/RequestFactory.h"
@@ -18,7 +18,7 @@ namespace
 	}
 }
 
-void URpmPartnerAssetLoader::DownloadAssets(TSharedPtr<FRequestFactory> Factory, EAvatarBodyType BodyType, EAvatarGender Gender)
+void URpmPartnerAssetDownloader::DownloadAssets(TSharedPtr<FRequestFactory> Factory, EAvatarBodyType BodyType, EAvatarGender Gender)
 {
 	if (Assets.Num() != 0)
 	{
@@ -28,27 +28,27 @@ void URpmPartnerAssetLoader::DownloadAssets(TSharedPtr<FRequestFactory> Factory,
 	{
 		RequestFactory = Factory;
 		AssetRequest = RequestFactory->CreateAssetRequest();
-		AssetRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetLoader::OnAssetsDownloadCompleted, BodyType, Gender);
+		AssetRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnAssetsDownloadCompleted, BodyType, Gender);
 		AssetRequest->Download();
 	}
 }
 
-TArray<FRpmPartnerAsset> URpmPartnerAssetLoader::GetFilteredAssets(EAvatarBodyType BodyType, EAvatarGender Gender) const
+TArray<FRpmPartnerAsset> URpmPartnerAssetDownloader::GetFilteredAssets(EAvatarBodyType BodyType, EAvatarGender Gender) const
 {
 	return Assets.FilterByPredicate([BodyType, Gender](const auto& Asset){ return IsAssetFiltered(Asset, BodyType, Gender); });
 }
 
-bool URpmPartnerAssetLoader::AreAssetsReady() const
+bool URpmPartnerAssetDownloader::AreAssetsReady() const
 {
 	return IconRequests.Num() == 0 && !AssetRequest.IsValid();
 }
 
-FPartnerAssetsDownloadCompleted& URpmPartnerAssetLoader::GetPartnerAssetsDownloadCallback()
+FBaseRequestCompleted& URpmPartnerAssetDownloader::GetPartnerAssetsDownloadCallback()
 {
 	return OnPartnerAssetsDownloaded;
 }
 
-void URpmPartnerAssetLoader::OnAssetsDownloadCompleted(bool bSuccess, EAvatarBodyType BodyType, EAvatarGender Gender)
+void URpmPartnerAssetDownloader::OnAssetsDownloadCompleted(bool bSuccess, EAvatarBodyType BodyType, EAvatarGender Gender)
 {
 	if (!bSuccess)
 	{
@@ -67,7 +67,7 @@ void URpmPartnerAssetLoader::OnAssetsDownloadCompleted(bool bSuccess, EAvatarBod
 	DownloadIcons(BodyType, Gender);
 }
 
-void URpmPartnerAssetLoader::DownloadIcons(EAvatarBodyType BodyType, EAvatarGender Gender)
+void URpmPartnerAssetDownloader::DownloadIcons(EAvatarBodyType BodyType, EAvatarGender Gender)
 {
 	for (const auto& Asset : Assets)
 	{
@@ -77,7 +77,7 @@ void URpmPartnerAssetLoader::DownloadIcons(EAvatarBodyType BodyType, EAvatarGend
 		}
 		auto IconRequest = RequestFactory->CreateImageRequest(Asset.Icon);
 		IconRequests.Add(Asset.Icon, IconRequest);
-		IconRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetLoader::OnIconDownloadCompleted, Asset.Icon);
+		IconRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnIconDownloadCompleted, Asset.Icon);
 		IconRequest->Download();
 		if (!Asset.Badge.IsEmpty())
 		{
@@ -86,7 +86,7 @@ void URpmPartnerAssetLoader::DownloadIcons(EAvatarBodyType BodyType, EAvatarGend
 			{
 				IconRequests.Add(Asset.Badge, BadgeRequest);
 			}
-			BadgeRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetLoader::OnIconDownloadCompleted, Asset.Badge);
+			BadgeRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnIconDownloadCompleted, Asset.Badge);
 			BadgeRequest->Download();
 		}
 	}
@@ -97,7 +97,7 @@ void URpmPartnerAssetLoader::DownloadIcons(EAvatarBodyType BodyType, EAvatarGend
 	}
 }
 
-void URpmPartnerAssetLoader::OnIconDownloadCompleted(bool bSuccess, FString Icon)
+void URpmPartnerAssetDownloader::OnIconDownloadCompleted(bool bSuccess, FString Icon)
 {
 	if (!bSuccess)
 	{

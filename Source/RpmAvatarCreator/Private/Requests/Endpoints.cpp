@@ -17,9 +17,19 @@ FString FEndpoints::GetAssetEndpoint(const FString& Subdomain)
 	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/assets")});
 }
 
+FString FEndpoints::GetColorEndpoint(const FString& AvatarId)
+{
+	return FString::Format(TEXT("{0}/{1}/colors?type={2}"), {AVATAR_API_V2_ENDPOINT, AvatarId, TEXT("skin,beard,hair,eyebrow")});
+}
+
 FString FEndpoints::GetAvatarPublicUrl(const FString& AvatarId)
 {
 	return FString::Format(TEXT("{0}/{1}.glb"), {AVATAR_API_V2_ENDPOINT, AvatarId});
+}
+
+FString FEndpoints::GetAvatarMetadataEndpoint(const FString& AvatarId)
+{
+	return FString::Format(TEXT("{0}/{1}.json"), {AVATAR_API_V2_ENDPOINT, AvatarId});
 }
 
 FString FEndpoints::GetCreateEndpoint()
@@ -27,9 +37,10 @@ FString FEndpoints::GetCreateEndpoint()
 	return AVATAR_API_V2_ENDPOINT;
 }
 
-FString FEndpoints::GetAvatarPreviewEndpoint(const FString& AvatarId)
+FString FEndpoints::GetAvatarModelEndpoint(const FString& AvatarId, bool bIsPreview)
 {
-	return FString::Format(TEXT("{0}/{1}.glb?preview=true&{2}"), {AVATAR_API_V2_ENDPOINT, AvatarId, REQUEST_OPTIMIZATION_PARAMS});
+	const FString PreviewParamStr = bIsPreview ? "preview=true&" : "";
+	return FString::Format(TEXT("{0}/{1}.glb?{2}{3}"), {AVATAR_API_V2_ENDPOINT, AvatarId, PreviewParamStr, REQUEST_OPTIMIZATION_PARAMS});
 }
 
 FString FEndpoints::GetUpdateAvatarEndpoint(const FString& AvatarId)

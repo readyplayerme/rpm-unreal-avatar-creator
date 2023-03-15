@@ -10,12 +10,12 @@ struct FRpmUserSession
 {
 	FString Id;
 	FString Token;
+	FString Partner;
 };
 
 UENUM(BlueprintType)
 enum class ERpmPartnerAssetType : uint8
 {
-	None,
 	BeardStyle,
 	EyeColor,
 	EyeShape,
@@ -35,7 +35,6 @@ enum class ERpmPartnerAssetType : uint8
 UENUM(BlueprintType)
 enum class ERpmPartnerAssetColor : uint8
 {
-	// "skinColorHex": "#e9bb98", //replaces v1 skinTone, can't be modified directly, depends on skinColor value
 	SkinColor,
 	HairColor,
 	BeardColor,
@@ -43,41 +42,58 @@ enum class ERpmPartnerAssetColor : uint8
 };
 
 USTRUCT(BlueprintType)
+struct FRpmColorPalette
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	ERpmPartnerAssetColor AssetColor;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	TArray<FColor> RgbColors;
+
+	FRpmColorPalette()
+	{
+		AssetColor = ERpmPartnerAssetColor::SkinColor;
+	}
+};
+
+USTRUCT(BlueprintType)
 struct FRpmPartnerAsset
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	int64 Id;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Name;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	ERpmPartnerAssetType AssetType;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	EAvatarGender Gender;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Icon;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Model;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Badge;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	UTexture2D* IconTexture;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	UTexture2D* BadgeTexture;
 
 	FRpmPartnerAsset()
 	{
 		Id = 0;
-		AssetType = ERpmPartnerAssetType::None;
+		AssetType = ERpmPartnerAssetType::FaceShape;
 		Gender = EAvatarGender::Undefined;
 		IconTexture = nullptr;
 		BadgeTexture = nullptr;
@@ -88,26 +104,34 @@ USTRUCT(BlueprintType)
 struct FRpmAvatarProperties
 {
 	GENERATED_BODY()
-	// "id": "60f8210e8011cfb7d827de46",
 	// "userId": "63b25e67f4eb12000fea504b",
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	FString Id;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Partner;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	EAvatarGender Gender;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	EAvatarBodyType BodyType;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	TMap<ERpmPartnerAssetColor, int32> Colors;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	TMap<ERpmPartnerAssetType, int64> Assets;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Base64Image;
+
+	FRpmAvatarProperties()
+	{
+		Gender = EAvatarGender::Undefined;
+		BodyType = EAvatarBodyType::Undefined;
+	}
 };
 
 UENUM(BlueprintType)
@@ -116,6 +140,9 @@ enum class ERpmAvatarCreatorError : uint8
 	None,
 	AuthenticationFailure,
 	AssetDownloadFailure,
+	ColorDownloadFailure,
+	MetadataDownloadFailure,
+	AvatarCreateFailure,
 	AvatarPreviewFailure,
 	AvatarSaveFailure
 };
@@ -128,8 +155,6 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarSaveCompleted, const FString&, Url);
 
 DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
 
-DECLARE_DELEGATE_OneParam(FAvatarCreateCompleted, bool);
-
-DECLARE_DELEGATE_OneParam(FPartnerAssetsDownloadCompleted, bool);
+DECLARE_DELEGATE_OneParam(FBaseRequestCompleted, bool);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FPreviewDownloadCompleted, const USkeletalMesh*, SkeletalMesh);

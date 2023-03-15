@@ -9,4 +9,5 @@ class FPartnerAssetExtractor
 {
 public:
 	static TArray<FRpmPartnerAsset> ExtractAssets(const FString& JsonString);
+	static TArray<FRpmColorPalette> ExtractColors(const FString& JsonString);
 };

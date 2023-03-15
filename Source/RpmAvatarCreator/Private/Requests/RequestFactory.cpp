@@ -26,14 +26,24 @@ TSharedPtr<FBaseRequest> FRequestFactory::CreateAssetRequest() const
 	return MakeShared<FBaseRequest>(FEndpoints::GetAssetEndpoint(PartnerDomain), AuthToken);
 }
 
+TSharedPtr<FBaseRequest> FRequestFactory::CreateColorRequest(const FString& AvatarId) const
+{
+	return MakeShared<FBaseRequest>(FEndpoints::GetColorEndpoint(AvatarId), AuthToken);
+}
+
 TSharedPtr<FBaseRequest> FRequestFactory::CreateImageRequest(const FString& IconUrl) const
 {
 	return MakeShared<FBaseRequest>(IconUrl);
 }
 
-TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarPreviewRequest(const FString& AvatarId) const
+TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarModelRequest(const FString& AvatarId, bool bIsPreview) const
 {
-	return MakeShared<FBaseRequest>(FEndpoints::GetAvatarPreviewEndpoint(AvatarId));
+	return MakeShared<FBaseRequest>(FEndpoints::GetAvatarModelEndpoint(AvatarId, bIsPreview));
+}
+
+TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarMetadataRequest(const FString& AvatarId) const
+{
+	return MakeShared<FBaseRequest>(FEndpoints::GetAvatarMetadataEndpoint(AvatarId));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarCreateRequest(const FString& PayloadJson) const

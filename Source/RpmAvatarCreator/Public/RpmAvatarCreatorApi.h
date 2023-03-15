@@ -21,14 +21,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Prepare Editor"))
 	void PrepareEditor(const FAvatarEditorReady& EditorReady, const FAvatarCreatorFailed& Failed);
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar"))
-	void UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId);
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar Asset"))
+	void UpdateAvatarAsset(ERpmPartnerAssetType AssetType, int64 AssetId);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar Color"))
+	void UpdateAvatarColor(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Save Avatar"))
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
-	USkeleton* TargetSkeleton;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me", Meta = (ExposeOnSpawn="true"))
+	class USkeleton* FullBodySkeleton;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me", Meta = (ExposeOnSpawn="true"))
+	class USkeleton* HalfBodySkeleton;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	FString PartnerDomain;
@@ -45,6 +51,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Filtered Partner Assets"))
 	TArray<FRpmPartnerAsset> GetFilteredPartnerAssets() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Color Palettes"))
+	TArray<FRpmColorPalette> GetColorPalettes() const;
+
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Photo"))
 	void SetProfilePhoto(UTextureRenderTarget2D* TextureRenderTarget);
 
@@ -55,17 +64,27 @@ private:
 	void OnAuthComplete(bool bSuccess);
 
 	UFUNCTION()
-	void AssetsDownloaded(bool bSuccess, FAvatarEditorReady EditorReady, FAvatarCreatorFailed Failed);
+	void ColorsDownloaded(bool bSuccess);
 
 	UFUNCTION()
-	void AvatarCreated(bool bSuccess, FAvatarEditorReady EditorReady, FAvatarCreatorFailed Failed);
+	void AssetsDownloaded(bool bSuccess);
+
+	UFUNCTION()
+	void PreviewDownloaded(bool bSuccess);
+
+	UFUNCTION()
+	void PropertiesDownloaded(bool bSuccess, bool bAvatarExists);
+
+	void ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarCreatorError Error);
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
 
 	TSharedPtr<class FRpmAuthManager> AuthManager;
 
+	TSharedPtr<class FRpmColorDownloader> ColorDownloader;
+
 	UPROPERTY()
-	class URpmPartnerAssetLoader* AssetLoader;
+	class URpmPartnerAssetDownloader* AssetDownloader;
 
 	UPROPERTY()
 	class URpmAvatarRequestHandler* AvatarRequestHandler;
@@ -73,5 +92,6 @@ private:
 	FAuthenticationCompleted OnAuthenticationCompleted;
 	FAvatarCreatorFailed OnAvatarCreatorFailed;
 
-	FPartnerAssetsDownloadCompleted OnAssetsDownloadCompleted;
+	FAvatarEditorReady OnEditorReady;
+	FAvatarCreatorFailed OnEditorFailed;
 };
