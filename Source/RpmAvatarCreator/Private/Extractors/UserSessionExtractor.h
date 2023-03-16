@@ -12,9 +12,13 @@ public:
 
 	static TOptional<FRpmUserData> ExtractUserData(const FString& JsonString);
 
+	static TOptional<FRpmUserSession> ExtractRefreshedUserSession(const FString& JsonString);
+
 	static FString MakeSendCodePayload(const FString& Email);
 
 	static FString MakeConfirmCodePayload(const FString& Code);
+
+	static FString MakeTokenRefreshPayload(const FRpmUserSession& UserSession);
 
 private:
 	static FString MakeDataPayload(const TSharedPtr<FJsonObject> DataObject);

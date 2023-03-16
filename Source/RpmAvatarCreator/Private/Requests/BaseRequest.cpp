@@ -6,6 +6,15 @@
 #include "HttpModule.h"
 #include "Interfaces/IHttpResponse.h"
 
+FBaseRequest::FBaseRequest(const FString& Url, const FString& AuthToken, const FString& RequestVerb, const FString& Payload, float Timeout)
+	: Url(Url)
+	, AuthToken(AuthToken)
+	, RequestVerb(RequestVerb)
+	, Payload(Payload)
+	, Timeout(Timeout)
+{
+}
+
 void FBaseRequest::Download()
 {
 	DownloadRequest = FHttpModule::Get().CreateRequest();
@@ -58,4 +67,14 @@ FString FBaseRequest::GetContentAsString() const
 const TArray<uint8>& FBaseRequest::GetContent() const
 {
 	return DownloadRequest->GetResponse()->GetContent();
+}
+
+int32 FBaseRequest::GetResponseCode() const
+{
+	return DownloadRequest->GetResponse()->GetResponseCode();
+}
+
+void FBaseRequest::SetAuthToken(const FString& Token)
+{
+	AuthToken = Token;
 }

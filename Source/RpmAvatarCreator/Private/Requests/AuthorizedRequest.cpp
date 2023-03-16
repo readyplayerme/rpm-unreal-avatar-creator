@@ -1,0 +1,76 @@
+// Copyright © 2023++ Ready Player Me
+
+
+#include "AuthorizedRequest.h"
+
+#include "Interfaces/IHttpResponse.h"
+#include "Extractors/UserSessionExtractor.h"
+
+FAuthorizedRequest::FAuthorizedRequest(TSharedPtr<FBaseRequest> MainRequest, const TSharedPtr<FBaseRequest> RefreshRequest, const FTokenRefreshed& TokenRefreshedDelegate)
+			: MainRequest(MainRequest)
+			, TokenRefreshRequest(RefreshRequest)
+			, TokenRefreshedDelegate(TokenRefreshedDelegate)
+{
+}
+
+void FAuthorizedRequest::MainRequestCompleted(bool bSuccess)
+{
+	if (!bSuccess && MainRequest->GetResponseCode() == EHttpResponseCodes::Denied && TokenRefreshedDelegate.IsBound())
+	{
+		TokenRefreshRequest->GetCompleteCallback().BindSP(StaticCastSharedRef<FAuthorizedRequest>(AsShared()), &FAuthorizedRequest::RefreshRequestCompleted);
+		TokenRefreshRequest->Download();
+		return;
+	}
+	(void)OnDownloadCompleted.ExecuteIfBound(bSuccess);
+	OnDownloadCompleted.Unbind();
+	TokenRefreshRequest.Reset();
+	TokenRefreshedDelegate.Unbind();
+}
+
+void FAuthorizedRequest::RefreshRequestCompleted(bool bSuccess)
+{
+	if (bSuccess)
+	{
+		const auto UserSession = FUserSessionExtractor::ExtractRefreshedUserSession(TokenRefreshRequest->GetContentAsString());
+		if (UserSession)
+		{
+			(void)TokenRefreshedDelegate.ExecuteIfBound(UserSession->Token, UserSession->RefreshToken);
+			TokenRefreshRequest.Reset();
+			TokenRefreshedDelegate.Unbind();
+			MainRequest->SetAuthToken(UserSession->Token);
+			Download();
+			return;
+		}
+	}
+	(void)OnDownloadCompleted.ExecuteIfBound(false);
+	OnDownloadCompleted.Unbind();
+	TokenRefreshRequest.Reset();
+	TokenRefreshedDelegate.Unbind();
+}
+
+void FAuthorizedRequest::Download()
+{
+	MainRequest->GetCompleteCallback().BindSP(StaticCastSharedRef<FAuthorizedRequest>(AsShared()), &FAuthorizedRequest::MainRequestCompleted);
+	MainRequest->Download();
+}
+
+void FAuthorizedRequest::CancelRequest()
+{
+	MainRequest->CancelRequest();
+	TokenRefreshRequest->CancelRequest();
+}
+
+FString FAuthorizedRequest::GetContentAsString() const
+{
+	return MainRequest->GetContentAsString();
+}
+
+const TArray<uint8>& FAuthorizedRequest::GetContent() const
+{
+	return MainRequest->GetContent();
+}
+
+int32 FAuthorizedRequest::GetResponseCode() const
+{
+	return MainRequest->GetResponseCode();
+}

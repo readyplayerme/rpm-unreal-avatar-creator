@@ -25,10 +25,10 @@ public:
 
 	void DownloadAvatarProperties(const FString& InAvatarId);
 
-	void DownloadModel(USkeleton* Skeleton, bool bAvatarExists);
+	void DownloadModel(USkeleton* Skeleton);
 
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
-	
+
 	FRpmAvatarProperties GetAvatarProperties() const;
 
 	UPROPERTY()
@@ -63,6 +63,8 @@ private:
 
 	UPROPERTY()
 	USkeleton* TargetSkeleton;
+
+	bool bAvatarExists;
 
 	FRpmAvatarProperties AvatarProperties;
 

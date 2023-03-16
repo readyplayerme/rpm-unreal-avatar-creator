@@ -29,6 +29,28 @@ TOptional<FRpmUserSession> FUserSessionExtractor::ExtractUserSession(const FStri
 	return Session;
 }
 
+TOptional<FRpmUserSession> FUserSessionExtractor::ExtractRefreshedUserSession(const FString& JsonString)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
+
+	if (!FJsonSerializer::Deserialize(Reader, JsonObject) || !JsonObject->HasField("data"))
+	{
+		return {};
+	}
+	
+	const TSharedPtr<FJsonObject> DataObject = JsonObject->GetObjectField("data");
+	if (!DataObject->HasField("refreshToken") || !DataObject->HasField("token"))
+	{
+		return {};
+	}
+
+	FRpmUserSession Session;
+	Session.RefreshToken = DataObject->GetStringField("refreshToken");
+	Session.Token = DataObject->GetStringField("token");
+	return Session;
+}
+
 TOptional<FRpmUserData> FUserSessionExtractor::ExtractUserData(const FString& JsonString)
 {
 	TSharedPtr<FJsonObject> JsonObject;
@@ -81,5 +103,13 @@ FString FUserSessionExtractor::MakeConfirmCodePayload(const FString& Code)
 {
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
 	DataObject->SetStringField("code", Code);
+	return MakeDataPayload(DataObject);
+}
+
+FString FUserSessionExtractor::MakeTokenRefreshPayload(const FRpmUserSession& UserSession)
+{
+	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
+	DataObject->SetStringField("refreshToken", UserSession.RefreshToken);
+	DataObject->SetStringField("token", UserSession.Token);
 	return MakeDataPayload(DataObject);
 }

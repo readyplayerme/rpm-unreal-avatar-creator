@@ -40,6 +40,7 @@ namespace
 
 URpmAvatarRequestHandler::URpmAvatarRequestHandler()
 	: Mesh(nullptr)
+	, bAvatarExists(false)
 {
 }
 
@@ -60,6 +61,7 @@ FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPreviewDownloadedCallb
 
 void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarId)
 {
+	bAvatarExists = true;
 	AvatarProperties.Id = InAvatarId;
 	AvatarMetadataRequest = RequestFactory->CreateAvatarMetadataRequest(AvatarProperties.Id);
 	AvatarMetadataRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPropertiesRequestCompleted);
@@ -68,6 +70,7 @@ void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarI
 
 void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properties)
 {
+	bAvatarExists = false;
 	Mesh = nullptr;
 	AvatarProperties = Properties;
 	if (AvatarProperties.Base64Image.IsEmpty())
@@ -141,7 +144,7 @@ void URpmAvatarRequestHandler::OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveC
 	(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarProperties.Id));
 }
 
-void URpmAvatarRequestHandler::DownloadModel(USkeleton* Skeleton, bool bAvatarExists)
+void URpmAvatarRequestHandler::DownloadModel(USkeleton* Skeleton)
 {
 	TargetSkeleton = Skeleton;
 	AvatarModelRequest = RequestFactory->CreateAvatarModelRequest(AvatarProperties.Id, !bAvatarExists);

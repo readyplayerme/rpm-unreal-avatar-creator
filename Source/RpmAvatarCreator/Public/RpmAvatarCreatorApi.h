@@ -76,10 +76,13 @@ private:
 	void AssetsDownloaded(bool bSuccess);
 
 	UFUNCTION()
-	void PreviewDownloaded(bool bSuccess);
+	void IconsDownloaded(bool bSuccess);
 
 	UFUNCTION()
-	void PropertiesDownloaded(bool bSuccess, bool bAvatarExists);
+	void ModelDownloaded(bool bSuccess);
+
+	UFUNCTION()
+	void PropertiesDownloaded(bool bSuccess, ERpmAvatarCreatorError Error);
 
 	void ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarCreatorError Error);
 

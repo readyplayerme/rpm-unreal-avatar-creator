@@ -4,17 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "BaseRequest.h"
+#include "AuthorizedRequest.h"
+#include "RpmAvatarCreatorTypes.h"
 
 class FRequestFactory : public FBaseRequest
 {
 public:
 	void SetPartnerDomain(const FString& Domain);
 
-	void SetAuthToken(const FString& Token);
+	void SetUserSession(const FRpmUserSession& Session);
+
+	void SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed);
 
 	TSharedPtr<FBaseRequest> CreateSendCodeRequest(const FString& PayloadJson) const;
 	TSharedPtr<FBaseRequest> CreateConfirmCodeRequest(const FString& PayloadJson) const;
-	TSharedPtr<FBaseRequest> CreateAuthRequest() const;
+	TSharedPtr<FBaseRequest> CreateTokenRefreshRequest() const;
+	TSharedPtr<FBaseRequest> CreateAuthAnonymousRequest() const;
 	TSharedPtr<FBaseRequest> CreateAssetRequest() const;
 	TSharedPtr<FBaseRequest> CreateColorRequest(const FString& AvatarId) const;
 	TSharedPtr<FBaseRequest> CreateAvatarModelRequest(const FString& AvatarId, bool bIsPreview) const;
@@ -25,7 +30,10 @@ public:
 	TSharedPtr<FBaseRequest> CreateSaveAvatarRequest(const FString& AvatarId) const;
 	TSharedPtr<FBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId) const;
 
+	TSharedPtr<FBaseRequest> CreateAuthorizedRequest(TSharedPtr<FBaseRequest> MainRequest) const;
+
 private:
 	FString PartnerDomain;
-	FString AuthToken;
+	FRpmUserSession UserSession;
+	FTokenRefreshed TokenRefreshedDelegate;
 };

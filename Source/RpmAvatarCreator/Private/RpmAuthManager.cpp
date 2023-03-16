@@ -15,6 +15,12 @@ FRpmAuthManager::FRpmAuthManager(TSharedPtr<FRequestFactory> RequestFactory)
 	LoadUserSession();
 }
 
+void FRpmAuthManager::BindTokenRefreshDelegate()
+{
+	OnTokenRefreshed.BindSP(AsShared(), &FRpmAuthManager::TokenRefreshed);
+	RequestFactory->SetTokenRefreshedDelegate(OnTokenRefreshed);
+}
+
 void FRpmAuthManager::Logout()
 {
 	UGameplayStatics::DeleteGameInSlot(USER_SESSION_SLOT, 0);
@@ -46,7 +52,7 @@ void FRpmAuthManager::AuthAnonymous(const FAuthenticationCompleted& Completed, c
 	OnAuthenticationCompleted = Completed;
 	OnAvatarCreatorFailed = Failed;
 
-	AuthRequest = RequestFactory->CreateAuthRequest();
+	AuthRequest = RequestFactory->CreateAuthAnonymousRequest();
 	AuthRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmAuthManager::AuthAnonymousCompleted);
 	AuthRequest->Download();
 }
@@ -87,7 +93,7 @@ void FRpmAuthManager::AuthAnonymousCompleted(bool bSuccess)
 		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::AuthenticationFailure);
 		return;
 	}
-	RequestFactory->SetAuthToken(UserSession->Token);
+	RequestFactory->SetUserSession(*UserSession);
 	SaveUserSession();
 	(void)OnAuthenticationCompleted.ExecuteIfBound();
 }
@@ -115,8 +121,16 @@ void FRpmAuthManager::LoadUserSession()
 	if (SaveGame)
 	{
 		UserSession = FRpmUserSession{SaveGame->bIsAnonymous, SaveGame->Id, SaveGame->Token, SaveGame->RefreshToken, SaveGame->Partner};
-		RequestFactory->SetAuthToken(UserSession->Token);
+		RequestFactory->SetUserSession(*UserSession);
 	}
+}
+
+void FRpmAuthManager::TokenRefreshed(const FString& Token, const FString& RefreshToken)
+{
+	UserSession->Token = Token;
+	UserSession->RefreshToken = RefreshToken;
+	RequestFactory->SetUserSession(*UserSession);
+	SaveUserSession();
 }
 
 TOptional<FRpmUserSession> FRpmAuthManager::GetUserSession() const
