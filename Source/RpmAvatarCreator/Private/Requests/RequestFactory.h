@@ -12,7 +12,7 @@ class FRequestFactory : public FBaseRequest
 public:
 	void SetPartnerDomain(const FString& Domain);
 
-	void SetUserSession(const FRpmUserSession& Session);
+	void SetUserData(const FRpmUserData& UserData);
 
 	void SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed);
 
@@ -34,6 +34,6 @@ public:
 
 private:
 	FString PartnerDomain;
-	FRpmUserSession UserSession;
+	FRpmUserData UserData;
 	FTokenRefreshed TokenRefreshedDelegate;
 };

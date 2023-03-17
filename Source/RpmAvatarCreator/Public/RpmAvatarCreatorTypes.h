@@ -6,43 +6,31 @@
 
 #include "RpmAvatarCreatorTypes.generated.h"
 
+USTRUCT(BlueprintType)
 struct FRpmUserData
 {
-	FString Id;
-	FString Token;
-	FString Partner;
-	FString Name;
-	FString Email;
-	FString RefreshToken;
-};
-
-// {
-// 	"data": {
-// 		"campaigns": [],
-// 		"assets": [],
-// 		"wallets": [],
-// 		"_id": "640f4d4ea452ff36c4622d0c",
-// 		"externalId": "5772c5ea-5229-430e-a77c-d1e8ec3cec1e",
-// 		"name": "yuri_901",
-// 		"email": "yuri+901@wolf3d.io",
-// 		"createdAt": "2023-03-13T16:20:30.409Z",
-// 		"token": "eyJhbGciOiJIU...",
-// 		"refreshToken": "wDzueLoeW5yFfY...",
-// 		"settings": {
-// 			"isPasswordUpdated": true,
-// 			"isEmailVerified": true,
-// 			"isEmailVerifiedOrInGracePeriod": true
-// 		}
-// 	}
-// }
-
-struct FRpmUserSession
-{
+	GENERATED_BODY()
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	bool bIsAnonymous;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Id;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Token;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString RefreshToken;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Partner;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	FString Name;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	FString Email;
 };
 
 UENUM(BlueprintType)

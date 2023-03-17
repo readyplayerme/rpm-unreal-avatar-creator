@@ -15,7 +15,8 @@ public:
 	void ConfirmActivationCode(const FString& Code, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
 	void AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
 	void Logout();
-	TOptional<FRpmUserSession> GetUserSession() const;
+	void LoadUserData();
+	TOptional<FRpmUserData> GetUserData() const;
 
 private:
 	void AuthAnonymousCompleted(bool bSuccess);
@@ -23,12 +24,10 @@ private:
 	void ConfirmActivationCodeCompleted(bool bSuccess);
 	void TokenRefreshed(const FString& Token, const FString& RefreshToken);
 
-	void SaveUserSession() const;
-	void LoadUserSession();
+	void SaveUserData() const;
 	
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TOptional<FRpmUserData> UserData;
-	TOptional<FRpmUserSession> UserSession;
 	TSharedPtr<class FBaseRequest> AuthRequest;
 
 	FAuthenticationCompleted OnAuthenticationCompleted;

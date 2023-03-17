@@ -5,20 +5,20 @@
 #include "CoreMinimal.h"
 #include "RpmAvatarCreatorTypes.h"
 
-class FUserSessionExtractor
+class FUserDataExtractor
 {
 public:
-	static TOptional<FRpmUserSession> ExtractUserSession(const FString& JsonString);
+	static TOptional<FRpmUserData> ExtractAnonymousUserData(const FString& JsonString);
 
 	static TOptional<FRpmUserData> ExtractUserData(const FString& JsonString);
 
-	static TOptional<FRpmUserSession> ExtractRefreshedUserSession(const FString& JsonString);
+	static TOptional<FRpmUserData> ExtractRefreshedUserSession(const FString& JsonString);
 
 	static FString MakeSendCodePayload(const FString& Email);
 
 	static FString MakeConfirmCodePayload(const FString& Code);
 
-	static FString MakeTokenRefreshPayload(const FRpmUserSession& UserSession);
+	static FString MakeTokenRefreshPayload(const FRpmUserData& UserData);
 
 private:
 	static FString MakeDataPayload(const TSharedPtr<FJsonObject> DataObject);

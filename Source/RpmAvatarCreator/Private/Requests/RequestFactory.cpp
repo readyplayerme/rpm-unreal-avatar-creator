@@ -5,16 +5,16 @@
 
 #include "CoreMinimal.h"
 #include "Endpoints.h"
-#include "Extractors/UserSessionExtractor.h"
+#include "Extractors/UserDataExtractor.h"
 
 void FRequestFactory::SetPartnerDomain(const FString& Domain)
 {
 	PartnerDomain = Domain;
 }
 
-void FRequestFactory::SetUserSession(const FRpmUserSession& Session)
+void FRequestFactory::SetUserData(const FRpmUserData& Data)
 {
-	UserSession = Session;
+	UserData = Data;
 }
 
 void FRequestFactory::SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed)
@@ -34,7 +34,7 @@ TSharedPtr<FBaseRequest> FRequestFactory::CreateConfirmCodeRequest(const FString
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateTokenRefreshRequest() const
 {
-	return MakeShared<FBaseRequest>(FEndpoints::GetTokenRefreshEndpoint(PartnerDomain), "", "POST", FUserSessionExtractor::MakeTokenRefreshPayload(UserSession));
+	return MakeShared<FBaseRequest>(FEndpoints::GetTokenRefreshEndpoint(PartnerDomain), "", "POST", FUserDataExtractor::MakeTokenRefreshPayload(UserData));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAuthAnonymousRequest() const
@@ -44,12 +44,12 @@ TSharedPtr<FBaseRequest> FRequestFactory::CreateAuthAnonymousRequest() const
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAssetRequest() const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetAssetEndpoint(PartnerDomain), UserSession.Token));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetAssetEndpoint(PartnerDomain), UserData.Token));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateColorRequest(const FString& AvatarId) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetColorEndpoint(AvatarId), UserSession.Token));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetColorEndpoint(AvatarId), UserData.Token));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateImageRequest(const FString& IconUrl) const
@@ -69,22 +69,22 @@ TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarMetadataRequest(const FStr
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAvatarCreateRequest(const FString& PayloadJson) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetCreateEndpoint(), UserSession.Token, "POST", PayloadJson));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetCreateEndpoint(), UserData.Token, "POST", PayloadJson));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetUpdateAvatarEndpoint(AvatarId), UserSession.Token, "PATCH", PayloadJson));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetUpdateAvatarEndpoint(AvatarId), UserData.Token, "PATCH", PayloadJson));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateSaveAvatarRequest(const FString& AvatarId) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetSaveAvatarEndpoint(AvatarId), UserSession.Token, "PUT"));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetSaveAvatarEndpoint(AvatarId), UserData.Token, "PUT"));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FString& AvatarId) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetDeleteAvatarEndpoint(AvatarId), UserSession.Token, "DELETE"));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetDeleteAvatarEndpoint(AvatarId), UserData.Token, "DELETE"));
 }
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAuthorizedRequest(TSharedPtr<FBaseRequest> MainRequest) const

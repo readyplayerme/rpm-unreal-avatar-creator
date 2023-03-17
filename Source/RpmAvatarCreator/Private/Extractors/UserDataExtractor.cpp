@@ -1,13 +1,13 @@
 // Copyright © 2023++ Ready Player Me
 
 
-#include "UserSessionExtractor.h"
+#include "UserDataExtractor.h"
 
 #include "Templates/SharedPointer.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
-TOptional<FRpmUserSession> FUserSessionExtractor::ExtractUserSession(const FString& JsonString)
+TOptional<FRpmUserData> FUserDataExtractor::ExtractAnonymousUserData(const FString& JsonString)
 {
 	TSharedPtr<FJsonObject> JsonObject;
 	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
@@ -23,13 +23,14 @@ TOptional<FRpmUserSession> FUserSessionExtractor::ExtractUserSession(const FStri
 		return {};
 	}
 
-	FRpmUserSession Session;
-	Session.Id = DataObject->GetStringField("id");
-	Session.Token = DataObject->GetStringField("token");
-	return Session;
+	FRpmUserData UserData;
+	UserData.bIsAnonymous = true;
+	UserData.Id = DataObject->GetStringField("id");
+	UserData.Token = DataObject->GetStringField("token");
+	return UserData;
 }
 
-TOptional<FRpmUserSession> FUserSessionExtractor::ExtractRefreshedUserSession(const FString& JsonString)
+TOptional<FRpmUserData> FUserDataExtractor::ExtractRefreshedUserSession(const FString& JsonString)
 {
 	TSharedPtr<FJsonObject> JsonObject;
 	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
@@ -45,13 +46,13 @@ TOptional<FRpmUserSession> FUserSessionExtractor::ExtractRefreshedUserSession(co
 		return {};
 	}
 
-	FRpmUserSession Session;
-	Session.RefreshToken = DataObject->GetStringField("refreshToken");
-	Session.Token = DataObject->GetStringField("token");
-	return Session;
+	FRpmUserData UserData;
+	UserData.RefreshToken = DataObject->GetStringField("refreshToken");
+	UserData.Token = DataObject->GetStringField("token");
+	return UserData;
 }
 
-TOptional<FRpmUserData> FUserSessionExtractor::ExtractUserData(const FString& JsonString)
+TOptional<FRpmUserData> FUserDataExtractor::ExtractUserData(const FString& JsonString)
 {
 	TSharedPtr<FJsonObject> JsonObject;
 	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
@@ -67,6 +68,7 @@ TOptional<FRpmUserData> FUserSessionExtractor::ExtractUserData(const FString& Js
 	}
 
 	FRpmUserData UserData;
+	UserData.bIsAnonymous = false;
 	UserData.Id = DataObject->GetStringField("_id");
 	UserData.Name = DataObject->GetStringField("name");
 	UserData.Email = DataObject->GetStringField("email");
@@ -75,7 +77,7 @@ TOptional<FRpmUserData> FUserSessionExtractor::ExtractUserData(const FString& Js
 	return UserData;
 }
 
-FString FUserSessionExtractor::MakeDataPayload(const TSharedPtr<FJsonObject> DataObject)
+FString FUserDataExtractor::MakeDataPayload(const TSharedPtr<FJsonObject> DataObject)
 {
 	FString OutputJsonString;
 
@@ -91,7 +93,7 @@ FString FUserSessionExtractor::MakeDataPayload(const TSharedPtr<FJsonObject> Dat
 	return OutputJsonString;
 }
 
-FString FUserSessionExtractor::MakeSendCodePayload(const FString& Email)
+FString FUserDataExtractor::MakeSendCodePayload(const FString& Email)
 {
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
 	DataObject->SetStringField("email", Email);
@@ -99,17 +101,17 @@ FString FUserSessionExtractor::MakeSendCodePayload(const FString& Email)
 	return MakeDataPayload(DataObject);
 }
 
-FString FUserSessionExtractor::MakeConfirmCodePayload(const FString& Code)
+FString FUserDataExtractor::MakeConfirmCodePayload(const FString& Code)
 {
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
 	DataObject->SetStringField("code", Code);
 	return MakeDataPayload(DataObject);
 }
 
-FString FUserSessionExtractor::MakeTokenRefreshPayload(const FRpmUserSession& UserSession)
+FString FUserDataExtractor::MakeTokenRefreshPayload(const FRpmUserData& UserData)
 {
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
-	DataObject->SetStringField("refreshToken", UserSession.RefreshToken);
-	DataObject->SetStringField("token", UserSession.Token);
+	DataObject->SetStringField("refreshToken", UserData.RefreshToken);
+	DataObject->SetStringField("token", UserData.Token);
 	return MakeDataPayload(DataObject);
 }

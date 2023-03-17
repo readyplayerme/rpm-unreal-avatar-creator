@@ -31,6 +31,7 @@ void URpmAvatarCreatorApi::SetPartnerDomain(const FString& PartnerDomain)
 {
 	AvatarProperties.Partner = PartnerDomain;
 	RequestFactory->SetPartnerDomain(PartnerDomain);
+	AuthManager->LoadUserData();
 }
 
 void URpmAvatarCreatorApi::SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded)
@@ -49,7 +50,7 @@ void URpmAvatarCreatorApi::SetProfilePhoto(UTextureRenderTarget2D* TextureRender
 
 bool URpmAvatarCreatorApi::IsUserAuthenticated() const
 {
-	return AuthManager->GetUserSession().IsSet();
+	return AuthManager->GetUserData().IsSet();
 }
 
 void URpmAvatarCreatorApi::AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)

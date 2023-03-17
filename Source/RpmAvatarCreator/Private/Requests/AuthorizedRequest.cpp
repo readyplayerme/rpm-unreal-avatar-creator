@@ -4,7 +4,7 @@
 #include "AuthorizedRequest.h"
 
 #include "Interfaces/IHttpResponse.h"
-#include "Extractors/UserSessionExtractor.h"
+#include "Extractors/UserDataExtractor.h"
 
 FAuthorizedRequest::FAuthorizedRequest(TSharedPtr<FBaseRequest> MainRequest, const TSharedPtr<FBaseRequest> RefreshRequest, const FTokenRefreshed& TokenRefreshedDelegate)
 			: MainRequest(MainRequest)
@@ -31,7 +31,7 @@ void FAuthorizedRequest::RefreshRequestCompleted(bool bSuccess)
 {
 	if (bSuccess)
 	{
-		const auto UserSession = FUserSessionExtractor::ExtractRefreshedUserSession(TokenRefreshRequest->GetContentAsString());
+		const auto UserSession = FUserDataExtractor::ExtractRefreshedUserSession(TokenRefreshRequest->GetContentAsString());
 		if (UserSession)
 		{
 			(void)TokenRefreshedDelegate.ExecuteIfBound(UserSession->Token, UserSession->RefreshToken);
