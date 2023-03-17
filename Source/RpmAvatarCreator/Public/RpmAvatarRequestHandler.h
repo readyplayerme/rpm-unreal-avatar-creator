@@ -65,6 +65,7 @@ private:
 	USkeleton* TargetSkeleton;
 
 	bool bAvatarExists;
+	bool bIsExistingAvatarUnchanged;
 
 	FRpmAvatarProperties AvatarProperties;
 

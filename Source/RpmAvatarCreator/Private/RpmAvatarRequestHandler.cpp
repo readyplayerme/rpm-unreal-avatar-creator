@@ -41,6 +41,7 @@ namespace
 URpmAvatarRequestHandler::URpmAvatarRequestHandler()
 	: Mesh(nullptr)
 	, bAvatarExists(false)
+	, bIsExistingAvatarUnchanged(false)
 {
 }
 
@@ -62,6 +63,7 @@ FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPreviewDownloadedCallb
 void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarId)
 {
 	bAvatarExists = true;
+	bIsExistingAvatarUnchanged = bAvatarExists;
 	AvatarProperties.Id = InAvatarId;
 	AvatarMetadataRequest = RequestFactory->CreateAvatarMetadataRequest(AvatarProperties.Id);
 	AvatarMetadataRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPropertiesRequestCompleted);
@@ -105,6 +107,7 @@ void URpmAvatarRequestHandler::UpdateAvatar(ERpmPartnerAssetColor AssetColor, in
 
 void URpmAvatarRequestHandler::UpdateAvatar(const FString& Payload)
 {
+	bIsExistingAvatarUnchanged = false;
 	if (UpdateAvatarRequest)
 	{
 		UpdateAvatarRequest->GetCompleteCallback().Unbind();
@@ -129,6 +132,10 @@ void URpmAvatarRequestHandler::OnUpdateAvatarCompleted(bool bSuccess)
 
 void URpmAvatarRequestHandler::SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed)
 {
+	if (bIsExistingAvatarUnchanged)
+	{
+		OnSaveAvatarCompleted(true, AvatarSaveCompleted, Failed);
+	}
 	SaveAvatarRequest = RequestFactory->CreateSaveAvatarRequest(AvatarProperties.Id);
 	SaveAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnSaveAvatarCompleted, AvatarSaveCompleted, Failed);
 	SaveAvatarRequest->Download();
