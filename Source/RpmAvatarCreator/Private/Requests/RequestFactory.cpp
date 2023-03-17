@@ -89,5 +89,9 @@ TSharedPtr<FBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FStrin
 
 TSharedPtr<FBaseRequest> FRequestFactory::CreateAuthorizedRequest(TSharedPtr<FBaseRequest> MainRequest) const
 {
+	if (UserData.bIsAnonymous)
+	{
+		return MainRequest;
+	}
 	return MakeShared<FAuthorizedRequest>(MainRequest, CreateTokenRefreshRequest(), TokenRefreshedDelegate);
 }

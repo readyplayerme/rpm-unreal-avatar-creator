@@ -64,6 +64,7 @@ void FRpmAuthManager::ConfirmActivationCodeCompleted(bool bSuccess)
 		return;
 	}
 	UserData = FUserDataExtractor::ExtractUserData(AuthRequest->GetContentAsString());
+	RequestFactory->SetUserData(*UserData);
 	SaveUserData();
 	(void)OnAuthenticationCompleted.ExecuteIfBound();
 }
