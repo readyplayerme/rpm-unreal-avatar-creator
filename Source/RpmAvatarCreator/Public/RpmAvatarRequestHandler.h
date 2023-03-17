@@ -73,9 +73,9 @@ private:
 	FBaseRequestCompleted OnAvatarPreviewDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
-	TSharedPtr<class FBaseRequest> AvatarMetadataRequest;
-	TSharedPtr<class FBaseRequest> CreateAvatarRequest;
-	TSharedPtr<class FBaseRequest> UpdateAvatarRequest;
-	TSharedPtr<class FBaseRequest> SaveAvatarRequest;
-	TSharedPtr<class FBaseRequest> AvatarModelRequest;
+	TSharedPtr<class IBaseRequest> AvatarMetadataRequest;
+	TSharedPtr<class IBaseRequest> CreateAvatarRequest;
+	TSharedPtr<class IBaseRequest> UpdateAvatarRequest;
+	TSharedPtr<class IBaseRequest> SaveAvatarRequest;
+	TSharedPtr<class IBaseRequest> AvatarModelRequest;
 };

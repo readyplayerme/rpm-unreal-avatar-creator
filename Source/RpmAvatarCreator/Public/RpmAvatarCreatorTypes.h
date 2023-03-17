@@ -31,6 +31,11 @@ struct FRpmUserData
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Email;
+
+	FRpmUserData()
+	{
+		bIsAnonymous = false;
+	}
 };
 
 UENUM(BlueprintType)

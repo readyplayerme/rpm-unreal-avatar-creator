@@ -63,6 +63,7 @@ FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPreviewDownloadedCallb
 void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarId)
 {
 	bAvatarExists = true;
+	//TODO: Fix the case when the item is selected in the UI but the Update request fails.
 	bIsExistingAvatarUnchanged = bAvatarExists;
 	AvatarProperties.Id = InAvatarId;
 	AvatarMetadataRequest = RequestFactory->CreateAvatarMetadataRequest(AvatarProperties.Id);

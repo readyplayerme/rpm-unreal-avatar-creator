@@ -4,25 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/IHttpRequest.h"
+#include "IBaseRequest.h"
 
-DECLARE_DELEGATE_OneParam(FFileDownloadCompleted, bool /*bSuccess*/);
-
-class FBaseRequest : public TSharedFromThis<FBaseRequest>
+class FBaseRequest : public IBaseRequest, public TSharedFromThis<FBaseRequest>
 {
 public:
-	virtual ~FBaseRequest() = default;
 	FBaseRequest() = default;
 	FBaseRequest(const FString& Url, const FString& AuthToken = "", const FString& RequestVerb = "GET", const FString& Payload = "", float Timeout = -1.f);
 
-	virtual void Download();
-	virtual void CancelRequest();
+	virtual void Download() override;
+	virtual void CancelRequest() override;
 
-	virtual FFileDownloadCompleted& GetCompleteCallback();
+	virtual FFileDownloadCompleted& GetCompleteCallback() override;
 
-	virtual FString GetContentAsString() const;
-	virtual const TArray<uint8>& GetContent() const;
-	virtual int32 GetResponseCode() const;
-	virtual void SetAuthToken(const FString& Token);
+	virtual FString GetContentAsString() const override;
+	virtual const TArray<uint8>& GetContent() const override;
+	virtual int32 GetResponseCode() const override;
+	virtual void SetAuthToken(const FString& Token) override;
 
 protected:
 	virtual void OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);

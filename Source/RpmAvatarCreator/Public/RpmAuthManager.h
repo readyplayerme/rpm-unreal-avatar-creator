@@ -28,7 +28,7 @@ private:
 	
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TOptional<FRpmUserData> UserData;
-	TSharedPtr<class FBaseRequest> AuthRequest;
+	TSharedPtr<class IBaseRequest> AuthRequest;
 
 	FAuthenticationCompleted OnAuthenticationCompleted;
 	FAvatarCreatorFailed OnAvatarCreatorFailed;

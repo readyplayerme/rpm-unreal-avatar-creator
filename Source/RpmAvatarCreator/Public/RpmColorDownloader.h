@@ -23,5 +23,5 @@ private:
 private:
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TArray<FRpmColorPalette> Colors;
-	TSharedPtr<class FBaseRequest> ColorRequest;
+	TSharedPtr<class IBaseRequest> ColorRequest;
 };

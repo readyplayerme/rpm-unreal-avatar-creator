@@ -42,6 +42,6 @@ private:
 	FBaseRequestCompleted OnIconsDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
-	TSharedPtr<class FBaseRequest> AssetRequest;
-	TMap<FString, TSharedPtr<class FBaseRequest>> IconRequests;
+	TSharedPtr<class IBaseRequest> AssetRequest;
+	TMap<FString, TSharedPtr<class IBaseRequest>> IconRequests;
 };

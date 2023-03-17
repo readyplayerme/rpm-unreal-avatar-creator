@@ -6,7 +6,7 @@
 #include "Interfaces/IHttpResponse.h"
 #include "Extractors/UserDataExtractor.h"
 
-FAuthorizedRequest::FAuthorizedRequest(TSharedPtr<FBaseRequest> MainRequest, const TSharedPtr<FBaseRequest> RefreshRequest, const FTokenRefreshed& TokenRefreshedDelegate)
+FAuthorizedRequest::FAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest, const TSharedPtr<IBaseRequest> RefreshRequest, const FTokenRefreshed& TokenRefreshedDelegate)
 			: MainRequest(MainRequest)
 			, TokenRefreshRequest(RefreshRequest)
 			, TokenRefreshedDelegate(TokenRefreshedDelegate)
@@ -17,7 +17,7 @@ void FAuthorizedRequest::MainRequestCompleted(bool bSuccess)
 {
 	if (!bSuccess && MainRequest->GetResponseCode() == EHttpResponseCodes::Denied && TokenRefreshedDelegate.IsBound())
 	{
-		TokenRefreshRequest->GetCompleteCallback().BindSP(StaticCastSharedRef<FAuthorizedRequest>(AsShared()), &FAuthorizedRequest::RefreshRequestCompleted);
+		TokenRefreshRequest->GetCompleteCallback().BindSP(AsShared(), &FAuthorizedRequest::RefreshRequestCompleted);
 		TokenRefreshRequest->Download();
 		return;
 	}
@@ -48,9 +48,14 @@ void FAuthorizedRequest::RefreshRequestCompleted(bool bSuccess)
 	TokenRefreshedDelegate.Unbind();
 }
 
+FFileDownloadCompleted& FAuthorizedRequest::GetCompleteCallback()
+{
+	return OnDownloadCompleted;
+}
+
 void FAuthorizedRequest::Download()
 {
-	MainRequest->GetCompleteCallback().BindSP(StaticCastSharedRef<FAuthorizedRequest>(AsShared()), &FAuthorizedRequest::MainRequestCompleted);
+	MainRequest->GetCompleteCallback().BindSP(AsShared(), &FAuthorizedRequest::MainRequestCompleted);
 	MainRequest->Download();
 }
 
