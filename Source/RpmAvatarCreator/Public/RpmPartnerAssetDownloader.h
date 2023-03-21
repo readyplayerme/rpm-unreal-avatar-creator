@@ -26,6 +26,8 @@ public:
 
 	FBaseRequestCompleted& GetPartnerAssetsDownloadCallback();
 
+	FBaseRequestCompleted& GetIconsDownloadCallback();
+
 	bool AreAssetsReady() const;
 
 private:

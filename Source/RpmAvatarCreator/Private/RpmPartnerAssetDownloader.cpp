@@ -45,6 +45,11 @@ FBaseRequestCompleted& URpmPartnerAssetDownloader::GetPartnerAssetsDownloadCallb
 	return OnPartnerAssetsDownloaded;
 }
 
+FBaseRequestCompleted& URpmPartnerAssetDownloader::GetIconsDownloadCallback()
+{
+	return OnIconsDownloaded;
+}
+
 void URpmPartnerAssetDownloader::OnAssetsDownloadCompleted(bool bSuccess)
 {
 	if (bSuccess)

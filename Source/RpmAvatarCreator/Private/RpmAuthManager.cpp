@@ -24,6 +24,7 @@ void FRpmAuthManager::Logout()
 {
 	UGameplayStatics::DeleteGameInSlot(USER_DATA_SLOT, 0);
 	UserData.Reset();
+	RequestFactory->SetUserData({});
 }
 
 void FRpmAuthManager::SendActivationCode(const FString& Email, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)

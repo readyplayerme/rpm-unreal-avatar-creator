@@ -53,6 +53,12 @@ bool URpmAvatarCreatorApi::IsUserAuthenticated() const
 	return AuthManager->GetUserData().IsSet();
 }
 
+FRpmUserData URpmAvatarCreatorApi::GetUserData() const
+{
+	auto UserData = AuthManager->GetUserData();
+	return UserData ? *UserData : FRpmUserData{};
+}
+
 void URpmAvatarCreatorApi::AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
 {
 	AuthManager->AuthAnonymous(Completed, Failed);
@@ -66,6 +72,11 @@ void URpmAvatarCreatorApi::SendActivationCode(const FString& Email, const FAuthe
 void URpmAvatarCreatorApi::ConfirmActivationCode(const FString& Code, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
 {
 	AuthManager->ConfirmActivationCode(Code, Completed, Failed);
+}
+
+void URpmAvatarCreatorApi::LogOut()
+{
+	AuthManager->Logout();
 }
 
 void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess, ERpmAvatarCreatorError Error)
@@ -132,7 +143,7 @@ void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess)
 		ExecuteEditorReadyCallback(false, ERpmAvatarCreatorError::AssetDownloadFailure);
 		return;
 	}
-	AssetDownloader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::IconsDownloaded);
+	AssetDownloader->GetIconsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::IconsDownloaded);
 	AssetDownloader->DownloadIcons(AvatarProperties.BodyType, AvatarProperties.Gender);
 
 	ColorDownloader->GetCompleteCallback().BindUObject(this, &URpmAvatarCreatorApi::ColorsDownloaded);
