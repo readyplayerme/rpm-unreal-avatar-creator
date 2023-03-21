@@ -19,7 +19,4 @@ public:
 	static FString MakeConfirmCodePayload(const FString& Code);
 
 	static FString MakeTokenRefreshPayload(const FRpmUserData& UserData);
-
-private:
-	static FString MakeDataPayload(const TSharedPtr<FJsonObject> DataObject);
 };

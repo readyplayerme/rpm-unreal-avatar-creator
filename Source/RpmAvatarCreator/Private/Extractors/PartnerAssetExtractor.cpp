@@ -55,7 +55,7 @@ TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& Js
 
 	for (const auto& Item : COLOR_TO_STRING_MAP)
 	{
-		if (DataObject->HasField(Item.Value))
+		if (DataObject->HasTypedField<EJson::Array>(Item.Value))
 		{
 			TArray<FColor> ColorArray;
 			for (const auto ColorItem : DataObject->GetArrayField(Item.Value))
@@ -86,7 +86,7 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 	{
 		FRpmPartnerAsset Asset;
 		const auto JsonObject = JsonValue->AsObject();
-		if (JsonObject->HasField("assetType"))
+		if (JsonObject->HasTypedField<EJson::String>("assetType"))
 		{
 			const FString AssetTypeStr = JsonObject->GetStringField("assetType");
 			if (!STRING_TO_ASSET_TYPES_MAP.Contains(AssetTypeStr))
@@ -99,33 +99,33 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 		{
 			Asset.Id = JsonObject->GetIntegerField("id");
 		}
-		if (JsonObject->HasField("name"))
+		if (JsonObject->HasTypedField<EJson::String>("name"))
 		{
 			Asset.Name = JsonObject->GetStringField("name");
 		}
-		if (JsonObject->HasField("gender"))
+		if (JsonObject->HasTypedField<EJson::String>("gender"))
 		{
 			Asset.Gender = FPayloadExtractor::GetGenderFromString(JsonObject->GetStringField("gender"));
 		}
-		if (JsonObject->HasField("icon"))
+		if (JsonObject->HasTypedField<EJson::String>("icon"))
 		{
 			Asset.Icon = JsonObject->GetStringField("icon");
 		}
-		if (Asset.AssetType == ERpmPartnerAssetType::EyeColor && JsonObject->HasField("mask"))
+		if (Asset.AssetType == ERpmPartnerAssetType::EyeColor && JsonObject->HasTypedField<EJson::String>("mask"))
 		{
 			Asset.Icon = JsonObject->GetStringField("mask");
 		}
-		if (JsonObject->HasField("model"))
+		if (JsonObject->HasTypedField<EJson::String>("model"))
 		{
 			Asset.Model = JsonObject->GetStringField("model");
 		}
-		if (JsonObject->HasField("badgeLogo") && JsonObject->GetObjectField("badgeLogo")->HasField("responsiveImage"))
+		if (JsonObject->HasTypedField<EJson::Object>("badgeLogo"))
 		{
 			const auto BadgeLogoJson = JsonObject->GetObjectField("badgeLogo");
-			if (BadgeLogoJson->HasField("responsiveImage"))
+			if (BadgeLogoJson->HasTypedField<EJson::Object>("responsiveImage"))
 			{
 				const auto ResponsiveImageJson = BadgeLogoJson->GetObjectField("responsiveImage");
-				if (ResponsiveImageJson->HasField("src"))
+				if (ResponsiveImageJson->HasTypedField<EJson::String>("src"))
 				{
 					Asset.Badge = ResponsiveImageJson->GetStringField("src");
 				}

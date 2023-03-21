@@ -29,6 +29,7 @@ namespace
 	{
 		return
 		{
+			{ERpmPartnerAssetType::Glasses, 0},
 			{ERpmPartnerAssetType::EyeColor, 9781796},
 			{ERpmPartnerAssetType::HairStyle, 23368535},
 			{ERpmPartnerAssetType::EyebrowStyle, 41308196},
