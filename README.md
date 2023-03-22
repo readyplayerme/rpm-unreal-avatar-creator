@@ -31,7 +31,7 @@ There are three ways you can add the **RpmAvatarCreator** plugin to your project
 - To add the plugin to your project as a submodules, run the following command in the terminal from your project folder. This is preferred way of setting up the plugin.
 
   ```
-   git submodule add --name RpmAvatarCreator -- https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator
+   git submodule add --name Plugins/RpmAvatarCreator -- https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator
   ```
 
 - To clone the plugin into your project, run the following command in the terminal from your project folder.
