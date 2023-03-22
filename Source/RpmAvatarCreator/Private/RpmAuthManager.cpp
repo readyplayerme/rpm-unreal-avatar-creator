@@ -23,7 +23,7 @@ void FRpmAuthManager::BindTokenRefreshDelegate()
 void FRpmAuthManager::Logout()
 {
 	UGameplayStatics::DeleteGameInSlot(USER_DATA_SLOT, 0);
-	UserData.Reset();
+	UserData = {};
 	RequestFactory->SetUserData({});
 }
 
@@ -65,7 +65,7 @@ void FRpmAuthManager::ConfirmActivationCodeCompleted(bool bSuccess)
 		return;
 	}
 	UserData = FUserDataExtractor::ExtractUserData(AuthRequest->GetContentAsString());
-	RequestFactory->SetUserData(*UserData);
+	RequestFactory->SetUserData(UserData);
 	SaveUserData();
 	(void)OnAuthenticationCompleted.ExecuteIfBound();
 }
@@ -86,14 +86,14 @@ void FRpmAuthManager::AuthAnonymousCompleted(bool bSuccess)
 	{
 		UserData = FUserDataExtractor::ExtractAnonymousUserData(AuthRequest->GetContentAsString());
 	}
-	bSuccess &= UserData.IsSet();
+	bSuccess &= UserData.bIsAuthenticated;
 
 	if (!bSuccess)
 	{
 		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::AuthenticationFailure);
 		return;
 	}
-	RequestFactory->SetUserData(*UserData);
+	RequestFactory->SetUserData(UserData);
 	SaveUserData();
 	(void)OnAuthenticationCompleted.ExecuteIfBound();
 }
@@ -103,7 +103,7 @@ void FRpmAuthManager::SaveUserData() const
 	URpmUserDataSaveGame* SaveGame = Cast<URpmUserDataSaveGame>(UGameplayStatics::CreateSaveGameObject(URpmUserDataSaveGame::StaticClass()));
 	if (SaveGame)
 	{
-		SaveGame->UserData = *UserData;
+		SaveGame->UserData = UserData;
 		if (!UGameplayStatics::SaveGameToSlot(SaveGame, USER_DATA_SLOT, 0))
 		{
 			UE_LOG(LogRpmAvatarCreator, Warning, TEXT("Failed to save user data"));
@@ -117,19 +117,19 @@ void FRpmAuthManager::LoadUserData()
 	if (SaveGame)
 	{
 		UserData = SaveGame->UserData;
-		RequestFactory->SetUserData(*UserData);
+		RequestFactory->SetUserData(UserData);
 	}
 }
 
 void FRpmAuthManager::TokenRefreshed(const FString& Token, const FString& RefreshToken)
 {
-	UserData->Token = Token;
-	UserData->RefreshToken = RefreshToken;
-	RequestFactory->SetUserData(*UserData);
+	UserData.Token = Token;
+	UserData.RefreshToken = RefreshToken;
+	RequestFactory->SetUserData(UserData);
 	SaveUserData();
 }
 
-TOptional<FRpmUserData> FRpmAuthManager::GetUserData() const
+FRpmUserData FRpmAuthManager::GetUserData() const
 {
 	return UserData;
 }

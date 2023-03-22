@@ -16,7 +16,7 @@ public:
 	void AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
 	void Logout();
 	void LoadUserData();
-	TOptional<FRpmUserData> GetUserData() const;
+	FRpmUserData GetUserData() const;
 
 private:
 	void AuthAnonymousCompleted(bool bSuccess);
@@ -27,7 +27,7 @@ private:
 	void SaveUserData() const;
 	
 	TSharedPtr<class FRequestFactory> RequestFactory;
-	TOptional<FRpmUserData> UserData;
+	FRpmUserData UserData;
 	TSharedPtr<class IBaseRequest> AuthRequest;
 
 	FAuthenticationCompleted OnAuthenticationCompleted;

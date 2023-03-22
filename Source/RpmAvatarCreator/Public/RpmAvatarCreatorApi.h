@@ -21,9 +21,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Preview Downloaded Delegate"))
 	void SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded);
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Is User Authenticated"))
-	bool IsUserAuthenticated() const;
-
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get User Data"))
 	FRpmUserData GetUserData() const;
 

@@ -48,15 +48,9 @@ void URpmAvatarCreatorApi::SetProfilePhoto(UTextureRenderTarget2D* TextureRender
 	}
 }
 
-bool URpmAvatarCreatorApi::IsUserAuthenticated() const
-{
-	return AuthManager->GetUserData().IsSet();
-}
-
 FRpmUserData URpmAvatarCreatorApi::GetUserData() const
 {
-	auto UserData = AuthManager->GetUserData();
-	return UserData ? *UserData : FRpmUserData{};
+	return AuthManager->GetUserData();
 }
 
 void URpmAvatarCreatorApi::AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)

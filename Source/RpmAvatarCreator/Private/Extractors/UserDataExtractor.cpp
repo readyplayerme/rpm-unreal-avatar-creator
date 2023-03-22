@@ -47,7 +47,7 @@ namespace
 	}
 }
 
-TOptional<FRpmUserData> FUserDataExtractor::ExtractAnonymousUserData(const FString& JsonString)
+FRpmUserData FUserDataExtractor::ExtractAnonymousUserData(const FString& JsonString)
 {
 	if (const TSharedPtr<FJsonObject> DataObject = ExtractDataObject(JsonString))
 	{
@@ -57,7 +57,8 @@ TOptional<FRpmUserData> FUserDataExtractor::ExtractAnonymousUserData(const FStri
 		}
 
 		FRpmUserData UserData;
-		UserData.bIsAnonymous = true;
+		UserData.bIsAuthenticated = true;
+		UserData.bIsExistingUser = false;
 		UserData.Id = DataObject->GetStringField(JSON_FIELD_ID);
 		UserData.Token = DataObject->GetStringField(JSON_FIELD_TOKEN);
 		return UserData;
@@ -65,7 +66,7 @@ TOptional<FRpmUserData> FUserDataExtractor::ExtractAnonymousUserData(const FStri
 	return {};
 }
 
-TOptional<FRpmUserData> FUserDataExtractor::ExtractRefreshedUserSession(const FString& JsonString)
+FRpmUserData FUserDataExtractor::ExtractRefreshedUserSession(const FString& JsonString)
 {
 	if (const TSharedPtr<FJsonObject> DataObject = ExtractDataObject(JsonString))
 	{
@@ -75,6 +76,7 @@ TOptional<FRpmUserData> FUserDataExtractor::ExtractRefreshedUserSession(const FS
 		}
 
 		FRpmUserData UserData;
+		UserData.bIsAuthenticated = true;
 		UserData.RefreshToken = DataObject->GetStringField(JSON_FIELD_REFRESH_TOKEN);
 		UserData.Token = DataObject->GetStringField(JSON_FIELD_TOKEN);
 		return UserData;
@@ -82,7 +84,7 @@ TOptional<FRpmUserData> FUserDataExtractor::ExtractRefreshedUserSession(const FS
 	return {};
 }
 
-TOptional<FRpmUserData> FUserDataExtractor::ExtractUserData(const FString& JsonString)
+FRpmUserData FUserDataExtractor::ExtractUserData(const FString& JsonString)
 {
 	if (const TSharedPtr<FJsonObject> DataObject = ExtractDataObject(JsonString))
 	{
@@ -92,7 +94,8 @@ TOptional<FRpmUserData> FUserDataExtractor::ExtractUserData(const FString& JsonS
 		}
 
 		FRpmUserData UserData;
-		UserData.bIsAnonymous = false;
+		UserData.bIsAuthenticated = true;
+		UserData.bIsExistingUser = true;
 		UserData.Id = DataObject->GetStringField("_id");
 		UserData.Name = DataObject->GetStringField(JSON_FIELD_NAME);
 		UserData.Email = DataObject->GetStringField(JSON_FIELD_EMAIL);

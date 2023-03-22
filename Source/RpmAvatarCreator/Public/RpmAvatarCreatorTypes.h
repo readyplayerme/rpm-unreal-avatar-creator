@@ -10,31 +10,35 @@ USTRUCT(BlueprintType)
 struct FRpmUserData
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
-	bool bIsAnonymous;
-	
+	bool bIsAuthenticated;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	bool bIsExistingUser;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Id;
-	
+
 	UPROPERTY()
 	FString Token;
-	
+
 	UPROPERTY()
 	FString RefreshToken;
-	
+
 	UPROPERTY()
 	FString Partner;
-	
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Name;
-	
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Email;
 
 	FRpmUserData()
 	{
-		bIsAnonymous = false;
+		bIsAuthenticated = false;
+		bIsExistingUser = false;
 	}
 };
 

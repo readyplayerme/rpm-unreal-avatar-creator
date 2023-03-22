@@ -8,11 +8,11 @@
 class FUserDataExtractor
 {
 public:
-	static TOptional<FRpmUserData> ExtractAnonymousUserData(const FString& JsonString);
+	static FRpmUserData ExtractAnonymousUserData(const FString& JsonString);
 
-	static TOptional<FRpmUserData> ExtractUserData(const FString& JsonString);
+	static FRpmUserData ExtractUserData(const FString& JsonString);
 
-	static TOptional<FRpmUserData> ExtractRefreshedUserSession(const FString& JsonString);
+	static FRpmUserData ExtractRefreshedUserSession(const FString& JsonString);
 
 	static FString MakeSendCodePayload(const FString& Email);
 

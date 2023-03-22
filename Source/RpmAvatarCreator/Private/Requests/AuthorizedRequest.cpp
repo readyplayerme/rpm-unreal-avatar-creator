@@ -31,13 +31,13 @@ void FAuthorizedRequest::RefreshRequestCompleted(bool bSuccess)
 {
 	if (bSuccess)
 	{
-		const auto UserSession = FUserDataExtractor::ExtractRefreshedUserSession(TokenRefreshRequest->GetContentAsString());
-		if (UserSession)
+		const auto UserData = FUserDataExtractor::ExtractRefreshedUserSession(TokenRefreshRequest->GetContentAsString());
+		if (UserData.bIsAuthenticated)
 		{
-			(void)TokenRefreshedDelegate.ExecuteIfBound(UserSession->Token, UserSession->RefreshToken);
+			(void)TokenRefreshedDelegate.ExecuteIfBound(UserData.Token, UserData.RefreshToken);
 			TokenRefreshRequest.Reset();
 			TokenRefreshedDelegate.Unbind();
-			MainRequest->SetAuthToken(UserSession->Token);
+			MainRequest->SetAuthToken(UserData.Token);
 			Download();
 			return;
 		}

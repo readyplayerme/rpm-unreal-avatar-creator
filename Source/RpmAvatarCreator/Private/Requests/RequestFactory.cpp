@@ -90,7 +90,7 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FStrin
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest) const
 {
-	if (UserData.bIsAnonymous)
+	if (!UserData.bIsExistingUser)
 	{
 		return MainRequest;
 	}
