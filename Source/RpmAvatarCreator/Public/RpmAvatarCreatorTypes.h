@@ -134,31 +134,48 @@ struct FRpmAvatarProperties
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Id;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Partner;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
 	EAvatarGender Gender;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
 	EAvatarBodyType BodyType;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
 	TMap<ERpmPartnerAssetColor, int32> Colors;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
 	TMap<ERpmPartnerAssetType, int64> Assets;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Base64Image;
 
 	FRpmAvatarProperties()
 	{
 		Gender = EAvatarGender::Undefined;
 		BodyType = EAvatarBodyType::Undefined;
+	}
+};
+
+USTRUCT(BlueprintType)
+struct FRpmDefaultAvatarData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	FRpmAvatarProperties Properties;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UTexture2D* Image;
+
+	FRpmDefaultAvatarData()
+	{
+		Image = nullptr;
 	}
 };
 
@@ -169,6 +186,7 @@ enum class ERpmAvatarCreatorError : uint8
 	AuthenticationFailure,
 	AssetDownloadFailure,
 	ColorDownloadFailure,
+	DefaultAvatarFailure,
 	MetadataDownloadFailure,
 	AvatarCreateFailure,
 	AvatarPreviewFailure,
@@ -182,6 +200,8 @@ DECLARE_DYNAMIC_DELEGATE(FAuthenticationCompleted);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarSaveCompleted, const FString&, Url);
 
 DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
+
+DECLARE_DYNAMIC_DELEGATE_OneParam(FDefaultAvatarsDownloadCompleted, const TArray<FRpmDefaultAvatarData>&, DefaultAvatars);
 
 DECLARE_DELEGATE_OneParam(FBaseRequestCompleted, bool);
 

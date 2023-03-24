@@ -8,6 +8,8 @@
 #include "Endpoints.h"
 #include "Extractors/UserDataExtractor.h"
 
+constexpr float IMAGE_REQUEST_TIMEOUT = 60.f;
+
 void FRequestFactory::SetPartnerDomain(const FString& Domain)
 {
 	PartnerDomain = Domain;
@@ -55,7 +57,7 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateColorRequest(const FString& Avat
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateImageRequest(const FString& IconUrl) const
 {
-	return MakeShared<FBaseRequest>(IconUrl);
+	return MakeShared<FBaseRequest>(IconUrl, "", "GET", "", IMAGE_REQUEST_TIMEOUT);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarModelRequest(const FString& AvatarId, bool bIsPreview) const

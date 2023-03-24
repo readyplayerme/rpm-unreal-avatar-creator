@@ -9,6 +9,7 @@
 #include "RpmAvatarRequestHandler.h"
 #include "Requests/RequestFactory.h"
 #include "ImageUtils.h"
+#include "RpmDefaultAvatarDownloader.h"
 #include "Serialization/BufferArchive.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Misc/Base64.h"
@@ -23,6 +24,8 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	ColorDownloader = MakeShared<FRpmColorDownloader>(RequestFactory);
 	AssetDownloader = NewObject<URpmPartnerAssetDownloader>();
 	AssetDownloader->SetRequestFactory(RequestFactory);
+	DefaultAvatarDownloader = NewObject<URpmDefaultAvatarDownloader>();
+	DefaultAvatarDownloader->SetRequestFactory(RequestFactory);
 	AvatarRequestHandler = NewObject<URpmAvatarRequestHandler>();
 	AvatarRequestHandler->SetRequestFactory(RequestFactory);
 }
@@ -165,6 +168,16 @@ void URpmAvatarCreatorApi::ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarC
 		OnEditorFailed.Clear();
 		OnEditorReady.Clear();
 	}
+}
+
+void URpmAvatarCreatorApi::SetDefaultAvatarIds(const TArray<FString>& AvatarIds)
+{
+	DefaultAvatarDownloader->SetTemplateAvatarIds(AvatarIds);
+}
+
+void URpmAvatarCreatorApi::DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
+{
+	DefaultAvatarDownloader->DownloadDefaultAvatars(AvatarProperties.BodyType, AvatarProperties.Gender, DownloadCompleted, Failed);
 }
 
 void URpmAvatarCreatorApi::UpdateAvatarAsset(ERpmPartnerAssetType AssetType, int64 AssetId)
