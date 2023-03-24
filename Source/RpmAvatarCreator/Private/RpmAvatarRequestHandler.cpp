@@ -29,6 +29,7 @@ namespace
 	{
 		return
 		{
+			{ERpmPartnerAssetType::Glasses, 0},
 			{ERpmPartnerAssetType::EyeColor, 9781796},
 			{ERpmPartnerAssetType::HairStyle, 23368535},
 			{ERpmPartnerAssetType::EyebrowStyle, 41308196},
@@ -40,13 +41,14 @@ namespace
 
 URpmAvatarRequestHandler::URpmAvatarRequestHandler()
 	: Mesh(nullptr)
+	, bAvatarExists(false)
+	, bIsExistingAvatarUnchanged(false)
 {
 }
 
-void URpmAvatarRequestHandler::Initialize(TSharedPtr<FRequestFactory> Factory, const FPreviewDownloadCompleted& PreviewDownloaded)
+void URpmAvatarRequestHandler::SetRequestFactory(TSharedPtr<class FRequestFactory> Factory)
 {
 	RequestFactory = Factory;
-	OnPreviewDownloaded = PreviewDownloaded;
 }
 
 FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPropertiesDownloadedCallback()
@@ -61,6 +63,9 @@ FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPreviewDownloadedCallb
 
 void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarId)
 {
+	bAvatarExists = true;
+	//TODO: Fix the case when the item is selected in the UI but the Update request fails.
+	bIsExistingAvatarUnchanged = bAvatarExists;
 	AvatarProperties.Id = InAvatarId;
 	AvatarMetadataRequest = RequestFactory->CreateAvatarMetadataRequest(AvatarProperties.Id);
 	AvatarMetadataRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPropertiesRequestCompleted);
@@ -69,6 +74,7 @@ void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarI
 
 void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properties)
 {
+	bAvatarExists = false;
 	Mesh = nullptr;
 	AvatarProperties = Properties;
 	if (AvatarProperties.Base64Image.IsEmpty())
@@ -103,6 +109,7 @@ void URpmAvatarRequestHandler::UpdateAvatar(ERpmPartnerAssetColor AssetColor, in
 
 void URpmAvatarRequestHandler::UpdateAvatar(const FString& Payload)
 {
+	bIsExistingAvatarUnchanged = false;
 	if (UpdateAvatarRequest)
 	{
 		UpdateAvatarRequest->GetCompleteCallback().Unbind();
@@ -127,6 +134,10 @@ void URpmAvatarRequestHandler::OnUpdateAvatarCompleted(bool bSuccess)
 
 void URpmAvatarRequestHandler::SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed)
 {
+	if (bIsExistingAvatarUnchanged)
+	{
+		OnSaveAvatarCompleted(true, AvatarSaveCompleted, Failed);
+	}
 	SaveAvatarRequest = RequestFactory->CreateSaveAvatarRequest(AvatarProperties.Id);
 	SaveAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnSaveAvatarCompleted, AvatarSaveCompleted, Failed);
 	SaveAvatarRequest->Download();
@@ -142,7 +153,7 @@ void URpmAvatarRequestHandler::OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveC
 	(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarProperties.Id));
 }
 
-void URpmAvatarRequestHandler::DownloadModel(USkeleton* Skeleton, bool bAvatarExists)
+void URpmAvatarRequestHandler::DownloadModel(USkeleton* Skeleton)
 {
 	TargetSkeleton = Skeleton;
 	AvatarModelRequest = RequestFactory->CreateAvatarModelRequest(AvatarProperties.Id, !bAvatarExists);

@@ -6,11 +6,40 @@
 
 #include "RpmAvatarCreatorTypes.generated.h"
 
-struct FRpmUserSession
+USTRUCT(BlueprintType)
+struct FRpmUserData
 {
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	bool bIsAuthenticated;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	bool bIsExistingUser;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Id;
+
+	UPROPERTY()
 	FString Token;
+
+	UPROPERTY()
+	FString RefreshToken;
+
+	UPROPERTY()
 	FString Partner;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	FString Name;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	FString Email;
+
+	FRpmUserData()
+	{
+		bIsAuthenticated = false;
+		bIsExistingUser = false;
+	}
 };
 
 UENUM(BlueprintType)
@@ -104,7 +133,6 @@ USTRUCT(BlueprintType)
 struct FRpmAvatarProperties
 {
 	GENERATED_BODY()
-	// "userId": "63b25e67f4eb12000fea504b",
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Id;
@@ -158,3 +186,5 @@ DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
 DECLARE_DELEGATE_OneParam(FBaseRequestCompleted, bool);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FPreviewDownloadCompleted, const USkeletalMesh*, SkeletalMesh);
+
+DECLARE_LOG_CATEGORY_EXTERN(LogRpmAvatarCreator, Log, All);

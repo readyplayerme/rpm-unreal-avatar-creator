@@ -8,7 +8,9 @@
 class RPMAVATARCREATOR_API FRpmColorDownloader : public TSharedFromThis<FRpmColorDownloader>
 {
 public:
-	void DownloadColors(TSharedPtr<class FRequestFactory> RequestFactory, const FString& AvatarId);
+	FRpmColorDownloader(TSharedPtr<class FRequestFactory> RequestFactory);
+
+	void DownloadColors(const FString& AvatarId);
 	TArray<FRpmColorPalette> GetColors() const;
 
 	FBaseRequestCompleted& GetCompleteCallback();
@@ -21,5 +23,5 @@ private:
 private:
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TArray<FRpmColorPalette> Colors;
-	TSharedPtr<class FBaseRequest> ColorRequest;
+	TSharedPtr<class IBaseRequest> ColorRequest;
 };

@@ -13,7 +13,11 @@ class RPMAVATARCREATOR_API URpmPartnerAssetDownloader : public UObject
 	GENERATED_BODY()
 
 public:
-	void DownloadAssets(TSharedPtr<class FRequestFactory> Factory, EAvatarBodyType BodyType, EAvatarGender Gender);
+	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
+
+	void DownloadAssets();
+
+	void DownloadIcons(EAvatarBodyType BodyType, EAvatarGender Gender);
 
 	UPROPERTY()
 	TArray<FRpmPartnerAsset> Assets;
@@ -22,11 +26,13 @@ public:
 
 	FBaseRequestCompleted& GetPartnerAssetsDownloadCallback();
 
+	FBaseRequestCompleted& GetIconsDownloadCallback();
+
 	bool AreAssetsReady() const;
 
 private:
 	UFUNCTION()
-	void OnAssetsDownloadCompleted(bool bSuccess, EAvatarBodyType BodyType, EAvatarGender Gender);
+	void OnAssetsDownloadCompleted(bool bSuccess);
 
 	UFUNCTION()
 	void OnIconDownloadCompleted(bool bSuccess, FString Icon);
@@ -34,11 +40,10 @@ private:
 	UPROPERTY()
 	TMap<FString, UTexture2D*> ImageMap;
 
-	void DownloadIcons(EAvatarBodyType BodyType, EAvatarGender Gender);
-
 	FBaseRequestCompleted OnPartnerAssetsDownloaded;
+	FBaseRequestCompleted OnIconsDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
-	TSharedPtr<class FBaseRequest> AssetRequest;
-	TMap<FString, TSharedPtr<class FBaseRequest>> IconRequests;
+	TSharedPtr<class IBaseRequest> AssetRequest;
+	TMap<FString, TSharedPtr<class IBaseRequest>> IconRequests;
 };

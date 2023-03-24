@@ -2,33 +2,134 @@
 
 
 #include "RpmAuthManager.h"
-#include "Extractors/UserSessionExtractor.h"
+#include "Extractors/UserDataExtractor.h"
 #include "Requests/RequestFactory.h"
+#include "RpmUserDataSaveGame.h"
+#include "Kismet/GameplayStatics.h"
 
-void FRpmAuthManager::AuthAnonymous(TSharedPtr<FRequestFactory> Factory)
+static const FString USER_DATA_SLOT = "RpmUserDataSlot";
+
+FRpmAuthManager::FRpmAuthManager(TSharedPtr<FRequestFactory> RequestFactory)
+	: RequestFactory(RequestFactory)
 {
-	RequestFactory = Factory;
-	AuthRequest = RequestFactory->CreateAuthRequest();
-	AuthRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmAuthManager::DownloadCompleted);
+}
+
+void FRpmAuthManager::BindTokenRefreshDelegate()
+{
+	OnTokenRefreshed.BindSP(AsShared(), &FRpmAuthManager::TokenRefreshed);
+	RequestFactory->SetTokenRefreshedDelegate(OnTokenRefreshed);
+}
+
+void FRpmAuthManager::Logout()
+{
+	UGameplayStatics::DeleteGameInSlot(USER_DATA_SLOT, 0);
+	UserData = {};
+	RequestFactory->SetUserData({});
+}
+
+void FRpmAuthManager::SendActivationCode(const FString& Email, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
+{
+	OnAuthenticationCompleted = Completed;
+	OnAvatarCreatorFailed = Failed;
+
+	AuthRequest = RequestFactory->CreateSendCodeRequest(FUserDataExtractor::MakeSendCodePayload(Email));
+	AuthRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmAuthManager::SendActivationCodeCompleted);
 	AuthRequest->Download();
 }
 
-FBaseRequestCompleted& FRpmAuthManager::GetCompleteCallback()
+void FRpmAuthManager::ConfirmActivationCode(const FString& Code, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
 {
-	return OnAuthCompleted;
+	OnAuthenticationCompleted = Completed;
+	OnAvatarCreatorFailed = Failed;
+
+	AuthRequest = RequestFactory->CreateConfirmCodeRequest(FUserDataExtractor::MakeConfirmCodePayload(Code));
+	AuthRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmAuthManager::ConfirmActivationCodeCompleted);
+	AuthRequest->Download();
 }
 
-void FRpmAuthManager::DownloadCompleted(bool bSuccess)
+void FRpmAuthManager::AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
+{
+	OnAuthenticationCompleted = Completed;
+	OnAvatarCreatorFailed = Failed;
+
+	AuthRequest = RequestFactory->CreateAuthAnonymousRequest();
+	AuthRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmAuthManager::AuthAnonymousCompleted);
+	AuthRequest->Download();
+}
+
+void FRpmAuthManager::ConfirmActivationCodeCompleted(bool bSuccess)
+{
+	if (!bSuccess)
+	{
+		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::AuthenticationFailure);
+		return;
+	}
+	UserData = FUserDataExtractor::ExtractUserData(AuthRequest->GetContentAsString());
+	RequestFactory->SetUserData(UserData);
+	SaveUserData();
+	(void)OnAuthenticationCompleted.ExecuteIfBound();
+}
+
+void FRpmAuthManager::SendActivationCodeCompleted(bool bSuccess)
+{
+	if (!bSuccess)
+	{
+		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::AuthenticationFailure);
+		return;
+	}
+	(void)OnAuthenticationCompleted.ExecuteIfBound();
+}
+
+void FRpmAuthManager::AuthAnonymousCompleted(bool bSuccess)
 {
 	if (bSuccess)
 	{
-		UserSession = FUserSessionExtractor::ExtractUserSession(AuthRequest->GetContentAsString());
+		UserData = FUserDataExtractor::ExtractAnonymousUserData(AuthRequest->GetContentAsString());
 	}
-	(void)OnAuthCompleted.ExecuteIfBound(bSuccess && UserSession.IsSet());
-	OnAuthCompleted.Unbind();
+	bSuccess &= UserData.bIsAuthenticated;
+
+	if (!bSuccess)
+	{
+		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::AuthenticationFailure);
+		return;
+	}
+	RequestFactory->SetUserData(UserData);
+	SaveUserData();
+	(void)OnAuthenticationCompleted.ExecuteIfBound();
 }
 
-TOptional<FRpmUserSession> FRpmAuthManager::GetUserSession() const
+void FRpmAuthManager::SaveUserData() const
 {
-	return UserSession;
+	URpmUserDataSaveGame* SaveGame = Cast<URpmUserDataSaveGame>(UGameplayStatics::CreateSaveGameObject(URpmUserDataSaveGame::StaticClass()));
+	if (SaveGame)
+	{
+		SaveGame->UserData = UserData;
+		if (!UGameplayStatics::SaveGameToSlot(SaveGame, USER_DATA_SLOT, 0))
+		{
+			UE_LOG(LogRpmAvatarCreator, Warning, TEXT("Failed to save user data"));
+		}
+	}
+}
+
+void FRpmAuthManager::LoadUserData()
+{
+	const URpmUserDataSaveGame* SaveGame = Cast<URpmUserDataSaveGame>(UGameplayStatics::LoadGameFromSlot(USER_DATA_SLOT, 0));
+	if (SaveGame)
+	{
+		UserData = SaveGame->UserData;
+		RequestFactory->SetUserData(UserData);
+	}
+}
+
+void FRpmAuthManager::TokenRefreshed(const FString& Token, const FString& RefreshToken)
+{
+	UserData.Token = Token;
+	UserData.RefreshToken = RefreshToken;
+	RequestFactory->SetUserData(UserData);
+	SaveUserData();
+}
+
+FRpmUserData FRpmAuthManager::GetUserData() const
+{
+	return UserData;
 }

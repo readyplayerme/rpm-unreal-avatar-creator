@@ -3,38 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Runtime/Launch/Resources/Version.h"
 #include "Interfaces/IHttpRequest.h"
+#include "IBaseRequest.h"
 
-DECLARE_DELEGATE_OneParam(FFileDownloadCompleted, bool /*bSuccess*/);
-
-class FBaseRequest : public TSharedFromThis<FBaseRequest>
+class FBaseRequest : public IBaseRequest, public TSharedFromThis<FBaseRequest>
 {
 public:
 	FBaseRequest() = default;
-	FBaseRequest(const FString& Url, const FString& AuthToken = "", const FString& RequestVerb = "GET", const FString& Payload = "", float Timeout = -1.f)
-		: Url(Url)
-		, AuthToken(AuthToken)
-		, RequestVerb(RequestVerb)
-		, Payload(Payload)
-		, Timeout(Timeout)
-	{
-	}
+	FBaseRequest(const FString& Url, const FString& AuthToken = "", const FString& RequestVerb = "GET", const FString& Payload = "", float Timeout = -1.f);
 
-	void Download();
-	void CancelRequest();
+	virtual void Download() override;
+	virtual void CancelRequest() override;
 
-	FFileDownloadCompleted& GetCompleteCallback();
+	virtual FFileDownloadCompleted& GetCompleteCallback() override;
 
-	FString GetContentAsString() const;
-	const TArray<uint8>& GetContent() const;
+	virtual FString GetContentAsString() const override;
+	virtual const TArray<uint8>& GetContent() const override;
+	virtual int32 GetResponseCode() const override;
+	virtual void SetAuthToken(const FString& Token) override;
 
-private:
-	void OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
+protected:
+	virtual void OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
 
 	FFileDownloadCompleted OnDownloadCompleted;
 
-protected:
 	FString Url;
 	FString AuthToken;
 	FString RequestVerb = "GET";

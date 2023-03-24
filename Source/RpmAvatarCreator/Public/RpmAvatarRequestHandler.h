@@ -15,7 +15,7 @@ class RPMAVATARCREATOR_API URpmAvatarRequestHandler : public UObject
 public:
 	URpmAvatarRequestHandler();
 
-	void Initialize(TSharedPtr<class FRequestFactory> RequestFactory, const FPreviewDownloadCompleted& PreviewDownloaded);
+	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
 
 	void CreateAvatar(const FRpmAvatarProperties& Properties);
 
@@ -25,10 +25,10 @@ public:
 
 	void DownloadAvatarProperties(const FString& InAvatarId);
 
-	void DownloadModel(USkeleton* Skeleton, bool bAvatarExists);
+	void DownloadModel(USkeleton* Skeleton);
 
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
-	
+
 	FRpmAvatarProperties GetAvatarProperties() const;
 
 	UPROPERTY()
@@ -64,15 +64,18 @@ private:
 	UPROPERTY()
 	USkeleton* TargetSkeleton;
 
+	bool bAvatarExists;
+	bool bIsExistingAvatarUnchanged;
+
 	FRpmAvatarProperties AvatarProperties;
 
 	FBaseRequestCompleted OnAvatarPropertiesDownloaded;
 	FBaseRequestCompleted OnAvatarPreviewDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
-	TSharedPtr<class FBaseRequest> AvatarMetadataRequest;
-	TSharedPtr<class FBaseRequest> CreateAvatarRequest;
-	TSharedPtr<class FBaseRequest> UpdateAvatarRequest;
-	TSharedPtr<class FBaseRequest> SaveAvatarRequest;
-	TSharedPtr<class FBaseRequest> AvatarModelRequest;
+	TSharedPtr<class IBaseRequest> AvatarMetadataRequest;
+	TSharedPtr<class IBaseRequest> CreateAvatarRequest;
+	TSharedPtr<class IBaseRequest> UpdateAvatarRequest;
+	TSharedPtr<class IBaseRequest> SaveAvatarRequest;
+	TSharedPtr<class IBaseRequest> AvatarModelRequest;
 };

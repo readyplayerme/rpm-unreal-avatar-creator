@@ -4,22 +4,34 @@
 
 #include "CoreMinimal.h"
 #include "RpmAvatarCreatorTypes.h"
+#include "Requests/AuthorizedRequest.h"
 
 class RPMAVATARCREATOR_API FRpmAuthManager : public TSharedFromThis<FRpmAuthManager>
 {
 public:
-	void AuthAnonymous(TSharedPtr<class FRequestFactory> RequestFactory);
-	TOptional<FRpmUserSession> GetUserSession() const;
-
-	FBaseRequestCompleted& GetCompleteCallback();
+	FRpmAuthManager(TSharedPtr<class FRequestFactory> RequestFactory);
+	void BindTokenRefreshDelegate();
+	void SendActivationCode(const FString& Email, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+	void ConfirmActivationCode(const FString& Code, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+	void AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+	void Logout();
+	void LoadUserData();
+	FRpmUserData GetUserData() const;
 
 private:
-	void DownloadCompleted(bool bSuccess);
+	void AuthAnonymousCompleted(bool bSuccess);
+	void SendActivationCodeCompleted(bool bSuccess);
+	void ConfirmActivationCodeCompleted(bool bSuccess);
+	void TokenRefreshed(const FString& Token, const FString& RefreshToken);
 
-	FBaseRequestCompleted OnAuthCompleted;
-
-private:
+	void SaveUserData() const;
+	
 	TSharedPtr<class FRequestFactory> RequestFactory;
-	TOptional<FRpmUserSession> UserSession;
-	TSharedPtr<class FBaseRequest> AuthRequest;
+	FRpmUserData UserData;
+	TSharedPtr<class IBaseRequest> AuthRequest;
+
+	FAuthenticationCompleted OnAuthenticationCompleted;
+	FAvatarCreatorFailed OnAvatarCreatorFailed;
+
+	FTokenRefreshed OnTokenRefreshed;
 };

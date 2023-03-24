@@ -3,27 +3,37 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseRequest.h"
+#include "IBaseRequest.h"
+#include "AuthorizedRequest.h"
+#include "RpmAvatarCreatorTypes.h"
 
-class FRequestFactory : public FBaseRequest
+class FRequestFactory
 {
 public:
-	FRequestFactory(const FString& Domain);
+	void SetPartnerDomain(const FString& Domain);
 
-	void SetAuthToken(const FString& Token);
+	void SetUserData(const FRpmUserData& UserData);
 
-	TSharedPtr<FBaseRequest> CreateAuthRequest() const;
-	TSharedPtr<FBaseRequest> CreateAssetRequest() const;
-	TSharedPtr<FBaseRequest> CreateColorRequest(const FString& AvatarId) const;
-	TSharedPtr<FBaseRequest> CreateAvatarModelRequest(const FString& AvatarId, bool bIsPreview) const;
-	TSharedPtr<FBaseRequest> CreateAvatarMetadataRequest(const FString& AvatarId) const;
-	TSharedPtr<FBaseRequest> CreateAvatarCreateRequest(const FString& PayloadJson) const;
-	TSharedPtr<FBaseRequest> CreateImageRequest(const FString& IconUrl) const;
-	TSharedPtr<FBaseRequest> CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const;
-	TSharedPtr<FBaseRequest> CreateSaveAvatarRequest(const FString& AvatarId) const;
-	TSharedPtr<FBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId) const;
+	void SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed);
+
+	TSharedPtr<IBaseRequest> CreateSendCodeRequest(const FString& PayloadJson) const;
+	TSharedPtr<IBaseRequest> CreateConfirmCodeRequest(const FString& PayloadJson) const;
+	TSharedPtr<IBaseRequest> CreateTokenRefreshRequest() const;
+	TSharedPtr<IBaseRequest> CreateAuthAnonymousRequest() const;
+	TSharedPtr<IBaseRequest> CreateAssetRequest() const;
+	TSharedPtr<IBaseRequest> CreateColorRequest(const FString& AvatarId) const;
+	TSharedPtr<IBaseRequest> CreateAvatarModelRequest(const FString& AvatarId, bool bIsPreview) const;
+	TSharedPtr<IBaseRequest> CreateAvatarMetadataRequest(const FString& AvatarId) const;
+	TSharedPtr<IBaseRequest> CreateAvatarCreateRequest(const FString& PayloadJson) const;
+	TSharedPtr<IBaseRequest> CreateImageRequest(const FString& IconUrl) const;
+	TSharedPtr<IBaseRequest> CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const;
+	TSharedPtr<IBaseRequest> CreateSaveAvatarRequest(const FString& AvatarId) const;
+	TSharedPtr<IBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId) const;
+
+	TSharedPtr<IBaseRequest> CreateAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest) const;
 
 private:
-	const FString PartnerDomain;
-	FString AuthToken;
+	FString PartnerDomain;
+	FRpmUserData UserData;
+	FTokenRefreshed TokenRefreshedDelegate;
 };

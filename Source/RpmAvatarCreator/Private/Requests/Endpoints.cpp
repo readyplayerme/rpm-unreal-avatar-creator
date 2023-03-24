@@ -7,9 +7,24 @@ static const TCHAR* API_ENDPOINT = TEXT("https://{0}.readyplayer.me/api{1}");
 static const TCHAR* AVATAR_API_V2_ENDPOINT = TEXT("https://api.readyplayer.me/v2/avatars");
 static const TCHAR* REQUEST_OPTIMIZATION_PARAMS = TEXT("morphTargets=none&textureAtlas=none&textureSizeLimit=512&useHands=false");
 
-FString FEndpoints::GetAuthEndpoint(const FString& Subdomain)
+FString FEndpoints::GetAuthAnonymousEndpoint(const FString& Subdomain)
 {
 	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/users")});
+}
+
+FString FEndpoints::GetSendCodeEndpoint(const FString& Subdomain)
+{
+	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/auth/start")});
+}
+
+FString FEndpoints::GetConfirmCodeEndpoint(const FString& Subdomain)
+{
+	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/auth/login")});
+}
+
+FString FEndpoints::GetTokenRefreshEndpoint(const FString& Subdomain)
+{
+	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/auth/refresh")});
 }
 
 FString FEndpoints::GetAssetEndpoint(const FString& Subdomain)

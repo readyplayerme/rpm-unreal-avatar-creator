@@ -18,19 +18,16 @@ namespace
 	}
 }
 
-void URpmPartnerAssetDownloader::DownloadAssets(TSharedPtr<FRequestFactory> Factory, EAvatarBodyType BodyType, EAvatarGender Gender)
+void URpmPartnerAssetDownloader::SetRequestFactory(TSharedPtr<class FRequestFactory> Factory)
 {
-	if (Assets.Num() != 0)
-	{
-		DownloadIcons(BodyType, Gender);
-	}
-	else
-	{
-		RequestFactory = Factory;
-		AssetRequest = RequestFactory->CreateAssetRequest();
-		AssetRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnAssetsDownloadCompleted, BodyType, Gender);
-		AssetRequest->Download();
-	}
+	RequestFactory = Factory;
+}
+
+void URpmPartnerAssetDownloader::DownloadAssets()
+{
+	AssetRequest = RequestFactory->CreateAssetRequest();
+	AssetRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnAssetsDownloadCompleted);
+	AssetRequest->Download();
 }
 
 TArray<FRpmPartnerAsset> URpmPartnerAssetDownloader::GetFilteredAssets(EAvatarBodyType BodyType, EAvatarGender Gender) const
@@ -48,23 +45,20 @@ FBaseRequestCompleted& URpmPartnerAssetDownloader::GetPartnerAssetsDownloadCallb
 	return OnPartnerAssetsDownloaded;
 }
 
-void URpmPartnerAssetDownloader::OnAssetsDownloadCompleted(bool bSuccess, EAvatarBodyType BodyType, EAvatarGender Gender)
+FBaseRequestCompleted& URpmPartnerAssetDownloader::GetIconsDownloadCallback()
 {
-	if (!bSuccess)
+	return OnIconsDownloaded;
+}
+
+void URpmPartnerAssetDownloader::OnAssetsDownloadCompleted(bool bSuccess)
+{
+	if (bSuccess)
 	{
-		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(false);
-		OnPartnerAssetsDownloaded.Unbind();
-		return;
+		Assets = FPartnerAssetExtractor::ExtractAssets(AssetRequest->GetContentAsString());
 	}
-	Assets = FPartnerAssetExtractor::ExtractAssets(AssetRequest->GetContentAsString());
 	AssetRequest.Reset();
-	if (Assets.Num() == 0)
-	{
-		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(false);
-		OnPartnerAssetsDownloaded.Unbind();
-		return;
-	}
-	DownloadIcons(BodyType, Gender);
+	(void)OnPartnerAssetsDownloaded.ExecuteIfBound(Assets.Num() != 0);
+	OnPartnerAssetsDownloaded.Unbind();
 }
 
 void URpmPartnerAssetDownloader::DownloadIcons(EAvatarBodyType BodyType, EAvatarGender Gender)
@@ -92,8 +86,8 @@ void URpmPartnerAssetDownloader::DownloadIcons(EAvatarBodyType BodyType, EAvatar
 	}
 	if (IconRequests.Num() == 0)
 	{
-		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(true);
-		OnPartnerAssetsDownloaded.Unbind();
+		(void)OnIconsDownloaded.ExecuteIfBound(true);
+		OnIconsDownloaded.Unbind();
 	}
 }
 
@@ -101,8 +95,8 @@ void URpmPartnerAssetDownloader::OnIconDownloadCompleted(bool bSuccess, FString 
 {
 	if (!bSuccess)
 	{
-		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(false);
-		OnPartnerAssetsDownloaded.Unbind();
+		(void)OnIconsDownloaded.ExecuteIfBound(false);
+		OnIconsDownloaded.Unbind();
 		// Check if we need to stop downloading other assets
 		return;
 	}
@@ -125,7 +119,7 @@ void URpmPartnerAssetDownloader::OnIconDownloadCompleted(bool bSuccess, FString 
 			}
 		}
 		ImageMap.Empty();
-		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(true);
-		OnPartnerAssetsDownloaded.Unbind();
+		(void)OnIconsDownloaded.ExecuteIfBound(true);
+		OnIconsDownloaded.Unbind();
 	}
 }
