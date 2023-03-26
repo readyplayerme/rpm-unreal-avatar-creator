@@ -12,6 +12,7 @@
 #include "RpmDefaultAvatarDownloader.h"
 #include "Serialization/BufferArchive.h"
 #include "Engine/TextureRenderTarget2D.h"
+#include "Engine/SkeletalMesh.h"
 #include "Misc/Base64.h"
 
 URpmAvatarCreatorApi::URpmAvatarCreatorApi()
@@ -48,6 +49,8 @@ void URpmAvatarCreatorApi::SetProfilePhoto(UTextureRenderTarget2D* TextureRender
 	if (FImageUtils::ExportRenderTarget2DAsPNG(TextureRenderTarget, Buffer))
 	{
 		AvatarProperties.Base64Image = FBase64::Encode(const_cast<uint8*>(Buffer.GetData()), Buffer.Num());
+		AvatarProperties.Assets.Empty();
+		AvatarProperties.Colors.Empty();
 	}
 }
 

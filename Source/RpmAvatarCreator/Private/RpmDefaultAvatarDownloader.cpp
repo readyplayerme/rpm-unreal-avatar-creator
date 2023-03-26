@@ -56,7 +56,7 @@ TArray<FRpmDefaultAvatarData> URpmDefaultAvatarDownloader::GetFilteredAvatars() 
 	TArray<FRpmDefaultAvatarData> DefaultAvatars;
 	for (const auto& Id : TemplateAvatarIds)
 	{
-		if (IsAvatarFiltered(TemplateProperties[Id], SelectedBodyType, SelectedGender))
+		if (TemplateProperties.Contains(Id) && IsAvatarFiltered(TemplateProperties[Id], SelectedBodyType, SelectedGender))
 		{
 			FRpmDefaultAvatarData Data;
 			Data.Image = ImageMap[Id];
