@@ -13,9 +13,9 @@ namespace
 {
 	bool IsAvatarFiltered(const FRpmAvatarProperties& Properties, EAvatarBodyType BodyType, EAvatarGender Gender)
 	{
-		const bool BodyTypeFiltered = Properties.BodyType == BodyType;
+		// const bool BodyTypeFiltered = Properties.BodyType == BodyType;
 		const bool GenderFiltered = Properties.Gender == Gender || Gender == EAvatarGender::Undefined;
-		return BodyTypeFiltered && GenderFiltered;
+		return GenderFiltered;
 	}
 }
 
@@ -56,7 +56,7 @@ TArray<FRpmDefaultAvatarData> URpmDefaultAvatarDownloader::GetFilteredAvatars() 
 	TArray<FRpmDefaultAvatarData> DefaultAvatars;
 	for (const auto& Id : TemplateAvatarIds)
 	{
-		if (TemplateProperties.Contains(Id) && IsAvatarFiltered(TemplateProperties[Id], SelectedBodyType, SelectedGender))
+		if (TemplateProperties.Contains(Id) && ImageMap.Contains(Id) && IsAvatarFiltered(TemplateProperties[Id], SelectedBodyType, SelectedGender))
 		{
 			FRpmDefaultAvatarData Data;
 			Data.Image = ImageMap[Id];
@@ -132,7 +132,6 @@ void URpmDefaultAvatarDownloader::OnImageDownloadCompleted(bool bSuccess, FStrin
 
 	if (ImageRequests.Num() == 0)
 	{
-		// ImageMap.Empty();
 		(void)OnDownloadCompleted.ExecuteIfBound(GetFilteredAvatars());
 		OnFailed.Unbind();
 		OnDownloadCompleted.Unbind();
