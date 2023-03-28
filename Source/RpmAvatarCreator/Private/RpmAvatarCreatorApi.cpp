@@ -180,7 +180,7 @@ void URpmAvatarCreatorApi::SetDefaultAvatarIds(const TArray<FString>& AvatarIds)
 
 void URpmAvatarCreatorApi::DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
 {
-	DefaultAvatarDownloader->DownloadDefaultAvatars(AvatarProperties.BodyType, AvatarProperties.Gender, DownloadCompleted, Failed);
+	DefaultAvatarDownloader->DownloadDefaultAvatars(AvatarProperties.Gender, DownloadCompleted, Failed);
 }
 
 void URpmAvatarCreatorApi::UpdateAvatarAsset(ERpmPartnerAssetType AssetType, int64 AssetId)

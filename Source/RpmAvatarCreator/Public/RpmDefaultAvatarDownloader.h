@@ -15,7 +15,7 @@ class RPMAVATARCREATOR_API URpmDefaultAvatarDownloader : public UObject
 public:
 	void SetTemplateAvatarIds(const TArray<FString>& AvatarIds);
 
-	void DownloadDefaultAvatars(EAvatarBodyType BodyType, EAvatarGender Gender, const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
+	void DownloadDefaultAvatars(EAvatarGender Gender, const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
 
 	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
 
@@ -36,7 +36,6 @@ private:
 	FDefaultAvatarsDownloadCompleted OnDownloadCompleted;
 	FAvatarCreatorFailed OnFailed;
 
-	EAvatarBodyType SelectedBodyType;
 	EAvatarGender SelectedGender;
 
 	TArray<FString> TemplateAvatarIds;
