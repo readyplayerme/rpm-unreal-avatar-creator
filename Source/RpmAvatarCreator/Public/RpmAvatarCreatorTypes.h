@@ -184,6 +184,8 @@ enum class ERpmAvatarCreatorError : uint8
 {
 	None,
 	AuthenticationFailure,
+	SendActivationCodeFailure,
+	ConfirmActivationCodeFailure,
 	AssetDownloadFailure,
 	ColorDownloadFailure,
 	DefaultAvatarFailure,

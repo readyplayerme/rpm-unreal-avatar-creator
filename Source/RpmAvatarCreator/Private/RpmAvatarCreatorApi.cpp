@@ -133,7 +133,7 @@ void URpmAvatarCreatorApi::ColorsDownloaded(bool bSuccess)
 
 void URpmAvatarCreatorApi::IconsDownloaded(bool bSuccess)
 {
-	ExecuteEditorReadyCallback(bSuccess, ERpmAvatarCreatorError::ColorDownloadFailure);
+	ExecuteEditorReadyCallback(bSuccess, ERpmAvatarCreatorError::AssetDownloadFailure);
 }
 
 void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess)

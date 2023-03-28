@@ -61,7 +61,7 @@ void FRpmAuthManager::ConfirmActivationCodeCompleted(bool bSuccess)
 {
 	if (!bSuccess)
 	{
-		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::AuthenticationFailure);
+		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::ConfirmActivationCodeFailure);
 		return;
 	}
 	UserData = FUserDataExtractor::ExtractUserData(AuthRequest->GetContentAsString());
@@ -74,7 +74,7 @@ void FRpmAuthManager::SendActivationCodeCompleted(bool bSuccess)
 {
 	if (!bSuccess)
 	{
-		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::AuthenticationFailure);
+		(void)OnAvatarCreatorFailed.ExecuteIfBound(ERpmAvatarCreatorError::SendActivationCodeFailure);
 		return;
 	}
 	(void)OnAuthenticationCompleted.ExecuteIfBound();
