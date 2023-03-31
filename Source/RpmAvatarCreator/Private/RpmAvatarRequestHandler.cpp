@@ -99,10 +99,6 @@ void URpmAvatarRequestHandler::OnUpdateAvatarCompleted(bool bSuccess)
 
 void URpmAvatarRequestHandler::DeleteAvatar(const FString& AvatarId, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed)
 {
-	if (bIsExistingAvatarUnchanged)
-	{
-		OnDeleteAvatarCompleted(true, AvatarDeleteCompleted, Failed);
-	}
 	DeleteAvatarRequest = RequestFactory->CreateDeleteAvatarRequest(AvatarId);
 	DeleteAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnDeleteAvatarCompleted, AvatarDeleteCompleted, Failed);
 	DeleteAvatarRequest->Download();
@@ -113,9 +109,11 @@ void URpmAvatarRequestHandler::OnDeleteAvatarCompleted(bool bSuccess, FAvatarDel
 	if (!bSuccess)
 	{
 		(void)Failed.ExecuteIfBound(ERpmAvatarCreatorError::AvatarDeleteFailure);
-		return;
 	}
-	(void)AvatarDeleteCompleted.ExecuteIfBound();
+	else
+	{
+		(void)AvatarDeleteCompleted.ExecuteIfBound();
+	}
 	DeleteAvatarRequest.Reset();
 }
 
@@ -135,9 +133,11 @@ void URpmAvatarRequestHandler::OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveC
 	if (!bSuccess)
 	{
 		(void)Failed.ExecuteIfBound(ERpmAvatarCreatorError::AvatarSaveFailure);
-		return;
 	}
-	(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarProperties.Id));
+	else
+	{
+		(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarProperties.Id));
+	}
 	SaveAvatarRequest.Reset();
 }
 
