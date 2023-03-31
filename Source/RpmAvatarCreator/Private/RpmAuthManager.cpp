@@ -32,7 +32,7 @@ void FRpmAuthManager::SendActivationCode(const FString& Email, const FAuthentica
 	OnAuthenticationCompleted = Completed;
 	OnAvatarCreatorFailed = Failed;
 
-	AuthRequest = RequestFactory->CreateSendCodeRequest(FUserDataExtractor::MakeSendCodePayload(Email));
+	AuthRequest = RequestFactory->CreateSendCodeRequest(FUserDataExtractor::MakeSendCodePayload(Email, UserData.Id));
 	AuthRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmAuthManager::SendActivationCodeCompleted);
 	AuthRequest->Download();
 }
