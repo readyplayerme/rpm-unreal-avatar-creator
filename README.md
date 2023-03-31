@@ -1,6 +1,6 @@
 # Ready Player Me Avatar Creator
 
-![Screenshot 2023-02-02 141147](https://user-images.githubusercontent.com/3124894/216334496-96b035ce-d6dc-4609-a43a-f53cf8722a92.png)
+![Screenshot_20230221_044146](https://user-images.githubusercontent.com/3124894/229149244-df433bd5-b8f3-40ba-b87f-ce071ecdc773.png)
 
 Ready Player Me Avatar Creator is an extension to www.readyplayer.me avatar platform, which helps you create avatars.
 
@@ -60,7 +60,7 @@ Inside of the DemoMap we create and add the widget to the viewport.
 We need to subscribe to the **Avatar Saved** event to get the url when the avatar is saved.
 Additionally we can load an avatar with this url.
 
-![Screenshot 2023-02-02 141254](https://user-images.githubusercontent.com/3124894/216334568-a64b674c-f9b8-4da7-a74e-4ba3249f8798.png)
+![Screenshot_20230221_060932](https://user-images.githubusercontent.com/3124894/229149539-1ae0e7a5-c9ae-4671-b6e1-e267e14fd204.png)
 
 ## Customization Options
 
