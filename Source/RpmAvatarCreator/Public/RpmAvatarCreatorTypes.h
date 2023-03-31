@@ -213,7 +213,8 @@ enum class ERpmAvatarCreatorError : uint8
 	MetadataDownloadFailure,
 	AvatarCreateFailure,
 	AvatarPreviewFailure,
-	AvatarSaveFailure
+	AvatarSaveFailure,
+	AvatarDeleteFailure
 };
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarCreatorFailed, ERpmAvatarCreatorError, Error);
@@ -221,6 +222,8 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarCreatorFailed, ERpmAvatarCreatorError, 
 DECLARE_DYNAMIC_DELEGATE(FAuthenticationCompleted);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarSaveCompleted, const FString&, Url);
+
+DECLARE_DYNAMIC_DELEGATE(FAvatarDeleteCompleted);
 
 DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
 

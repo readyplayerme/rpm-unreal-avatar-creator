@@ -29,6 +29,8 @@ public:
 
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
+	void DeleteAvatar(const FString& AvatarId, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed);
+
 	FRpmAvatarProperties GetAvatarProperties() const;
 
 	UPROPERTY()
@@ -50,6 +52,9 @@ private:
 
 	UFUNCTION()
 	void OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveCompleted AvatarSaveCompleted, FAvatarCreatorFailed Failed);
+
+	UFUNCTION()
+	void OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed);
 
 	UFUNCTION()
 	void OnModelDownloadCompleted(bool bSuccess);
@@ -77,5 +82,6 @@ private:
 	TSharedPtr<class IBaseRequest> CreateAvatarRequest;
 	TSharedPtr<class IBaseRequest> UpdateAvatarRequest;
 	TSharedPtr<class IBaseRequest> SaveAvatarRequest;
+	TSharedPtr<class IBaseRequest> DeleteAvatarRequest;
 	TSharedPtr<class IBaseRequest> AvatarModelRequest;
 };

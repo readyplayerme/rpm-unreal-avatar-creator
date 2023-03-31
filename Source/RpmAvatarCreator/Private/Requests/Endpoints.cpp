@@ -82,5 +82,5 @@ FString FEndpoints::GetSaveAvatarEndpoint(const FString& AvatarId)
 
 FString FEndpoints::GetDeleteAvatarEndpoint(const FString& AvatarId)
 {
-	return FString::Format(TEXT("{0}/{1}"), {AVATAR_API_V2_ENDPOINT, AvatarId});
+	return FString::Format(TEXT("{0}/{1}"), {AVATAR_API_V1_ENDPOINT, AvatarId});
 }
