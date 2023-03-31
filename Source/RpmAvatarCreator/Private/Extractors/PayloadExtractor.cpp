@@ -117,9 +117,13 @@ FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString
 	{
 		if (AssetsObject->HasField(Item.Value))
 		{
-			int64 AssetId;
-			FDefaultValueHelper::ParseInt64(AssetsObject->GetStringField(Item.Value), AssetId);
-			AvatarProperties.Assets.Add(Item.Key, AssetId);
+			const FString AssetStr = AssetsObject->GetStringField(Item.Value);
+			if (!AssetStr.IsEmpty())
+			{
+				int64 AssetId = 0;
+				FDefaultValueHelper::ParseInt64(AssetsObject->GetStringField(Item.Value), AssetId);
+				AvatarProperties.Assets.Add(Item.Key, AssetId);
+			}
 		}
 	}
 	for (const auto& Item : ASSET_COLOR_TO_STRING_MAP)

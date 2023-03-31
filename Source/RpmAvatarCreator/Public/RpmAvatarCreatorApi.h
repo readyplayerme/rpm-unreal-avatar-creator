@@ -45,6 +45,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar Color"))
 	void UpdateAvatarColor(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
 
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Default Avatar Ids"))
+	void SetDefaultAvatarIds(const TArray<FString>& AvatarIds);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Default Avatars"))
+	void DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
+
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Save Avatar"))
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
@@ -97,6 +103,9 @@ private:
 
 	UPROPERTY()
 	class URpmPartnerAssetDownloader* AssetDownloader;
+
+	UPROPERTY()
+	class URpmDefaultAvatarDownloader* DefaultAvatarDownloader;
 
 	UPROPERTY()
 	class URpmAvatarRequestHandler* AvatarRequestHandler;

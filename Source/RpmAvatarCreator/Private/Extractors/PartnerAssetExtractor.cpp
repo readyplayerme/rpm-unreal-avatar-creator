@@ -58,7 +58,7 @@ TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& Js
 		if (DataObject->HasTypedField<EJson::Array>(Item.Value))
 		{
 			TArray<FColor> ColorArray;
-			for (const auto ColorItem : DataObject->GetArrayField(Item.Value))
+			for (const auto& ColorItem : DataObject->GetArrayField(Item.Value))
 			{
 				const FString ColorHex = ColorItem->AsString();
 				ColorArray.Add(FColor::FromHex(ColorHex));
