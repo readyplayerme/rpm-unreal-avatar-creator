@@ -51,6 +51,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Default Avatars"))
 	void DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
 
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Personal Avatars"))
+	void DownloadPersonalAvatars(const FPersonalAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Personal Avatar Image Download Delegate"))
+	void SetPersonalAvatarImageDownloadDelegate(const FPersonalAvatarImageDownloadCompleted& ImageDownloaded);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Personal Avatar Images"))
+	void DownloadPersonalAvatarImages(const FString& Partner);
+
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Save Avatar"))
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
@@ -106,6 +115,9 @@ private:
 
 	UPROPERTY()
 	class URpmDefaultAvatarDownloader* DefaultAvatarDownloader;
+
+	UPROPERTY()
+	class URpmPersonalAvatarDownloader* PersonalAvatarDownloader;
 
 	UPROPERTY()
 	class URpmAvatarRequestHandler* AvatarRequestHandler;

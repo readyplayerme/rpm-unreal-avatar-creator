@@ -6,8 +6,7 @@
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Requests/RequestFactory.h"
 #include "Extractors/PayloadExtractor.h"
-
-static const FString RENDER_URL_PREFIX = "https://models.readyplayer.me/";
+#include "Requests/Endpoints.h"
 
 namespace
 {
@@ -97,8 +96,7 @@ void URpmDefaultAvatarDownloader::DownloadImages()
 			continue;
 		}
 
-		const FString ImageUrl = RENDER_URL_PREFIX + Properties.Key + ".png";
-		auto IconRequest = RequestFactory->CreateImageRequest(ImageUrl);
+		auto IconRequest = RequestFactory->CreateImageRequest(FEndpoints::GetRenderEndpoint(Properties.Key));
 		ImageRequests.Add(Properties.Key, IconRequest);
 		IconRequest->GetCompleteCallback().BindUObject(this, &URpmDefaultAvatarDownloader::OnImageDownloadCompleted, Properties.Key);
 		IconRequest->Download();

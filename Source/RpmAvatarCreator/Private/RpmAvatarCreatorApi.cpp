@@ -9,6 +9,7 @@
 #include "RpmAvatarRequestHandler.h"
 #include "Requests/RequestFactory.h"
 #include "ImageUtils.h"
+#include "RpmPersonalAvatarDownloader.h"
 #include "RpmDefaultAvatarDownloader.h"
 #include "Serialization/BufferArchive.h"
 #include "Engine/TextureRenderTarget2D.h"
@@ -27,6 +28,8 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	AssetDownloader->SetRequestFactory(RequestFactory);
 	DefaultAvatarDownloader = NewObject<URpmDefaultAvatarDownloader>();
 	DefaultAvatarDownloader->SetRequestFactory(RequestFactory);
+	PersonalAvatarDownloader = NewObject<URpmPersonalAvatarDownloader>();
+	PersonalAvatarDownloader->SetRequestFactory(RequestFactory);
 	AvatarRequestHandler = NewObject<URpmAvatarRequestHandler>();
 	AvatarRequestHandler->SetRequestFactory(RequestFactory);
 }
@@ -77,6 +80,9 @@ void URpmAvatarCreatorApi::ConfirmActivationCode(const FString& Code, const FAut
 void URpmAvatarCreatorApi::LogOut()
 {
 	AuthManager->Logout();
+	const FString Partner = AvatarProperties.Partner;
+	AvatarProperties = {};
+	AvatarProperties.Partner = Partner;
 }
 
 void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess, ERpmAvatarCreatorError Error)
@@ -181,6 +187,21 @@ void URpmAvatarCreatorApi::SetDefaultAvatarIds(const TArray<FString>& AvatarIds)
 void URpmAvatarCreatorApi::DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
 {
 	DefaultAvatarDownloader->DownloadDefaultAvatars(AvatarProperties.Gender, DownloadCompleted, Failed);
+}
+
+void URpmAvatarCreatorApi::DownloadPersonalAvatars(const FPersonalAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
+{
+	PersonalAvatarDownloader->DownloadPersonalAvatars(DownloadCompleted, Failed);
+}
+
+void URpmAvatarCreatorApi::SetPersonalAvatarImageDownloadDelegate(const FPersonalAvatarImageDownloadCompleted& ImageDownloaded)
+{
+	PersonalAvatarDownloader->SetImageDownloadDelegate(ImageDownloaded);
+}
+
+void URpmAvatarCreatorApi::DownloadPersonalAvatarImages(const FString& Partner)
+{
+	PersonalAvatarDownloader->DownloadImages(Partner);
 }
 
 void URpmAvatarCreatorApi::UpdateAvatarAsset(ERpmPartnerAssetType AssetType, int64 AssetId)

@@ -7,6 +7,7 @@ public class RpmAvatarCreator : ModuleRules
 	public RpmAvatarCreator(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		bUseUnity = false;
 
 		PublicIncludePaths.AddRange(
 			new string[] {
