@@ -27,7 +27,7 @@ public:
 	TSharedPtr<IBaseRequest> CreateAvatarCreateRequest(const FString& PayloadJson) const;
 	TSharedPtr<IBaseRequest> CreateImageRequest(const FString& IconUrl) const;
 	TSharedPtr<IBaseRequest> CreateRenderRequest(const FString& AvatarId) const;
-	TSharedPtr<IBaseRequest> CreatePersonalAvatarsRequest() const;
+	TSharedPtr<IBaseRequest> CreateUserAvatarsRequest() const;
 	TSharedPtr<IBaseRequest> CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const;
 	TSharedPtr<IBaseRequest> CreateSaveAvatarRequest(const FString& AvatarId) const;
 	TSharedPtr<IBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId) const;

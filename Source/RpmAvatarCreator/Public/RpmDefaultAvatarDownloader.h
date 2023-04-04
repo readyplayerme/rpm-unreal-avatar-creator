@@ -29,6 +29,8 @@ private:
 	void OnImageDownloadCompleted(bool bSuccess, FString AvatarId);
 
 	void DownloadImages();
+	
+	bool IsValidDefaultAvatar(const FString& Id) const;
 
 	UPROPERTY()
 	TMap<FString, UTexture2D*> ImageMap;

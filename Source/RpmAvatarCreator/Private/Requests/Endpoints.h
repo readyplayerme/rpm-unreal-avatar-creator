@@ -23,7 +23,7 @@ public:
 
 	static FString GetRenderEndpoint(const FString& AvatarId);
 
-	static FString GetPersonalAvatarsEndpoint(const FString& UserId);
+	static FString GetUserAvatarsEndpoint(const FString& UserId);
 
 	static FString GetAvatarMetadataEndpoint(const FString& AvatarId);
 

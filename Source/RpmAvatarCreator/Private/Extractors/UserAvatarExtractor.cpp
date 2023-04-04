@@ -1,7 +1,7 @@
 // Copyright © 2023++ Ready Player Me
 
 
-#include "PersonalAvatarExtractor.h"
+#include "UserAvatarExtractor.h"
 
 #include "Templates/SharedPointer.h"
 #include "Serialization/JsonReader.h"
@@ -27,20 +27,20 @@ namespace
 	}
 }
 
-TArray<FRpmPersonalAvatar> FPersonalAvatarExtractor::ExtractPersonalAvatars(const FString& JsonString)
+TArray<FRpmUserAvatar> FUserAvatarExtractor::ExtractUserAvatars(const FString& JsonString)
 {
 	const TArray<TSharedPtr<FJsonValue>> JsonArray = ExtractDataObject(JsonString);
-	TArray<FRpmPersonalAvatar> PersonalAvatars;
+	TArray<FRpmUserAvatar> UserAvatars;
 	for (const auto& JsonValue : JsonArray)
 	{
 		const auto JsonObject = JsonValue->AsObject();
 		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_PARTNER) && JsonObject->HasTypedField<EJson::String>(JSON_FIELD_ID))
 		{
-			FRpmPersonalAvatar PersonalAvatar;
-			PersonalAvatar.Partner = JsonObject->GetStringField(JSON_FIELD_PARTNER);
-			PersonalAvatar.Id = JsonObject->GetStringField(JSON_FIELD_ID);
-			PersonalAvatars.Add(PersonalAvatar);
+			FRpmUserAvatar UserAvatar;
+			UserAvatar.Partner = JsonObject->GetStringField(JSON_FIELD_PARTNER);
+			UserAvatar.Id = JsonObject->GetStringField(JSON_FIELD_ID);
+			UserAvatars.Add(UserAvatar);
 		}
 	}
-	return PersonalAvatars;
+	return UserAvatars;
 }

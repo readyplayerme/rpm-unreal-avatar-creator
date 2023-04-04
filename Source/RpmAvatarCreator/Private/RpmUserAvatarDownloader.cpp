@@ -1,23 +1,23 @@
 // Copyright © 2023++ Ready Player Me
 
 
-#include "RpmPersonalAvatarDownloader.h"
+#include "RpmUserAvatarDownloader.h"
 
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Requests/RequestFactory.h"
-#include "Extractors/PersonalAvatarExtractor.h"
+#include "Extractors/UserAvatarExtractor.h"
 #include "Requests/Endpoints.h"
 
-void URpmPersonalAvatarDownloader::SetRequestFactory(TSharedPtr<FRequestFactory> Factory)
+void URpmUserAvatarDownloader::SetRequestFactory(TSharedPtr<FRequestFactory> Factory)
 {
 	RequestFactory = Factory;
 }
 
-void URpmPersonalAvatarDownloader::DownloadPersonalAvatars(const FPersonalAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
+void URpmUserAvatarDownloader::DownloadUserAvatars(const FUserAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
 {
 	OnAvatarsDownloaded = DownloadCompleted;
 	OnFailed = Failed;
-	if (PersonalAvatars.Num() != 0)
+	if (UserAvatars.Num() != 0)
 	{
 		(void)OnAvatarsDownloaded.ExecuteIfBound(GetFilteredAvatars());
 		OnFailed.Unbind();
@@ -25,48 +25,48 @@ void URpmPersonalAvatarDownloader::DownloadPersonalAvatars(const FPersonalAvatar
 	}
 	else
 	{
-		AvatarsRequest = RequestFactory->CreatePersonalAvatarsRequest();
-		AvatarsRequest->GetCompleteCallback().BindUObject(this, &URpmPersonalAvatarDownloader::OnAvatarsDownloadCompleted);
+		AvatarsRequest = RequestFactory->CreateUserAvatarsRequest();
+		AvatarsRequest->GetCompleteCallback().BindUObject(this, &URpmUserAvatarDownloader::OnAvatarsDownloadCompleted);
 		AvatarsRequest->Download();
 	}
 }
 
-TArray<FRpmPersonalAvatar> URpmPersonalAvatarDownloader::GetFilteredAvatars()
+TArray<FRpmUserAvatar> URpmUserAvatarDownloader::GetFilteredAvatars()
 {
-	for (auto& Avatar : PersonalAvatars)
+	for (auto& Avatar : UserAvatars)
 	{
 		if (ImageMap.Contains(Avatar.Id))
 		{
 			Avatar.Image = ImageMap[Avatar.Id];
 		}
 	}
-	return PersonalAvatars;
+	return UserAvatars;
 }
 
-void URpmPersonalAvatarDownloader::OnAvatarsDownloadCompleted(bool bSuccess)
+void URpmUserAvatarDownloader::OnAvatarsDownloadCompleted(bool bSuccess)
 {
 	if (!bSuccess)
 	{
-		(void)OnFailed.ExecuteIfBound(ERpmAvatarCreatorError::PersonalAvatarDownloadFailure);
+		(void)OnFailed.ExecuteIfBound(ERpmAvatarCreatorError::UserAvatarDownloadFailure);
 		OnFailed.Unbind();
 		OnAvatarsDownloaded.Unbind();
 		return;
 	}
-	PersonalAvatars = FPersonalAvatarExtractor::ExtractPersonalAvatars(AvatarsRequest->GetContentAsString());
+	UserAvatars = FUserAvatarExtractor::ExtractUserAvatars(AvatarsRequest->GetContentAsString());
 	AvatarsRequest.Reset();
 	(void)OnAvatarsDownloaded.ExecuteIfBound(GetFilteredAvatars());
 	OnFailed.Unbind();
 	OnAvatarsDownloaded.Unbind();
 }
 
-void URpmPersonalAvatarDownloader::SetImageDownloadDelegate(const FPersonalAvatarImageDownloadCompleted& ImageDownloaded)
+void URpmUserAvatarDownloader::SetImageDownloadDelegate(const FUserAvatarImageDownloadCompleted& ImageDownloaded)
 {
 	OnImageDownloaded = ImageDownloaded;
 }
 
-void URpmPersonalAvatarDownloader::DownloadImages(const FString& Partner)
+void URpmUserAvatarDownloader::DownloadImages(const FString& Partner)
 {
-	for (const auto& Avatar : PersonalAvatars)
+	for (const auto& Avatar : UserAvatars)
 	{
 		if (!Partner.IsEmpty() && Partner != Avatar.Partner)
 		{
@@ -84,12 +84,12 @@ void URpmPersonalAvatarDownloader::DownloadImages(const FString& Partner)
 
 		auto IconRequest = RequestFactory->CreateImageRequest(FEndpoints::GetRenderEndpoint(Avatar.Id));
 		ImageRequests.Add(Avatar.Id, IconRequest);
-		IconRequest->GetCompleteCallback().BindUObject(this, &URpmPersonalAvatarDownloader::OnImageDownloadCompleted, Avatar.Id);
+		IconRequest->GetCompleteCallback().BindUObject(this, &URpmUserAvatarDownloader::OnImageDownloadCompleted, Avatar.Id);
 		IconRequest->Download();
 	}
 }
 
-void URpmPersonalAvatarDownloader::OnImageDownloadCompleted(bool bSuccess, FString AvatarId)
+void URpmUserAvatarDownloader::OnImageDownloadCompleted(bool bSuccess, FString AvatarId)
 {
 	UTexture2D* Texture = nullptr;
 	if (bSuccess)

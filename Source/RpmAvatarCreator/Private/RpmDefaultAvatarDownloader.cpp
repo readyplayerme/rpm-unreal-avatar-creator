@@ -47,12 +47,17 @@ void URpmDefaultAvatarDownloader::DownloadDefaultAvatars(EAvatarGender Gender, c
 	}
 }
 
+bool URpmDefaultAvatarDownloader::IsValidDefaultAvatar(const FString& Id) const
+{
+	return TemplateProperties.Contains(Id) && ImageMap.Contains(Id) && IsAvatarFiltered(TemplateProperties[Id], SelectedGender);
+}
+
 TArray<FRpmDefaultAvatarData> URpmDefaultAvatarDownloader::GetFilteredAvatars() const
 {
 	TArray<FRpmDefaultAvatarData> DefaultAvatars;
 	for (const auto& Id : TemplateAvatarIds)
 	{
-		if (TemplateProperties.Contains(Id) && ImageMap.Contains(Id) && IsAvatarFiltered(TemplateProperties[Id], SelectedGender))
+		if (IsValidDefaultAvatar(Id))
 		{
 			FRpmDefaultAvatarData Data;
 			Data.Image = ImageMap[Id];

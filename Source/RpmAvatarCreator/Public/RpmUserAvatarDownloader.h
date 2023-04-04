@@ -5,23 +5,23 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "RpmAvatarCreatorTypes.h"
-#include "RpmPersonalAvatarDownloader.generated.h"
+#include "RpmUserAvatarDownloader.generated.h"
 
 UCLASS(BlueprintType)
-class RPMAVATARCREATOR_API URpmPersonalAvatarDownloader : public UObject
+class RPMAVATARCREATOR_API URpmUserAvatarDownloader : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	void DownloadPersonalAvatars(const FPersonalAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
+	void DownloadUserAvatars(const FUserAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
 
-	void SetImageDownloadDelegate(const FPersonalAvatarImageDownloadCompleted& ImageDownloaded);
+	void SetImageDownloadDelegate(const FUserAvatarImageDownloadCompleted& ImageDownloaded);
 
 	void DownloadImages(const FString& Partner);
 
 	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
 
-	TArray<FRpmPersonalAvatar> GetFilteredAvatars();
+	TArray<FRpmUserAvatar> GetFilteredAvatars();
 
 private:
 	void OnAvatarsDownloadCompleted(bool bSuccess);
@@ -31,13 +31,13 @@ private:
 	UPROPERTY()
 	TMap<FString, UTexture2D*> ImageMap;
 
-	FPersonalAvatarsDownloadCompleted OnAvatarsDownloaded;
+	FUserAvatarsDownloadCompleted OnAvatarsDownloaded;
 	FAvatarCreatorFailed OnFailed;
 
-	FPersonalAvatarImageDownloadCompleted OnImageDownloaded;
+	FUserAvatarImageDownloadCompleted OnImageDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
-	TArray<FRpmPersonalAvatar> PersonalAvatars;
+	TArray<FRpmUserAvatar> UserAvatars;
 	TSharedPtr<class IBaseRequest> AvatarsRequest;
 	TMap<FString, TSharedPtr<class IBaseRequest>> ImageRequests;
 };

@@ -65,9 +65,9 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateRenderRequest(const FString& Ava
 	return MakeShared<FBaseRequest>(FEndpoints::GetRenderEndpoint(AvatarId), "", "GET", "", IMAGE_REQUEST_TIMEOUT);
 }
 
-TSharedPtr<IBaseRequest> FRequestFactory::CreatePersonalAvatarsRequest() const
+TSharedPtr<IBaseRequest> FRequestFactory::CreateUserAvatarsRequest() const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetPersonalAvatarsEndpoint(UserData.Id), UserData.Token));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(FEndpoints::GetUserAvatarsEndpoint(UserData.Id), UserData.Token));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarModelRequest(const FString& AvatarId, bool bIsPreview) const

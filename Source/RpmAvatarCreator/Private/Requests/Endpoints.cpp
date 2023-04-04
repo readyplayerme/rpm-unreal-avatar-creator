@@ -49,7 +49,7 @@ FString FEndpoints::GetRenderEndpoint(const FString& AvatarId)
 	return FString::Format(TEXT("{0}/{1}.png"), {RENDER_URL_PREFIX, AvatarId});
 }
 
-FString FEndpoints::GetPersonalAvatarsEndpoint(const FString& UserId)
+FString FEndpoints::GetUserAvatarsEndpoint(const FString& UserId)
 {
 	return FString::Format(TEXT("{0}?select=id,partner&userId={1}"), {AVATAR_API_V1_ENDPOINT, UserId});
 }
