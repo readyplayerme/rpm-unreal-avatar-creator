@@ -9,6 +9,7 @@
 #include "RpmAvatarRequestHandler.h"
 #include "Requests/RequestFactory.h"
 #include "ImageUtils.h"
+#include "RpmUserAvatarDownloader.h"
 #include "RpmDefaultAvatarDownloader.h"
 #include "Serialization/BufferArchive.h"
 #include "Engine/TextureRenderTarget2D.h"
@@ -27,6 +28,8 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	AssetDownloader->SetRequestFactory(RequestFactory);
 	DefaultAvatarDownloader = NewObject<URpmDefaultAvatarDownloader>();
 	DefaultAvatarDownloader->SetRequestFactory(RequestFactory);
+	UserAvatarDownloader = NewObject<URpmUserAvatarDownloader>();
+	UserAvatarDownloader->SetRequestFactory(RequestFactory);
 	AvatarRequestHandler = NewObject<URpmAvatarRequestHandler>();
 	AvatarRequestHandler->SetRequestFactory(RequestFactory);
 }
@@ -77,6 +80,9 @@ void URpmAvatarCreatorApi::ConfirmActivationCode(const FString& Code, const FAut
 void URpmAvatarCreatorApi::LogOut()
 {
 	AuthManager->Logout();
+	const FString Partner = AvatarProperties.Partner;
+	AvatarProperties = {};
+	AvatarProperties.Partner = Partner;
 }
 
 void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess, ERpmAvatarCreatorError Error)
@@ -180,7 +186,22 @@ void URpmAvatarCreatorApi::SetDefaultAvatarIds(const TArray<FString>& AvatarIds)
 
 void URpmAvatarCreatorApi::DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
 {
-	DefaultAvatarDownloader->DownloadDefaultAvatars(AvatarProperties.BodyType, AvatarProperties.Gender, DownloadCompleted, Failed);
+	DefaultAvatarDownloader->DownloadDefaultAvatars(AvatarProperties.Gender, DownloadCompleted, Failed);
+}
+
+void URpmAvatarCreatorApi::DownloadUserAvatars(const FUserAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
+{
+	UserAvatarDownloader->DownloadUserAvatars(DownloadCompleted, Failed);
+}
+
+void URpmAvatarCreatorApi::SetUserAvatarImageDownloadDelegate(const FUserAvatarImageDownloadCompleted& ImageDownloaded)
+{
+	UserAvatarDownloader->SetImageDownloadDelegate(ImageDownloaded);
+}
+
+void URpmAvatarCreatorApi::DownloadUserAvatarImages(const FString& Partner)
+{
+	UserAvatarDownloader->DownloadImages(Partner);
 }
 
 void URpmAvatarCreatorApi::UpdateAvatarAsset(ERpmPartnerAssetType AssetType, int64 AssetId)
@@ -196,6 +217,11 @@ void URpmAvatarCreatorApi::UpdateAvatarColor(ERpmPartnerAssetColor AssetColor, i
 void URpmAvatarCreatorApi::SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed)
 {
 	AvatarRequestHandler->SaveAvatar(AvatarSaveCompleted, Failed);
+}
+
+void URpmAvatarCreatorApi::DeleteAvatar(const FString& AvatarId, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed)
+{
+	AvatarRequestHandler->DeleteAvatar(AvatarId, AvatarDeleteCompleted, Failed);
 }
 
 FRpmAvatarProperties URpmAvatarCreatorApi::GetAvatarProperties() const

@@ -106,10 +106,14 @@ FRpmUserData FUserDataExtractor::ExtractUserData(const FString& JsonString)
 	return {};
 }
 
-FString FUserDataExtractor::MakeSendCodePayload(const FString& Email)
+FString FUserDataExtractor::MakeSendCodePayload(const FString& Email, const FString& UserId)
 {
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
 	DataObject->SetStringField(JSON_FIELD_EMAIL, Email);
+	if (!UserId.IsEmpty())
+	{
+		DataObject->SetStringField("id", UserId);
+	}
 	DataObject->SetStringField("authType", JSON_FIELD_CODE);
 	return MakeDataPayload(DataObject);
 }

@@ -179,6 +179,26 @@ struct FRpmDefaultAvatarData
 	}
 };
 
+USTRUCT(BlueprintType)
+struct FRpmUserAvatar
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
+	FString Id;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
+	FString Partner;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UTexture2D* Image;
+
+	FRpmUserAvatar()
+	{
+		Image = nullptr;
+	}
+};
+
 UENUM(BlueprintType)
 enum class ERpmAvatarCreatorError : uint8
 {
@@ -189,10 +209,12 @@ enum class ERpmAvatarCreatorError : uint8
 	AssetDownloadFailure,
 	ColorDownloadFailure,
 	DefaultAvatarFailure,
+	UserAvatarDownloadFailure,
 	MetadataDownloadFailure,
 	AvatarCreateFailure,
 	AvatarPreviewFailure,
-	AvatarSaveFailure
+	AvatarSaveFailure,
+	AvatarDeleteFailure
 };
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarCreatorFailed, ERpmAvatarCreatorError, Error);
@@ -201,7 +223,13 @@ DECLARE_DYNAMIC_DELEGATE(FAuthenticationCompleted);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarSaveCompleted, const FString&, Url);
 
+DECLARE_DYNAMIC_DELEGATE(FAvatarDeleteCompleted);
+
 DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
+
+DECLARE_DYNAMIC_DELEGATE_OneParam(FUserAvatarsDownloadCompleted, const TArray<FRpmUserAvatar>&, UserAvatars);
+
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FUserAvatarImageDownloadCompleted, const FString&, AvatarId, UTexture2D*, Image);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FDefaultAvatarsDownloadCompleted, const TArray<FRpmDefaultAvatarData>&, DefaultAvatars);
 

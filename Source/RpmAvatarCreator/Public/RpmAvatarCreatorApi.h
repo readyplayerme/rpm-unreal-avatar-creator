@@ -51,8 +51,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Default Avatars"))
 	void DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
 
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download User Avatars"))
+	void DownloadUserAvatars(const FUserAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set User Avatar Image Download Delegate"))
+	void SetUserAvatarImageDownloadDelegate(const FUserAvatarImageDownloadCompleted& ImageDownloaded);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download User Avatar Images"))
+	void DownloadUserAvatarImages(const FString& Partner);
+
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Save Avatar"))
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
+
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Delete Avatar"))
+	void DeleteAvatar(const FString& AvatarId, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me", Meta = (ExposeOnSpawn="true"))
 	class USkeleton* FullBodySkeleton;
@@ -106,6 +118,9 @@ private:
 
 	UPROPERTY()
 	class URpmDefaultAvatarDownloader* DefaultAvatarDownloader;
+
+	UPROPERTY()
+	class URpmUserAvatarDownloader* UserAvatarDownloader;
 
 	UPROPERTY()
 	class URpmAvatarRequestHandler* AvatarRequestHandler;

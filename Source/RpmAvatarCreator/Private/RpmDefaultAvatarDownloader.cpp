@@ -6,16 +6,13 @@
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Requests/RequestFactory.h"
 #include "Extractors/PayloadExtractor.h"
-
-static const FString RENDER_URL_PREFIX = "https://models.readyplayer.me/";
+#include "Requests/Endpoints.h"
 
 namespace
 {
-	bool IsAvatarFiltered(const FRpmAvatarProperties& Properties, EAvatarBodyType BodyType, EAvatarGender Gender)
+	bool IsAvatarFiltered(const FRpmAvatarProperties& Properties, EAvatarGender Gender)
 	{
-		// const bool BodyTypeFiltered = Properties.BodyType == BodyType;
-		const bool GenderFiltered = Properties.Gender == Gender || Gender == EAvatarGender::Undefined;
-		return GenderFiltered;
+		return Properties.Gender == Gender || Gender == EAvatarGender::Undefined;
 	}
 }
 
@@ -29,11 +26,10 @@ void URpmDefaultAvatarDownloader::SetTemplateAvatarIds(const TArray<FString>& Av
 	TemplateAvatarIds = AvatarIds;
 }
 
-void URpmDefaultAvatarDownloader::DownloadDefaultAvatars(EAvatarBodyType BodyType, EAvatarGender Gender, const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
+void URpmDefaultAvatarDownloader::DownloadDefaultAvatars(EAvatarGender Gender, const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
 {
 	OnDownloadCompleted = DownloadCompleted;
 	OnFailed = Failed;
-	SelectedBodyType = BodyType;
 	SelectedGender = Gender;
 	if (TemplateProperties.Num() != 0)
 	{
@@ -51,12 +47,17 @@ void URpmDefaultAvatarDownloader::DownloadDefaultAvatars(EAvatarBodyType BodyTyp
 	}
 }
 
+bool URpmDefaultAvatarDownloader::IsValidDefaultAvatar(const FString& Id) const
+{
+	return TemplateProperties.Contains(Id) && ImageMap.Contains(Id) && IsAvatarFiltered(TemplateProperties[Id], SelectedGender);
+}
+
 TArray<FRpmDefaultAvatarData> URpmDefaultAvatarDownloader::GetFilteredAvatars() const
 {
 	TArray<FRpmDefaultAvatarData> DefaultAvatars;
 	for (const auto& Id : TemplateAvatarIds)
 	{
-		if (TemplateProperties.Contains(Id) && ImageMap.Contains(Id) && IsAvatarFiltered(TemplateProperties[Id], SelectedBodyType, SelectedGender))
+		if (IsValidDefaultAvatar(Id))
 		{
 			FRpmDefaultAvatarData Data;
 			Data.Image = ImageMap[Id];
@@ -95,14 +96,12 @@ void URpmDefaultAvatarDownloader::DownloadImages()
 {
 	for (const auto& Properties : TemplateProperties)
 	{
-		if (ImageMap.Contains(Properties.Key) || !IsAvatarFiltered(Properties.Value, SelectedBodyType, SelectedGender))
+		if (ImageMap.Contains(Properties.Key) || !IsAvatarFiltered(Properties.Value, SelectedGender))
 		{
 			continue;
 		}
 
-		// "{0}/{1}.png?scene=halfbody-portrait-v1-transparent{2}{3}"
-		const FString ImageUrl = RENDER_URL_PREFIX + Properties.Key + ".png";
-		auto IconRequest = RequestFactory->CreateImageRequest(ImageUrl);
+		auto IconRequest = RequestFactory->CreateImageRequest(FEndpoints::GetRenderEndpoint(Properties.Key));
 		ImageRequests.Add(Properties.Key, IconRequest);
 		IconRequest->GetCompleteCallback().BindUObject(this, &URpmDefaultAvatarDownloader::OnImageDownloadCompleted, Properties.Key);
 		IconRequest->Download();

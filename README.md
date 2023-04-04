@@ -1,6 +1,6 @@
 # Ready Player Me Avatar Creator
 
-![Screenshot 2023-02-02 141147](https://user-images.githubusercontent.com/3124894/216334496-96b035ce-d6dc-4609-a43a-f53cf8722a92.png)
+![Screenshot_20230221_044146](https://user-images.githubusercontent.com/3124894/229149244-df433bd5-b8f3-40ba-b87f-ce071ecdc773.png)
 
 Ready Player Me Avatar Creator is an extension to www.readyplayer.me avatar platform, which helps you create avatars.
 
@@ -26,7 +26,7 @@ Please visit the online documentation and join our public `discord` community.
 
 ### Add RpmAvatarCreator plugin
 
-There are three ways you can add the **RpmAvatarCreator** plugin to your project. Add as submodules, clone the repo, or paste the plugin inside of the **Plugins** folder.
+There are three ways you can add the **RpmAvatarCreator** plugin to your project. Add as submodules, paste the plugin inside of the **Plugins** folder, or add the blueprint version of the plugin to the Engine.
 
 - To add the plugin to your project as a submodules, run the following command in the terminal from your project folder. This is preferred way of setting up the plugin.
 
@@ -36,15 +36,13 @@ There are three ways you can add the **RpmAvatarCreator** plugin to your project
 
 - To clone the plugin into your project, run the following command in the terminal from your project folder.
 
-  ```
-  git clone https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator ; cd Plugins/RpmAvatarCreator ; git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) ; cd ../..
-  ```
-
 - To paste the plugin inside of the Plugins folder, create a **Plugins** folder from the root of your project, download the latest tags of the [RpmAvatarCreator](https://github.com/readyplayerme/rpm-unreal-avatar-creator.git) plugins into it. Rename the **rpm-unreal-avatar-creator** plugin folder to the **RpmAvatarCreator**.
 
-### Update RpmAvatarCreator plugin
+- To add the blueprint version of the plugin, find the plugin attached in the [Latest Release](https://github.com/readyplayerme/rpm-unreal-avatar-creator/releases/latest), add it to the Plugins/Runtime folder of the installed Unreal Engine.
 
-To update the plugin paste the following command in the terminal from your project folder. This will fetch and switch the plugin repositories to the latest stable release.
+### Update RpmAvatarCreator plugin submodule
+
+To update the plugin submodule paste the following command in the terminal from your project folder. This will fetch and switch the plugin repositories to the latest stable release.
 
   ```
   cd Plugins/RpmAvatarCreator ; git fetch --tags ; git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) ; cd ../..
@@ -62,12 +60,20 @@ Inside of the DemoMap we create and add the widget to the viewport.
 We need to subscribe to the **Avatar Saved** event to get the url when the avatar is saved.
 Additionally we can load an avatar with this url.
 
-![Screenshot 2023-02-02 141254](https://user-images.githubusercontent.com/3124894/216334568-a64b674c-f9b8-4da7-a74e-4ba3249f8798.png)
+![Screenshot_20230221_060932](https://user-images.githubusercontent.com/3124894/229149539-1ae0e7a5-c9ae-4671-b6e1-e267e14fd204.png)
 
 ## Customization Options
 
 ### Use the Sample project
 When spawning the **Avatar Creator** widget, it's possible to configure it with the specified parameters.
+
+Customization options:
+ - **Partner Domain** Specify your partner domain
+ - **Select Body Type** Allows to skip the body type selection screen
+ - **Select Gender** Allows to skip the gender selection screen
+ - **Allow Close Button** Hides the close button
+ - **Allow Webcam** Enables the selfie selection screen if the webcam is available
+ - **Default Avatar Ids** Specify the avatar ids that will be shown in the **Pick An Avatar** page
 
 ### Duplicate The Sample
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
@@ -78,12 +84,9 @@ In this case you **will not** be able to get the latest changes of this sample p
 
 ## TODO
 
-- Add color selection in the avatar editor
-- Add **Chose your avatar** page
-- Add ability to log-in and create a user
+- Improve the UI
 - Add shadow for the avatar in the avatar editor
 - Add a sample for the VR
-- Add support for editing existing avatars
 
 ## Links
 - [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine)
