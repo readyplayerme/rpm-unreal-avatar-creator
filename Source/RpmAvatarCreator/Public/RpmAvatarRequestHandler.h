@@ -37,6 +37,9 @@ public:
 	USkeletalMesh* Mesh;
 	
 	UPROPERTY()
+	class URpmUserAvatarDownloader* UserAvatarDownloader;
+	
+	UPROPERTY()
 	FPreviewDownloadCompleted OnPreviewDownloaded;
 
 	FBaseRequestCompleted& GetAvatarPropertiesDownloadedCallback();
@@ -54,7 +57,7 @@ private:
 	void OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveCompleted AvatarSaveCompleted, FAvatarCreatorFailed Failed);
 
 	UFUNCTION()
-	void OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed);
+	void OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed, FString AvatarId);
 
 	UFUNCTION()
 	void OnModelDownloadCompleted(bool bSuccess);
