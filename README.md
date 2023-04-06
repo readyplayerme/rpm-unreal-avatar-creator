@@ -52,13 +52,14 @@ To update the plugin submodule paste the following command in the terminal from 
 
 A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
 
-## Show Avatar Creator
+## Integration
 
 AvatarCreator is a widget that can be added to the map.
 Inside of the DemoMap we create and add the widget to the viewport.
 **AvatarCreator** can be customized by providing default values when the widget is created.
 We need to subscribe to the **Avatar Saved** event to get the url when the avatar is saved.
-Additionally we can load an avatar with this url.
+We need to subscribe to the **Avatar Selected** event as well to get the url when the avatar is selected from the list of the user avatars.
+Additionally we can load an avatar with this url afterwards.
 
 ![Screenshot_20230221_060932](https://user-images.githubusercontent.com/3124894/229149539-1ae0e7a5-c9ae-4671-b6e1-e267e14fd204.png)
 
@@ -73,7 +74,7 @@ Customization options:
  - **Select Gender** Allows to skip the gender selection screen
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
- - **Default Avatar Ids** Specify the avatar ids that will be shown in the **Pick An Avatar** page
+ - **Default Avatar Ids** Specify the avatar ids that will be shown in the **Pick An Avatar** page. **Important** this field needs to be filled with the avatar ids from the demo map.
 
 ### Duplicate The Sample
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
@@ -84,6 +85,7 @@ In this case you **will not** be able to get the latest changes of this sample p
 
 ## TODO
 
+- Fix the webcam support for mobile
 - Improve the UI
 - Add shadow for the avatar in the avatar editor
 - Add a sample for the VR
