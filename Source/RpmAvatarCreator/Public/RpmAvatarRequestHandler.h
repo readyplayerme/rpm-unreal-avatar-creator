@@ -25,7 +25,7 @@ public:
 
 	void DownloadAvatarProperties(const FString& InAvatarId);
 
-	void DownloadModel(USkeleton* Skeleton);
+	void DownloadModel(class USkeleton* Skeleton);
 
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
