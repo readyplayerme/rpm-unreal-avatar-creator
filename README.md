@@ -4,6 +4,8 @@
 
 Ready Player Me Avatar Creator is an extension to www.readyplayer.me avatar platform, which helps you create avatars.
 
+RpmAvatarCreator plugin is an in-engine implementation of the web avatar creator.
+
 Please visit the online documentation and join our public `discord` community.
 
 ![](https://i.imgur.com/zGamwPM.png) **[Online Documentation]( https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-sdk )**
@@ -51,15 +53,14 @@ To update the plugin submodule paste the following command in the terminal from 
 ## Quick Start
 
 A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
+To add the AvatarCreator widget to your project simply copy the existing blueprint logic from the demo map into your project.
 
-## Integration
-
-AvatarCreator is a widget that can be added to the map.
-Inside of the DemoMap we create and add the widget to the viewport.
+AvatarCreator is a widget that can be added to a map or another widget.
+Inside the DemoMap we create and add the widget to the viewport.
 **AvatarCreator** can be customized by providing default values when the widget is created.
-We need to subscribe to the **Avatar Saved** event to get the url when the avatar is saved.
-We need to subscribe to the **Avatar Selected** event as well to get the url when the avatar is selected from the list of the user avatars.
-Additionally we can load an avatar with this url afterwards.
+We need to subscribe to the **Avatar Saved** event to get the URL when the avatar is saved.
+We need to subscribe to the **Avatar Selected** event as well to get the URL when the avatar is selected from the list of user avatars.
+Additionally, we can load an avatar with this URL afterward.
 
 ![Screenshot_20230221_060932](https://user-images.githubusercontent.com/3124894/229149539-1ae0e7a5-c9ae-4671-b6e1-e267e14fd204.png)
 
@@ -70,18 +71,18 @@ When spawning the **Avatar Creator** widget, it's possible to configure it with 
 
 Customization options:
  - **Partner Domain** Specify your partner domain
- - **Select Body Type** Allows to skip the body type selection screen
- - **Select Gender** Allows to skip the gender selection screen
+ - **Select Body Type** Allows skipping the body type selection screen
+ - **Select Gender** Allows skipping the gender selection screen
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
- - **Default Avatar Ids** Specify the avatar ids that will be shown in the **Pick An Avatar** page. **Important** this field needs to be filled with the avatar ids from the demo map.
+ - **Default Avatar Ids** Specify the avatar ids that will be shown on the **Pick An Avatar** page. **Important** this field needs to be filled with the avatar ids from the demo map.
 
 ### Duplicate The Sample
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
-In this case you **will not** be able to get the latest changes of this sample project UI.
+In this case, you will **not** be able to get the latest changes of this sample project UI.
 
 ### UI From Scratch
-**Avatar Creator** sample uses **AvatarCreatorApi** C++ class for communicating with the **Ready Player Me** Backend. The plugin **Content** can be completely rewritten to suit your project needs, while using the **AvatarCreatorApi** for the communication with the Backend.
+**Avatar Creator** sample uses **AvatarCreatorApi** C++ class for communicating with the **Ready Player Me** Backend. The plugin **Content** can be completely rewritten to suit your project needs while using the **AvatarCreatorApi** for communication with the Backend.
 
 ## TODO
 
