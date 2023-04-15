@@ -55,8 +55,8 @@ To update the plugin submodule paste the following command in the terminal from 
 A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
 To add the AvatarCreator widget to your project simply copy the existing blueprint logic from the demo map into your project.
 
-AvatarCreator is a widget that can be added to a map or another widget.
-Inside the DemoMap we create and add the widget to the viewport.
+**AvatarCreator** is a widget that can be added to a map or another widget.
+Inside the AvatarCreatorDemo map we create and add the widget to the viewport.
 **AvatarCreator** can be customized by providing default values when the widget is created.
 We need to subscribe to the **Avatar Saved** event to get the URL when the avatar is saved.
 We need to subscribe to the **Avatar Selected** event as well to get the URL when the avatar is selected from the list of user avatars.
