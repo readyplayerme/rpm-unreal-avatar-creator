@@ -91,9 +91,9 @@ In this case, you will **not** be able to get the latest changes of this sample 
 - Add shadow for the avatar in the avatar editor
 - Add a sample for the VR
 
-## Troubleshooting
+## Known Issues
 
-- To avoid the issue where the avatar has a dark head, use the glTFRuntime version that is greater than 20230225.
+- If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest to avoid this issue.
 
 ## Links
 - [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine)
