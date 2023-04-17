@@ -3,6 +3,7 @@
 
 #include "RpmAvatarRequestHandler.h"
 
+#include "RpmUserAvatarDownloader.h"
 #include "glTFRuntimeFunctionLibrary.h"
 #include "Requests/RequestFactory.h"
 #include "Requests/Endpoints.h"
@@ -100,11 +101,11 @@ void URpmAvatarRequestHandler::OnUpdateAvatarCompleted(bool bSuccess)
 void URpmAvatarRequestHandler::DeleteAvatar(const FString& AvatarId, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed)
 {
 	DeleteAvatarRequest = RequestFactory->CreateDeleteAvatarRequest(AvatarId);
-	DeleteAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnDeleteAvatarCompleted, AvatarDeleteCompleted, Failed);
+	DeleteAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnDeleteAvatarCompleted, AvatarDeleteCompleted, Failed, AvatarId);
 	DeleteAvatarRequest->Download();
 }
 
-void URpmAvatarRequestHandler::OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed)
+void URpmAvatarRequestHandler::OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed, FString AvatarId)
 {
 	if (!bSuccess)
 	{
@@ -112,6 +113,10 @@ void URpmAvatarRequestHandler::OnDeleteAvatarCompleted(bool bSuccess, FAvatarDel
 	}
 	else
 	{
+		if (IsValid(UserAvatarDownloader))
+		{
+			UserAvatarDownloader->DeleteAvatar(AvatarId);
+		}
 		(void)AvatarDeleteCompleted.ExecuteIfBound();
 	}
 	DeleteAvatarRequest.Reset();
@@ -136,6 +141,10 @@ void URpmAvatarRequestHandler::OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveC
 	}
 	else
 	{
+		if (IsValid(UserAvatarDownloader))
+		{
+			UserAvatarDownloader->AddAvatar(AvatarProperties.Id, AvatarProperties.Partner);
+		}
 		(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarProperties.Id));
 	}
 	SaveAvatarRequest.Reset();

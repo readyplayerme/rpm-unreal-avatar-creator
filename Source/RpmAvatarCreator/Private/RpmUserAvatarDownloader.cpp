@@ -64,6 +64,22 @@ void URpmUserAvatarDownloader::SetImageDownloadDelegate(const FUserAvatarImageDo
 	OnImageDownloaded = ImageDownloaded;
 }
 
+void URpmUserAvatarDownloader::AddAvatar(const FString& AvatarId, const FString& Partner)
+{
+	FRpmUserAvatar UserAvatar;
+	UserAvatar.Id = AvatarId;
+	UserAvatar.Partner = Partner;
+	UserAvatars.Add(UserAvatar);
+}
+
+void URpmUserAvatarDownloader::DeleteAvatar(const FString& AvatarId)
+{
+	UserAvatars.RemoveAll([AvatarId](const auto& UserAvatar)
+	{
+		return UserAvatar.Id == AvatarId;
+	});
+}
+
 void URpmUserAvatarDownloader::DownloadImages(const FString& Partner)
 {
 	for (const auto& Avatar : UserAvatars)

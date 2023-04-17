@@ -19,6 +19,10 @@ public:
 
 	void DownloadImages(const FString& Partner);
 
+	void AddAvatar(const FString& AvatarId, const FString& Partner);
+
+	void DeleteAvatar(const FString& AvatarId);
+
 	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
 
 	TArray<FRpmUserAvatar> GetFilteredAvatars();

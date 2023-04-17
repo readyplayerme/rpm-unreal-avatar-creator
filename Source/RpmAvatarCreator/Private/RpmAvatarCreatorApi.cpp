@@ -32,6 +32,7 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	UserAvatarDownloader->SetRequestFactory(RequestFactory);
 	AvatarRequestHandler = NewObject<URpmAvatarRequestHandler>();
 	AvatarRequestHandler->SetRequestFactory(RequestFactory);
+	AvatarRequestHandler->UserAvatarDownloader = UserAvatarDownloader;
 }
 
 void URpmAvatarCreatorApi::SetPartnerDomain(const FString& PartnerDomain)
