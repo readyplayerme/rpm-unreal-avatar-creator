@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.1] 2023-04-19
+
+## Added
+
+- Added CloseButtonClicked event to properly handle.
+
+## Fixed
+
+- Changed the spawned actor location to avoid lighting issues.
+- Selfie page layout
+- Hide profile dropdown when clicking on the scene
+
+## Update
+
+- Increased scrolling speed for the scroll boxes.
+
 ## [0.2.0] 2023-04-17
 
 ## Added
