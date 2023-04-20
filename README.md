@@ -1,4 +1,4 @@
-# Ready Player Me Avatar Creator
+# Ready Player Me Avatar Creator (Alpha)
 
 ![Screenshot_20230221_044146](https://user-images.githubusercontent.com/3124894/229149244-df433bd5-b8f3-40ba-b87f-ce071ecdc773.png)
 
@@ -11,6 +11,10 @@ Please visit the online documentation and join our public `discord` community.
 ![](https://i.imgur.com/zGamwPM.png) **[Online Documentation]( https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-sdk )**
 
 ![](https://i.imgur.com/FgbNsPN.png) **[Discord Channel]( https://discord.gg/9veRUu2 )**
+
+## Important
+
+The plugin is currently in **alpha** stage. We recommend not to use it in the production until the stable version is released.
 
 ## Dependencies
 - **ReadyPlayerMe** Unreal SDK, an open source plugin that contains all the core functionality required for loading and displaying avatars.
@@ -64,6 +68,9 @@ Additionally, we can load an avatar with this URL afterward.
 
 ![Screenshot_20230221_060932](https://user-images.githubusercontent.com/3124894/229149539-1ae0e7a5-c9ae-4671-b6e1-e267e14fd204.png)
 
+Additionally if close button is enabled, we can subscribe to the **Close Button Clicked** event to be notified when the close button is clicked.
+This way we can close the widget and perform other actions.
+
 ## Customization Options
 
 ### Use the Sample project
@@ -87,6 +94,8 @@ In this case, you will **not** be able to get the latest changes of this sample 
 ## TODO
 
 - Fix the webcam support for mobile
+- Fix the webcam support for UE5
+- Update profile dropdown UI
 - Improve the UI
 - Add shadow for the avatar in the avatar editor
 - Add a sample for the VR
@@ -94,6 +103,7 @@ In this case, you will **not** be able to get the latest changes of this sample 
 ## Known Issues
 
 - If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest to avoid this issue.
+- To enable the webcam support for your project, you might need to enable some engine plugins depending on the target platform.
 
 ## Links
 - [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine)
