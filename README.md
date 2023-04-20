@@ -12,6 +12,10 @@ Please visit the online documentation and join our public `discord` community.
 
 ![](https://i.imgur.com/FgbNsPN.png) **[Discord Channel]( https://discord.gg/9veRUu2 )**
 
+## Important
+
+The plugin is currently in **alpha** stage. We recommend not to use it in the production until the stable version is released.
+
 ## Dependencies
 - **ReadyPlayerMe** Unreal SDK, an open source plugin that contains all the core functionality required for loading and displaying avatars.
   The plugin can be found on GitHub [here](https://github.com/readyplayerme/rpm-unreal-sdk).
@@ -21,10 +25,6 @@ Please visit the online documentation and join our public `discord` community.
 ### Requirements
 
 - Unreal Engine Version 4.27 or higher
-
-## Important
-
-The plugin is currently in **alpha** stage. We recommend not to use it in the production until the stable version is released.
 
 ## Integration
 
