@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 
 DECLARE_DELEGATE_OneParam(FFileDownloadCompleted, bool /*bSuccess*/);
+DECLARE_MULTICAST_DELEGATE(FCancellationDelegate);
 
 class IBaseRequest
 {

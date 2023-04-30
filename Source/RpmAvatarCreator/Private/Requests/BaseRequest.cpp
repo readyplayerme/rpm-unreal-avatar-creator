@@ -6,8 +6,9 @@
 #include "HttpModule.h"
 #include "Interfaces/IHttpResponse.h"
 
-FBaseRequest::FBaseRequest(const FString& Url, const FString& AuthToken, const FString& RequestVerb, const FString& Payload, float Timeout)
-	: Url(Url)
+FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken, const FString& RequestVerb, const FString& Payload, float Timeout)
+	: CancellationDelegate(CancellationDelegate)
+	, Url(Url)
 	, AuthToken(AuthToken)
 	, RequestVerb(RequestVerb)
 	, Payload(Payload)
@@ -17,6 +18,7 @@ FBaseRequest::FBaseRequest(const FString& Url, const FString& AuthToken, const F
 
 void FBaseRequest::Download()
 {
+	CancellationHandle = CancellationDelegate->AddSP(AsShared(), &FBaseRequest::CancelRequest);
 	DownloadRequest = FHttpModule::Get().CreateRequest();
 	if (Timeout > 0.f)
 	{
@@ -50,6 +52,7 @@ void FBaseRequest::CancelRequest()
 		DownloadRequest->CancelRequest();
 	}
 	OnDownloadCompleted.Unbind();
+	CancellationDelegate->Remove(CancellationHandle);
 }
 
 void FBaseRequest::OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
@@ -57,6 +60,7 @@ void FBaseRequest::OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response
 	const bool Success = bSuccess && Response.IsValid() && EHttpResponseCodes::IsOk(Response->GetResponseCode());
 	(void)OnDownloadCompleted.ExecuteIfBound(Success);
 	OnDownloadCompleted.Unbind();
+	CancellationDelegate->Remove(CancellationHandle);
 }
 
 FString FBaseRequest::GetContentAsString() const

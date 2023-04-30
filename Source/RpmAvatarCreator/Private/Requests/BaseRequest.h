@@ -6,11 +6,12 @@
 #include "Interfaces/IHttpRequest.h"
 #include "IBaseRequest.h"
 
+
 class FBaseRequest : public IBaseRequest, public TSharedFromThis<FBaseRequest>
 {
 public:
 	FBaseRequest() = default;
-	FBaseRequest(const FString& Url, const FString& AuthToken = "", const FString& RequestVerb = "GET", const FString& Payload = "", float Timeout = -1.f);
+	FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken = "", const FString& RequestVerb = "GET", const FString& Payload = "", float Timeout = -1.f);
 
 	virtual void Download() override;
 	virtual void CancelRequest() override;
@@ -26,6 +27,9 @@ protected:
 	virtual void OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
 
 	FFileDownloadCompleted OnDownloadCompleted;
+
+	TSharedRef<FCancellationDelegate> CancellationDelegate;
+	FDelegateHandle CancellationHandle;
 
 	FString Url;
 	FString AuthToken;

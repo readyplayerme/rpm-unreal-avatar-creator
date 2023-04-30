@@ -10,11 +10,15 @@
 class FRequestFactory
 {
 public:
+	FRequestFactory();
+
 	void SetPartnerDomain(const FString& Domain);
 
 	void SetUserData(const FRpmUserData& UserData);
 
 	void SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed);
+
+	void CancelRequests();
 
 	TSharedPtr<IBaseRequest> CreateSendCodeRequest(const FString& PayloadJson) const;
 	TSharedPtr<IBaseRequest> CreateConfirmCodeRequest(const FString& PayloadJson) const;
@@ -38,4 +42,5 @@ private:
 	FString PartnerDomain;
 	FRpmUserData UserData;
 	FTokenRefreshed TokenRefreshedDelegate;
+	TSharedRef<FCancellationDelegate> CancellationDelegate;
 };
