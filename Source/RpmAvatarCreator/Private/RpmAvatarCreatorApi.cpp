@@ -242,6 +242,6 @@ TArray<FRpmColorPalette> URpmAvatarCreatorApi::GetColorPalettes() const
 
 void URpmAvatarCreatorApi::BeginDestroy()
 {
-	//TODO: Cancel Load
+	RequestFactory->CancelRequests();
 	Super::BeginDestroy();
 }

@@ -38,7 +38,6 @@ FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPreviewDownloadedCallb
 void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarId)
 {
 	bAvatarExists = true;
-	//TODO: Fix the case when the item is selected in the UI but the Update request fails.
 	bIsExistingAvatarUnchanged = bAvatarExists;
 	AvatarProperties.Id = InAvatarId;
 	AvatarMetadataRequest = RequestFactory->CreateAvatarMetadataRequest(AvatarProperties.Id);
@@ -50,10 +49,9 @@ void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properti
 {
 	bAvatarExists = false;
 	Mesh = nullptr;
-	AvatarProperties = Properties;
-	CreateAvatarRequest = RequestFactory->CreateAvatarCreateRequest(FPayloadExtractor::MakeCreatePayload(AvatarProperties));
-	CreateAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnAvatarCreateCompleted);
-	CreateAvatarRequest->Download();
+	AvatarMetadataRequest = RequestFactory->CreateAvatarCreateRequest(FPayloadExtractor::MakeCreatePayload(Properties));
+	AvatarMetadataRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPropertiesRequestCompleted);
+	AvatarMetadataRequest->Download();
 }
 
 FRpmAvatarProperties URpmAvatarRequestHandler::GetAvatarProperties() const
@@ -75,6 +73,7 @@ void URpmAvatarRequestHandler::UpdateAvatar(ERpmPartnerAssetColor AssetColor, in
 
 void URpmAvatarRequestHandler::UpdateAvatar(const FString& Payload)
 {
+	//TODO: Fix the case when the item is selected in the UI but the Update request fails.
 	bIsExistingAvatarUnchanged = false;
 	if (UpdateAvatarRequest)
 	{
@@ -156,17 +155,6 @@ void URpmAvatarRequestHandler::DownloadModel(USkeleton* Skeleton)
 	AvatarModelRequest = RequestFactory->CreateAvatarModelRequest(AvatarProperties.Id, !bAvatarExists);
 	AvatarModelRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnModelDownloadCompleted);
 	AvatarModelRequest->Download();
-}
-
-void URpmAvatarRequestHandler::OnAvatarCreateCompleted(bool bSuccess)
-{
-	if (bSuccess)
-	{
-		AvatarProperties = FPayloadExtractor::ExtractPayload(CreateAvatarRequest->GetContentAsString());
-	}
-
-	(void)OnAvatarPropertiesDownloaded.ExecuteIfBound(bSuccess);
-	OnAvatarPropertiesDownloaded.Unbind();
 }
 
 void URpmAvatarRequestHandler::OnPropertiesRequestCompleted(bool bSuccess)
