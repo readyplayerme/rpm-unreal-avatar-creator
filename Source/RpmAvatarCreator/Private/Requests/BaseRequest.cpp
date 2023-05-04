@@ -6,8 +6,21 @@
 #include "HttpModule.h"
 #include "Interfaces/IHttpResponse.h"
 
-FBaseRequest::FBaseRequest(const FString& Url, const FString& AuthToken, const FString& RequestVerb, const FString& Payload, float Timeout)
-	: Url(Url)
+namespace
+{
+	TMap<ERequestVerb, FString> REQUEST_VERB_MAP =
+	{
+		{ERequestVerb::Get, "GET"},
+		{ERequestVerb::Post, "POST"},
+		{ERequestVerb::Put, "PUT"},
+		{ERequestVerb::Patch, "PATCH"},
+		{ERequestVerb::Delete, "DELETE"}
+	};
+}
+
+FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken, ERequestVerb RequestVerb, const FString& Payload, float Timeout)
+	: CancellationDelegate(CancellationDelegate)
+	, Url(Url)
 	, AuthToken(AuthToken)
 	, RequestVerb(RequestVerb)
 	, Payload(Payload)
@@ -17,6 +30,7 @@ FBaseRequest::FBaseRequest(const FString& Url, const FString& AuthToken, const F
 
 void FBaseRequest::Download()
 {
+	CancellationHandle = CancellationDelegate->AddSP(AsShared(), &FBaseRequest::CancelRequest);
 	DownloadRequest = FHttpModule::Get().CreateRequest();
 	if (Timeout > 0.f)
 	{
@@ -34,7 +48,7 @@ void FBaseRequest::Download()
 		DownloadRequest->SetContentAsString(Payload);
 	}
 	DownloadRequest->OnProcessRequestComplete().BindSP(AsShared(), &FBaseRequest::OnReceived);
-	DownloadRequest->SetVerb(RequestVerb);
+	DownloadRequest->SetVerb(REQUEST_VERB_MAP[RequestVerb]);
 	DownloadRequest->ProcessRequest();
 }
 
@@ -50,6 +64,7 @@ void FBaseRequest::CancelRequest()
 		DownloadRequest->CancelRequest();
 	}
 	OnDownloadCompleted.Unbind();
+	CancellationDelegate->Remove(CancellationHandle);
 }
 
 void FBaseRequest::OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess)
@@ -57,6 +72,7 @@ void FBaseRequest::OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response
 	const bool Success = bSuccess && Response.IsValid() && EHttpResponseCodes::IsOk(Response->GetResponseCode());
 	(void)OnDownloadCompleted.ExecuteIfBound(Success);
 	OnDownloadCompleted.Unbind();
+	CancellationDelegate->Remove(CancellationHandle);
 }
 
 FString FBaseRequest::GetContentAsString() const
