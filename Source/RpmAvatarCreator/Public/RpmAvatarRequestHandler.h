@@ -48,9 +48,6 @@ public:
 
 private:
 	UFUNCTION()
-	void OnAvatarCreateCompleted(bool bSuccess);
-
-	UFUNCTION()
 	void OnUpdateAvatarCompleted(bool bSuccess);
 
 	UFUNCTION()
@@ -82,7 +79,6 @@ private:
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TSharedPtr<class IBaseRequest> AvatarMetadataRequest;
-	TSharedPtr<class IBaseRequest> CreateAvatarRequest;
 	TSharedPtr<class IBaseRequest> UpdateAvatarRequest;
 	TSharedPtr<class IBaseRequest> SaveAvatarRequest;
 	TSharedPtr<class IBaseRequest> DeleteAvatarRequest;

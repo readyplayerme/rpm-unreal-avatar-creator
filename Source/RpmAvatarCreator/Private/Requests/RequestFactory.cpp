@@ -37,22 +37,22 @@ void FRequestFactory::CancelRequests()
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateSendCodeRequest(const FString& PayloadJson) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetSendCodeEndpoint(PartnerDomain), "", "POST", PayloadJson);
+	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetSendCodeEndpoint(PartnerDomain), "", ERequestVerb::Post, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateConfirmCodeRequest(const FString& PayloadJson) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetConfirmCodeEndpoint(PartnerDomain), "", "POST", PayloadJson);
+	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetConfirmCodeEndpoint(PartnerDomain), "", ERequestVerb::Post, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateTokenRefreshRequest() const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetTokenRefreshEndpoint(PartnerDomain), "", "POST", FUserDataExtractor::MakeTokenRefreshPayload(UserData));
+	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetTokenRefreshEndpoint(PartnerDomain), "", ERequestVerb::Post, FUserDataExtractor::MakeTokenRefreshPayload(UserData));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthAnonymousRequest() const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAuthAnonymousEndpoint(PartnerDomain), "", "POST");
+	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAuthAnonymousEndpoint(PartnerDomain), "", ERequestVerb::Post);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest() const
@@ -72,7 +72,7 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateImageRequest(const FString& Icon
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateRenderRequest(const FString& AvatarId) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetRenderEndpoint(AvatarId), "", "GET", "", IMAGE_REQUEST_TIMEOUT);
+	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetRenderEndpoint(AvatarId), "", ERequestVerb::Get, "", IMAGE_REQUEST_TIMEOUT);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateUserAvatarsRequest() const
@@ -92,22 +92,22 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarMetadataRequest(const FStr
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarCreateRequest(const FString& PayloadJson) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetCreateEndpoint(), UserData.Token, "POST", PayloadJson));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetCreateEndpoint(), UserData.Token, ERequestVerb::Post, PayloadJson));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetUpdateAvatarEndpoint(AvatarId), UserData.Token, "PATCH", PayloadJson));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetUpdateAvatarEndpoint(AvatarId), UserData.Token, ERequestVerb::Patch, PayloadJson));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateSaveAvatarRequest(const FString& AvatarId) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetSaveAvatarEndpoint(AvatarId), UserData.Token, "PUT"));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetSaveAvatarEndpoint(AvatarId), UserData.Token, ERequestVerb::Put));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FString& AvatarId) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetDeleteAvatarEndpoint(AvatarId), UserData.Token, "DELETE"));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetDeleteAvatarEndpoint(AvatarId), UserData.Token, ERequestVerb::Delete));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest) const

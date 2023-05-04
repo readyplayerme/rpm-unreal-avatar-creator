@@ -6,12 +6,20 @@
 #include "Interfaces/IHttpRequest.h"
 #include "IBaseRequest.h"
 
+enum class ERequestVerb
+{
+	Get,
+	Post,
+	Put,
+	Patch,
+	Delete
+};
 
 class FBaseRequest : public IBaseRequest, public TSharedFromThis<FBaseRequest>
 {
 public:
 	FBaseRequest() = default;
-	FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken = "", const FString& RequestVerb = "GET", const FString& Payload = "", float Timeout = -1.f);
+	FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken = "", ERequestVerb RequestVerb = ERequestVerb::Get, const FString& Payload = "", float Timeout = -1.f);
 
 	virtual void Download() override;
 	virtual void CancelRequest() override;
@@ -33,7 +41,7 @@ protected:
 
 	FString Url;
 	FString AuthToken;
-	FString RequestVerb = "GET";
+	ERequestVerb RequestVerb = ERequestVerb::Get;
 	FString Payload = "";
 	float Timeout = -1.f;
 

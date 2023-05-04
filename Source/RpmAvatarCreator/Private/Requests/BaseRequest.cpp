@@ -6,7 +6,19 @@
 #include "HttpModule.h"
 #include "Interfaces/IHttpResponse.h"
 
-FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken, const FString& RequestVerb, const FString& Payload, float Timeout)
+namespace
+{
+	TMap<ERequestVerb, FString> REQUEST_VERB_MAP =
+	{
+		{ERequestVerb::Get, "GET"},
+		{ERequestVerb::Post, "POST"},
+		{ERequestVerb::Put, "PUT"},
+		{ERequestVerb::Patch, "PATCH"},
+		{ERequestVerb::Delete, "DELETE"}
+	};
+}
+
+FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken, ERequestVerb RequestVerb, const FString& Payload, float Timeout)
 	: CancellationDelegate(CancellationDelegate)
 	, Url(Url)
 	, AuthToken(AuthToken)
@@ -36,7 +48,7 @@ void FBaseRequest::Download()
 		DownloadRequest->SetContentAsString(Payload);
 	}
 	DownloadRequest->OnProcessRequestComplete().BindSP(AsShared(), &FBaseRequest::OnReceived);
-	DownloadRequest->SetVerb(RequestVerb);
+	DownloadRequest->SetVerb(REQUEST_VERB_MAP[RequestVerb]);
 	DownloadRequest->ProcessRequest();
 }
 
