@@ -15,7 +15,11 @@ class RPMAVATARCREATOR_API URpmAvatarCreatorFunctionLibrary : public UBlueprintF
 	GENERATED_BODY()
 
 public:
-	/** Get unique id of the avatar. */
+	/** Get the Base64 string of the image in the Render Target. */
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Base64 String From Render Target"))
 	static FString GetBase64String(class UTextureRenderTarget2D* TextureRenderTarget);
+
+	/** Get avatar Url from avatar id. */
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Avatar Url From Avatar Id"))
+	static FString GetAvatarUrl(const FString& AvatarId);
 };
