@@ -84,9 +84,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Color Palettes"))
 	TArray<FRpmColorPalette> GetColorPalettes() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Photo"))
-	void SetProfilePhoto(UTextureRenderTarget2D* TextureRenderTarget);
-
 	virtual void BeginDestroy() override;
 
 private:
