@@ -8,13 +8,9 @@
 #include "RpmAuthManager.h"
 #include "RpmAvatarRequestHandler.h"
 #include "Requests/RequestFactory.h"
-#include "ImageUtils.h"
 #include "RpmUserAvatarDownloader.h"
 #include "RpmDefaultAvatarDownloader.h"
-#include "Serialization/BufferArchive.h"
-#include "Engine/TextureRenderTarget2D.h"
 #include "Engine/SkeletalMesh.h"
-#include "Misc/Base64.h"
 
 URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	: FullBodySkeleton(nullptr)
@@ -45,17 +41,6 @@ void URpmAvatarCreatorApi::SetPartnerDomain(const FString& PartnerDomain)
 void URpmAvatarCreatorApi::SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded)
 {
 	AvatarRequestHandler->OnPreviewDownloaded = PreviewDownloaded;
-}
-
-void URpmAvatarCreatorApi::SetProfilePhoto(UTextureRenderTarget2D* TextureRenderTarget)
-{
-	FBufferArchive Buffer;
-	if (FImageUtils::ExportRenderTarget2DAsPNG(TextureRenderTarget, Buffer))
-	{
-		AvatarProperties.Base64Image = FBase64::Encode(const_cast<uint8*>(Buffer.GetData()), Buffer.Num());
-		AvatarProperties.Assets.Empty();
-		AvatarProperties.Colors.Empty();
-	}
 }
 
 FRpmUserData URpmAvatarCreatorApi::GetUserData() const

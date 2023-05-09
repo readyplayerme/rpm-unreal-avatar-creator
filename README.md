@@ -93,17 +93,27 @@ In this case, you will **not** be able to get the latest changes of this sample 
 
 ## TODO
 
-- Fix the webcam support for mobile
+- Fix the webcam support for Android
 - Fix the webcam support for UE5
-- Update profile dropdown UI
-- Improve the UI
 - Add shadow for the avatar in the avatar editor
 - Add a sample for the VR
 
 ## Known Issues
 
-- If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest to avoid this issue.
-- To enable the webcam support for your project, you might need to enable some engine plugins depending on the target platform.
+If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest to avoid this issue.
+
+### Webcam support
+Webcam functionality is currently available only on the Windows platform when using Unreal Engine 4.27.
+However, Unreal Engine 5 experiences issues with Webcam support. To make the webcam work in Unreal Engine 5, a workaround is available, which involves changing the Default RHI property to DirectX 11. However, this change may result in the disabling of certain Unreal Engine 5 features.
+if webcam support is required for mobile platforms, you will need to either create a platform-specific webcam functionality or add an external plugin.
+
+### File Picker
+The sample doesn't provide an option to pick an image file that would be used for generating an avatar according to the image. This is done to keep the sample project simple.
+Depending on the target platform, the file picker functionality and dependencies will be different.
+
+In case you require file picker functionality, you can either add an external plugin or create a platform-specific file picker.
+After implementing the platform-side file picking functionality, convert the selected image to a base64 string and pass it to the Base64Image property of the AvatarProperties in the AvatarCreatorApi.
+After implementing the file picking logic, you will need to modify the WBP_SelfieSuggestion widget and include a button for picking images.
 
 ## Links
 - [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine)

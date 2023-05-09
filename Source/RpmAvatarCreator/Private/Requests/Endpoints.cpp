@@ -7,7 +7,7 @@ static const TCHAR* API_ENDPOINT = TEXT("https://{0}.readyplayer.me/api{1}");
 static const TCHAR* AVATAR_API_V2_ENDPOINT = TEXT("https://api.readyplayer.me/v2/avatars");
 static const TCHAR* AVATAR_API_V1_ENDPOINT = TEXT("https://api.readyplayer.me/v1/avatars");
 static const TCHAR* REQUEST_OPTIMIZATION_PARAMS = TEXT("morphTargets=none&textureAtlas=none&textureSizeLimit=512&useHands=false");
-static const TCHAR* RENDER_URL_PREFIX = TEXT("https://models.readyplayer.me");
+static const TCHAR* MODELS_URL_PREFIX = TEXT("https://models.readyplayer.me");
 
 FString FEndpoints::GetAuthAnonymousEndpoint(const FString& Subdomain)
 {
@@ -41,12 +41,12 @@ FString FEndpoints::GetColorEndpoint(const FString& AvatarId)
 
 FString FEndpoints::GetAvatarPublicUrl(const FString& AvatarId)
 {
-	return FString::Format(TEXT("{0}/{1}.glb"), {AVATAR_API_V2_ENDPOINT, AvatarId});
+	return FString::Format(TEXT("{0}/{1}.glb"), {MODELS_URL_PREFIX, AvatarId});
 }
 
 FString FEndpoints::GetRenderEndpoint(const FString& AvatarId)
 {
-	return FString::Format(TEXT("{0}/{1}.png"), {RENDER_URL_PREFIX, AvatarId});
+	return FString::Format(TEXT("{0}/{1}.png"), {MODELS_URL_PREFIX, AvatarId});
 }
 
 FString FEndpoints::GetUserAvatarsEndpoint(const FString& UserId)
