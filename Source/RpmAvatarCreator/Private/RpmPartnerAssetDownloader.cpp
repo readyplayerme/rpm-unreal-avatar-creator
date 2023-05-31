@@ -6,6 +6,7 @@
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Requests/RequestFactory.h"
 #include "Extractors/PartnerAssetExtractor.h"
+#include "Engine/Texture2D.h"
 
 namespace
 {
