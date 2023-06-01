@@ -34,7 +34,7 @@ public:
 	TSharedPtr<IBaseRequest> CreateUserAvatarsRequest() const;
 	TSharedPtr<IBaseRequest> CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const;
 	TSharedPtr<IBaseRequest> CreateSaveAvatarRequest(const FString& AvatarId) const;
-	TSharedPtr<IBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId) const;
+	TSharedPtr<IBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId, bool bIsDraft) const;
 
 	TSharedPtr<IBaseRequest> CreateAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest) const;
 

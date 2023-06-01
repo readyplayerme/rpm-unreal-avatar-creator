@@ -29,7 +29,7 @@ public:
 
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
-	void DeleteAvatar(const FString& AvatarId, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed);
+	void DeleteAvatar(const FString& AvatarId, bool bIsDraft, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed);
 
 	FRpmAvatarProperties GetAvatarProperties() const;
 
@@ -54,7 +54,7 @@ private:
 	void OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveCompleted AvatarSaveCompleted, FAvatarCreatorFailed Failed);
 
 	UFUNCTION()
-	void OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed, FString AvatarId);
+	void OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed, FString AvatarId, bool bIsDraft);
 
 	UFUNCTION()
 	void OnModelDownloadCompleted(bool bSuccess);

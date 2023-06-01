@@ -35,5 +35,5 @@ public:
 
 	static FString GetSaveAvatarEndpoint(const FString& AvatarId);
 
-	static FString GetDeleteAvatarEndpoint(const FString& AvatarId);
+	static FString GetDeleteAvatarEndpoint(const FString& AvatarId, bool bIsDraft);
 };
