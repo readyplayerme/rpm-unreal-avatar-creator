@@ -14,7 +14,7 @@ FString FEndpoints::GetAuthAnonymousEndpoint(const FString& Subdomain)
 	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/users")});
 }
 
-FString FEndpoints::GetSendCodeEndpoint(const FString& Subdomain)
+FString FEndpoints::GetAuthStartEndpoint(const FString& Subdomain)
 {
 	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/auth/start")});
 }

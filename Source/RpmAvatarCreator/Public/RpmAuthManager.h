@@ -11,7 +11,7 @@ class RPMAVATARCREATOR_API FRpmAuthManager : public TSharedFromThis<FRpmAuthMana
 public:
 	FRpmAuthManager(TSharedPtr<class FRequestFactory> RequestFactory);
 	void BindTokenRefreshDelegate();
-	void SendActivationCode(const FString& Email, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
+	void AuthStart(const FString& Email, bool bTypeCode, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
 	void ConfirmActivationCode(const FString& Code, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
 	void AuthAnonymous(const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed);
 	void Logout();
@@ -20,12 +20,12 @@ public:
 
 private:
 	void AuthAnonymousCompleted(bool bSuccess);
-	void SendActivationCodeCompleted(bool bSuccess);
+	void AuthStartCompleted(bool bSuccess);
 	void ConfirmActivationCodeCompleted(bool bSuccess);
 	void TokenRefreshed(const FString& Token, const FString& RefreshToken);
 
 	void SaveUserData() const;
-	
+
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	FRpmUserData UserData;
 	TSharedPtr<class IBaseRequest> AuthRequest;

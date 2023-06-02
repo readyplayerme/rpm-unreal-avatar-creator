@@ -20,7 +20,7 @@ public:
 
 	void CancelRequests();
 
-	TSharedPtr<IBaseRequest> CreateSendCodeRequest(const FString& PayloadJson) const;
+	TSharedPtr<IBaseRequest> CreateAuthStartRequest(const FString& PayloadJson) const;
 	TSharedPtr<IBaseRequest> CreateConfirmCodeRequest(const FString& PayloadJson) const;
 	TSharedPtr<IBaseRequest> CreateTokenRefreshRequest() const;
 	TSharedPtr<IBaseRequest> CreateAuthAnonymousRequest() const;

@@ -35,9 +35,9 @@ void FRequestFactory::CancelRequests()
 	CancellationDelegate->Broadcast();
 }
 
-TSharedPtr<IBaseRequest> FRequestFactory::CreateSendCodeRequest(const FString& PayloadJson) const
+TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthStartRequest(const FString& PayloadJson) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetSendCodeEndpoint(PartnerDomain), "", ERequestVerb::Post, PayloadJson);
+	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAuthStartEndpoint(PartnerDomain), "", ERequestVerb::Post, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateConfirmCodeRequest(const FString& PayloadJson) const

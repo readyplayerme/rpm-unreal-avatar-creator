@@ -53,9 +53,9 @@ void URpmAvatarCreatorApi::AuthAnonymous(const FAuthenticationCompleted& Complet
 	AuthManager->AuthAnonymous(Completed, Failed);
 }
 
-void URpmAvatarCreatorApi::SendActivationCode(const FString& Email, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
+void URpmAvatarCreatorApi::AuthStart(const FString& Email, bool bTypeCode, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
 {
-	AuthManager->SendActivationCode(Email, Completed, Failed);
+	AuthManager->AuthStart(Email, bTypeCode, Completed, Failed);
 }
 
 void URpmAvatarCreatorApi::ConfirmActivationCode(const FString& Code, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
