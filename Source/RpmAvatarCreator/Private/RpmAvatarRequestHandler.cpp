@@ -97,14 +97,14 @@ void URpmAvatarRequestHandler::OnUpdateAvatarCompleted(bool bSuccess)
 	(void)OnPreviewDownloaded.ExecuteIfBound(Mesh);
 }
 
-void URpmAvatarRequestHandler::DeleteAvatar(const FString& AvatarId, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed)
+void URpmAvatarRequestHandler::DeleteAvatar(const FString& AvatarId, bool bIsDraft, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed)
 {
-	DeleteAvatarRequest = RequestFactory->CreateDeleteAvatarRequest(AvatarId);
-	DeleteAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnDeleteAvatarCompleted, AvatarDeleteCompleted, Failed, AvatarId);
+	DeleteAvatarRequest = RequestFactory->CreateDeleteAvatarRequest(AvatarId, bIsDraft);
+	DeleteAvatarRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnDeleteAvatarCompleted, AvatarDeleteCompleted, Failed, AvatarId, bIsDraft);
 	DeleteAvatarRequest->Download();
 }
 
-void URpmAvatarRequestHandler::OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed, FString AvatarId)
+void URpmAvatarRequestHandler::OnDeleteAvatarCompleted(bool bSuccess, FAvatarDeleteCompleted AvatarDeleteCompleted, FAvatarCreatorFailed Failed, FString AvatarId, bool bIsDraft)
 {
 	if (!bSuccess)
 	{
@@ -112,7 +112,7 @@ void URpmAvatarRequestHandler::OnDeleteAvatarCompleted(bool bSuccess, FAvatarDel
 	}
 	else
 	{
-		if (IsValid(UserAvatarDownloader))
+		if (!bIsDraft && IsValid(UserAvatarDownloader))
 		{
 			UserAvatarDownloader->DeleteAvatar(AvatarId);
 		}

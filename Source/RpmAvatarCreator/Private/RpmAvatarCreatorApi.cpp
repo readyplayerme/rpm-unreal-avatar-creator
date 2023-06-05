@@ -205,9 +205,9 @@ void URpmAvatarCreatorApi::SaveAvatar(const FAvatarSaveCompleted& AvatarSaveComp
 	AvatarRequestHandler->SaveAvatar(AvatarSaveCompleted, Failed);
 }
 
-void URpmAvatarCreatorApi::DeleteAvatar(const FString& AvatarId, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed)
+void URpmAvatarCreatorApi::DeleteAvatar(const FString& AvatarId, bool bIsDraft, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed)
 {
-	AvatarRequestHandler->DeleteAvatar(AvatarId, AvatarDeleteCompleted, Failed);
+	AvatarRequestHandler->DeleteAvatar(AvatarId, bIsDraft, AvatarDeleteCompleted, Failed);
 }
 
 FRpmAvatarProperties URpmAvatarCreatorApi::GetAvatarProperties() const

@@ -105,9 +105,9 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateSaveAvatarRequest(const FString&
 	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetSaveAvatarEndpoint(AvatarId), UserData.Token, ERequestVerb::Put));
 }
 
-TSharedPtr<IBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FString& AvatarId) const
+TSharedPtr<IBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FString& AvatarId, bool bIsDraft) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetDeleteAvatarEndpoint(AvatarId), UserData.Token, ERequestVerb::Delete));
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetDeleteAvatarEndpoint(AvatarId, bIsDraft), UserData.Token, ERequestVerb::Delete));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest) const

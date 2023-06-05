@@ -80,7 +80,8 @@ FString FEndpoints::GetSaveAvatarEndpoint(const FString& AvatarId)
 	return FString::Format(TEXT("{0}/{1}"), {AVATAR_API_V2_ENDPOINT, AvatarId});
 }
 
-FString FEndpoints::GetDeleteAvatarEndpoint(const FString& AvatarId)
+FString FEndpoints::GetDeleteAvatarEndpoint(const FString& AvatarId, bool bIsDraft)
 {
-	return FString::Format(TEXT("{0}/{1}"), {AVATAR_API_V1_ENDPOINT, AvatarId});
+	const FString DraftStr = bIsDraft ? "draft" : "";
+	return FString::Format(TEXT("{0}/{1}/{2}"), {AVATAR_API_V2_ENDPOINT, AvatarId, DraftStr});
 }
