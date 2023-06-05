@@ -14,6 +14,7 @@ static const FString JSON_FIELD_EMAIL = "email";
 static const FString JSON_FIELD_CODE = "code";
 static const FString JSON_FIELD_NAME = "name";
 static const FString JSON_FIELD_ID = "id";
+static const FString JSON_FIELD_AUTH_TYPE = "authType";
 
 namespace
 {
@@ -106,17 +107,17 @@ FRpmUserData FUserDataExtractor::ExtractUserData(const FString& JsonString)
 	return {};
 }
 
-FString FUserDataExtractor::MakeAuthStartPayload(const FString& Email, const FString& UserId, bool bTypeCode)
+FString FUserDataExtractor::MakeAuthStartPayload(const FString& Email, const FString& UserId, bool bIsTypeCode)
 {
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
 	DataObject->SetStringField(JSON_FIELD_EMAIL, Email);
 	if (!UserId.IsEmpty())
 	{
-		DataObject->SetStringField("id", UserId);
+		DataObject->SetStringField(JSON_FIELD_ID, UserId);
 	}
-	if (bTypeCode)
+	if (bIsTypeCode)
 	{
-		DataObject->SetStringField("authType", JSON_FIELD_CODE);
+		DataObject->SetStringField(JSON_FIELD_AUTH_TYPE, JSON_FIELD_CODE);
 	}
 	return MakeDataPayload(DataObject);
 }

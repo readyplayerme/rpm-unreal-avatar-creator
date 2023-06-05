@@ -27,12 +27,12 @@ void FRpmAuthManager::Logout()
 	RequestFactory->SetUserData({});
 }
 
-void FRpmAuthManager::AuthStart(const FString& Email, bool bTypeCode, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
+void FRpmAuthManager::AuthStart(const FString& Email, bool bIsTypeCode, const FAuthenticationCompleted& Completed, const FAvatarCreatorFailed& Failed)
 {
 	OnAuthenticationCompleted = Completed;
 	OnAvatarCreatorFailed = Failed;
 
-	AuthRequest = RequestFactory->CreateAuthStartRequest(FUserDataExtractor::MakeAuthStartPayload(Email, UserData.Id, bTypeCode));
+	AuthRequest = RequestFactory->CreateAuthStartRequest(FUserDataExtractor::MakeAuthStartPayload(Email, UserData.Id, bIsTypeCode));
 	AuthRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmAuthManager::AuthStartCompleted);
 	AuthRequest->Download();
 }

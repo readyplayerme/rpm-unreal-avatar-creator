@@ -14,7 +14,7 @@ public:
 
 	static FRpmUserData ExtractRefreshedUserSession(const FString& JsonString);
 
-	static FString MakeAuthStartPayload(const FString& Email, const FString& UserId, bool bTypeCode);
+	static FString MakeAuthStartPayload(const FString& Email, const FString& UserId, bool bIsTypeCode);
 
 	static FString MakeConfirmCodePayload(const FString& Code);
 
