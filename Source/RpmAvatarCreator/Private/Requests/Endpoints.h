@@ -9,7 +9,7 @@ class FEndpoints
 public:
 	static FString GetAuthAnonymousEndpoint(const FString& Subdomain);
 	
-	static FString GetSendCodeEndpoint(const FString& Subdomain);
+	static FString GetAuthStartEndpoint(const FString& Subdomain);
 	
 	static FString GetConfirmCodeEndpoint(const FString& Subdomain);
 
