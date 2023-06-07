@@ -64,6 +64,11 @@ FString FEndpoints::GetCreateEndpoint()
 	return AVATAR_API_V2_ENDPOINT;
 }
 
+FString FEndpoints::GetAvatarTemplatesEndpoint(const FString& TemplateId)
+{
+	return FString::Format(TEXT("{0}/{1}/{2}"), {AVATAR_API_V2_ENDPOINT, TEXT("templates"), TemplateId});
+}
+
 FString FEndpoints::GetAvatarModelEndpoint(const FString& AvatarId, bool bIsPreview)
 {
 	const FString PreviewParamStr = bIsPreview ? "preview=true&" : "";

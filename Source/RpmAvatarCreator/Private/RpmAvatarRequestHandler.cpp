@@ -45,11 +45,11 @@ void URpmAvatarRequestHandler::DownloadAvatarProperties(const FString& InAvatarI
 	AvatarMetadataRequest->Download();
 }
 
-void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properties)
+void URpmAvatarRequestHandler::CreateAvatar(const FRpmAvatarProperties& Properties, const FString& TemplateId)
 {
 	bAvatarExists = false;
 	Mesh = nullptr;
-	AvatarMetadataRequest = RequestFactory->CreateAvatarCreateRequest(FPayloadExtractor::MakeCreatePayload(Properties));
+	AvatarMetadataRequest = RequestFactory->CreateAvatarCreateRequest(FPayloadExtractor::MakeCreatePayload(Properties), TemplateId);
 	AvatarMetadataRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPropertiesRequestCompleted);
 	AvatarMetadataRequest->Download();
 }

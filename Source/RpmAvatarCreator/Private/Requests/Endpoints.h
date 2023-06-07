@@ -15,6 +15,8 @@ public:
 
 	static FString GetTokenRefreshEndpoint(const FString& Subdomain);
 
+	static FString GetAvatarTemplatesEndpoint(const FString& TemplateId = "");
+
 	static FString GetAssetEndpoint(const FString& Subdomain);
 	
 	static FString GetColorEndpoint(const FString& AvatarId);

@@ -45,11 +45,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar Color"))
 	void UpdateAvatarColor(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Default Avatar Ids"))
-	void SetDefaultAvatarIds(const TArray<FString>& AvatarIds);
-
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Default Avatars"))
-	void DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Avatar Templates"))
+	void DownloadAvatarTemplates(const FAvatarTemplatesDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download User Avatars"))
 	void DownloadUserAvatars(const FUserAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
@@ -74,6 +71,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	FRpmAvatarProperties AvatarProperties;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
+	FString SelectedAvatarTemplateId;
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Avatar Properties"))
 	FRpmAvatarProperties GetAvatarProperties() const;
@@ -114,7 +114,7 @@ private:
 	class URpmPartnerAssetDownloader* AssetDownloader;
 
 	UPROPERTY()
-	class URpmDefaultAvatarDownloader* DefaultAvatarDownloader;
+	class URpmAvatarTemplateDownloader* AvatarTemplateDownloader;
 
 	UPROPERTY()
 	class URpmUserAvatarDownloader* UserAvatarDownloader;

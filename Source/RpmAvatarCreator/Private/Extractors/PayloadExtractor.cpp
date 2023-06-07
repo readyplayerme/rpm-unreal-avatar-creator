@@ -149,19 +149,11 @@ FString FPayloadExtractor::MakeCreatePayload(const FRpmAvatarProperties& AvatarP
 	DataObject->SetObjectField("assets", AssetsObject);
 
 	DataObject->SetStringField("partner", AvatarProperties.Partner);
-	DataObject->SetStringField("gender",  GenderToString(AvatarProperties.Gender));
 	DataObject->SetStringField("bodyType", BodyTypeToString(AvatarProperties.BodyType));
 	if (!AvatarProperties.Base64Image.IsEmpty())
 	{
 		DataObject->SetStringField("base64Image", AvatarProperties.Base64Image);
-	}
-	for (const auto& Item : AvatarProperties.Assets)
-	{
-		AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[Item.Key], FString::FromInt(Item.Value));
-	}
-	for (const auto& Item : AvatarProperties.Colors)
-	{
-		AssetsObject->SetNumberField(ASSET_COLOR_TO_STRING_MAP[Item.Key], Item.Value);
+		DataObject->SetStringField("gender",  GenderToString(AvatarProperties.Gender));
 	}
 
 	const auto Writer = TJsonWriterFactory<>::Create(&OutputJsonString);

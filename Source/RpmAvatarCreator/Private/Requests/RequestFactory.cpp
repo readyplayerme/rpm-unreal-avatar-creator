@@ -55,6 +55,11 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthAnonymousRequest() const
 	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAuthAnonymousEndpoint(PartnerDomain), "", ERequestVerb::Post);
 }
 
+TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarTemplatesRequest() const
+{
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAvatarTemplatesEndpoint(), UserData.Token));
+}
+
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest() const
 {
 	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAssetEndpoint(PartnerDomain), UserData.Token));
@@ -90,9 +95,13 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarMetadataRequest(const FStr
 	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAvatarMetadataEndpoint(AvatarId));
 }
 
-TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarCreateRequest(const FString& PayloadJson) const
+TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarCreateRequest(const FString& PayloadJson, const FString& TemplateId) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetCreateEndpoint(), UserData.Token, ERequestVerb::Post, PayloadJson));
+	if (TemplateId.IsEmpty())
+	{
+		return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetCreateEndpoint(), UserData.Token, ERequestVerb::Post, PayloadJson));
+	}
+	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAvatarTemplatesEndpoint(TemplateId), UserData.Token, ERequestVerb::Post, PayloadJson));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const
