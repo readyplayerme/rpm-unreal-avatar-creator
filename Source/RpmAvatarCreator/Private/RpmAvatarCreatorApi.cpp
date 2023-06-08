@@ -205,11 +205,6 @@ void URpmAvatarCreatorApi::DeleteAvatar(const FString& AvatarId, bool bIsDraft, 
 	AvatarRequestHandler->DeleteAvatar(AvatarId, bIsDraft, AvatarDeleteCompleted, Failed);
 }
 
-FRpmAvatarProperties URpmAvatarCreatorApi::GetAvatarProperties() const
-{
-	return AvatarRequestHandler->GetAvatarProperties();
-}
-
 TArray<FRpmPartnerAsset> URpmAvatarCreatorApi::GetFilteredPartnerAssets() const
 {
 	return AssetDownloader->GetFilteredAssets(AvatarProperties.BodyType, AvatarProperties.Gender);

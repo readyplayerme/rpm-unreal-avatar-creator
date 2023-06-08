@@ -5,7 +5,7 @@
 
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Requests/RequestFactory.h"
-#include "Extractors/AvatarTemplateExtractor.h"
+#include "Extractors\AvatarTemplateExtractor.h"
 #include "Misc/Paths.h"
 
 namespace

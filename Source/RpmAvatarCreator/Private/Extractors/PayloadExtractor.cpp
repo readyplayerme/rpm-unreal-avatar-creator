@@ -2,11 +2,9 @@
 
 #include "PayloadExtractor.h"
 
+#include "DataJsonUtils.h"
 #include "Misc/DefaultValueHelper.h"
 #include "Templates/SharedPointer.h"
-#include "Serialization/JsonReader.h"
-#include "Serialization/JsonWriter.h"
-#include "Serialization/JsonSerializer.h"
 
 namespace
 {
@@ -87,31 +85,17 @@ EAvatarGender FPayloadExtractor::GetGenderFromString(const FString& GenderStr)
 
 FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString)
 {
-	TSharedPtr<FJsonObject> JsonObject;
-	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
-
-	if (!FJsonSerializer::Deserialize(Reader, JsonObject))
+	const TSharedPtr<FJsonObject> DataObject = FDataJsonUtils::ExtractDataObject(JsonString);
+	if (!DataObject || !DataObject->HasField("assets"))
 	{
 		return {};
 	}
-
-	if (!JsonObject->HasField("data"))
-	{
-		return {};
-	}
-
-	const auto DataObject = JsonObject->GetObjectField("data");
 
 	FRpmAvatarProperties AvatarProperties;
 	AvatarProperties.Id = DataObject->GetStringField("id");
 	AvatarProperties.Partner = DataObject->GetStringField("partner");
 	AvatarProperties.Gender = StringToGender(DataObject->GetStringField("gender"));
 	AvatarProperties.BodyType = StringToBodyType(DataObject->GetStringField("bodyType"));
-	
-	if (!DataObject->HasField("assets"))
-	{
-		return {};
-	}
 	const auto AssetsObject = DataObject->GetObjectField("assets");
 	for (const auto& Item : ASSET_TYPE_TO_STRING_MAP)
 	{
@@ -139,13 +123,9 @@ FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString
 
 FString FPayloadExtractor::MakeCreatePayload(const FRpmAvatarProperties& AvatarProperties)
 {
-	FString OutputJsonString;
-
-	const TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
 	const TSharedPtr<FJsonObject> AssetsObject = MakeShared<FJsonObject>();
 
-	JsonObject->SetObjectField("data", DataObject);
 	DataObject->SetObjectField("assets", AssetsObject);
 
 	DataObject->SetStringField("partner", AvatarProperties.Partner);
@@ -156,30 +136,15 @@ FString FPayloadExtractor::MakeCreatePayload(const FRpmAvatarProperties& AvatarP
 		DataObject->SetStringField("gender",  GenderToString(AvatarProperties.Gender));
 	}
 
-	const auto Writer = TJsonWriterFactory<>::Create(&OutputJsonString);
-	if (!FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer))
-	{
-		UE_LOG(LogRpmAvatarCreator, Warning, TEXT("Failed to create a valid metadata json"));
-	}
-	return OutputJsonString;
+	return FDataJsonUtils::MakeDataPayload(DataObject);
 }
 
 FString FPayloadExtractor::MakeUpdatePayload(const TSharedPtr<FJsonObject> AssetsObject)
 {
-	FString OutputJsonString;
-
-	const TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
 	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
-
-	JsonObject->SetObjectField("data", DataObject);
 	DataObject->SetObjectField("assets", AssetsObject);
 
-	const auto Writer = TJsonWriterFactory<>::Create(&OutputJsonString);
-	if (!FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer))
-	{
-		UE_LOG(LogRpmAvatarCreator, Warning, TEXT("Failed to create a valid update payload json"));
-	}
-	return OutputJsonString;
+	return FDataJsonUtils::MakeDataPayload(DataObject);
 }
 FString FPayloadExtractor::MakeUpdatePayload(ERpmPartnerAssetType AssetType, int64 AssetId)
 {

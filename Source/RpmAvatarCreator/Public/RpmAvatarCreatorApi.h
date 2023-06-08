@@ -75,9 +75,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	FString SelectedAvatarTemplateId;
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Avatar Properties"))
-	FRpmAvatarProperties GetAvatarProperties() const;
-
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Filtered Partner Assets"))
 	TArray<FRpmPartnerAsset> GetFilteredPartnerAssets() const;
 
