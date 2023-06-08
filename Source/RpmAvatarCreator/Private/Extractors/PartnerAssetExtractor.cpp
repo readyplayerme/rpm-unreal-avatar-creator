@@ -1,6 +1,8 @@
 // Copyright © 2023++ Ready Player Me
 
 #include "PartnerAssetExtractor.h"
+
+#include "DataJsonUtils.h"
 #include "PayloadExtractor.h"
 
 #include "Templates/SharedPointer.h"
@@ -39,19 +41,12 @@ namespace
 TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& JsonString)
 {
 	TArray<FRpmColorPalette> Colors;
-	TSharedPtr<FJsonObject> JsonObject;
 
-	if (!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(JsonString), JsonObject))
+	const TSharedPtr<FJsonObject> DataObject = FDataJsonUtils::ExtractDataObject(JsonString);
+	if (!DataObject)
 	{
 		return {};
 	}
-
-	if (!JsonObject->HasField("data"))
-	{
-		return {};
-	}
-
-	const auto DataObject = JsonObject->GetObjectField("data");
 
 	for (const auto& Item : COLOR_TO_STRING_MAP)
 	{
@@ -76,9 +71,8 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 {
 	TArray<FRpmPartnerAsset> Assets;
 	TArray<TSharedPtr<FJsonValue>> JsonArray;
-	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
 
-	if (!FJsonSerializer::Deserialize(Reader, JsonArray))
+	if (!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(JsonString), JsonArray))
 	{
 		return {};
 	}

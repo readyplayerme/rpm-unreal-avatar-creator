@@ -17,7 +17,7 @@ public:
 
 	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
 
-	void CreateAvatar(const FRpmAvatarProperties& Properties);
+	void CreateAvatar(const FRpmAvatarProperties& Properties, const FString& TemplateId);
 
 	void UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId);
 

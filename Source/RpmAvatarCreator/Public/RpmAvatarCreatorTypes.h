@@ -163,17 +163,20 @@ struct FRpmAvatarProperties
 };
 
 USTRUCT(BlueprintType)
-struct FRpmDefaultAvatarData
+struct FRpmAvatarTemplate
 {
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
-	FRpmAvatarProperties Properties;
+	FString Id;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	FString ImageUrl;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	UTexture2D* Image;
 
-	FRpmDefaultAvatarData()
+	FRpmAvatarTemplate()
 	{
 		Image = nullptr;
 	}
@@ -208,7 +211,7 @@ enum class ERpmAvatarCreatorError : uint8
 	ConfirmActivationCodeFailure,
 	AssetDownloadFailure,
 	ColorDownloadFailure,
-	DefaultAvatarFailure,
+	AvatarTemplateFailure,
 	UserAvatarDownloadFailure,
 	MetadataDownloadFailure,
 	AvatarCreateFailure,
@@ -231,7 +234,7 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FUserAvatarsDownloadCompleted, const TArray<FR
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FUserAvatarImageDownloadCompleted, const FString&, AvatarId, UTexture2D*, Image);
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FDefaultAvatarsDownloadCompleted, const TArray<FRpmDefaultAvatarData>&, DefaultAvatars);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarTemplatesDownloadCompleted, const TArray<FRpmAvatarTemplate>&, AvatarTemplates);
 
 DECLARE_DELEGATE_OneParam(FBaseRequestCompleted, bool);
 

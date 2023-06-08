@@ -9,7 +9,7 @@
 #include "RpmAvatarRequestHandler.h"
 #include "Requests/RequestFactory.h"
 #include "RpmUserAvatarDownloader.h"
-#include "RpmDefaultAvatarDownloader.h"
+#include "RpmAvatarTemplateDownloader.h"
 #include "Engine/SkeletalMesh.h"
 
 URpmAvatarCreatorApi::URpmAvatarCreatorApi()
@@ -22,8 +22,8 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	ColorDownloader = MakeShared<FRpmColorDownloader>(RequestFactory);
 	AssetDownloader = NewObject<URpmPartnerAssetDownloader>();
 	AssetDownloader->SetRequestFactory(RequestFactory);
-	DefaultAvatarDownloader = NewObject<URpmDefaultAvatarDownloader>();
-	DefaultAvatarDownloader->SetRequestFactory(RequestFactory);
+	AvatarTemplateDownloader = NewObject<URpmAvatarTemplateDownloader>();
+	AvatarTemplateDownloader->SetRequestFactory(RequestFactory);
 	UserAvatarDownloader = NewObject<URpmUserAvatarDownloader>();
 	UserAvatarDownloader->SetRequestFactory(RequestFactory);
 	AvatarRequestHandler = NewObject<URpmAvatarRequestHandler>();
@@ -103,7 +103,7 @@ void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, 
 	AvatarRequestHandler->GetAvatarPropertiesDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::PropertiesDownloaded, Error);
 	if (AvatarProperties.Id.IsEmpty())
 	{
-		AvatarRequestHandler->CreateAvatar(AvatarProperties);
+		AvatarRequestHandler->CreateAvatar(AvatarProperties, SelectedAvatarTemplateId);
 	}
 	else
 	{
@@ -165,14 +165,9 @@ void URpmAvatarCreatorApi::ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarC
 	}
 }
 
-void URpmAvatarCreatorApi::SetDefaultAvatarIds(const TArray<FString>& AvatarIds)
+void URpmAvatarCreatorApi::DownloadAvatarTemplates(const FAvatarTemplatesDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
 {
-	DefaultAvatarDownloader->SetTemplateAvatarIds(AvatarIds);
-}
-
-void URpmAvatarCreatorApi::DownloadDefaultAvatars(const FDefaultAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
-{
-	DefaultAvatarDownloader->DownloadDefaultAvatars(AvatarProperties.Gender, DownloadCompleted, Failed);
+	AvatarTemplateDownloader->DownloadTemplates(AvatarProperties.Gender, DownloadCompleted, Failed);
 }
 
 void URpmAvatarCreatorApi::DownloadUserAvatars(const FUserAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed)
@@ -208,11 +203,6 @@ void URpmAvatarCreatorApi::SaveAvatar(const FAvatarSaveCompleted& AvatarSaveComp
 void URpmAvatarCreatorApi::DeleteAvatar(const FString& AvatarId, bool bIsDraft, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed)
 {
 	AvatarRequestHandler->DeleteAvatar(AvatarId, bIsDraft, AvatarDeleteCompleted, Failed);
-}
-
-FRpmAvatarProperties URpmAvatarCreatorApi::GetAvatarProperties() const
-{
-	return AvatarRequestHandler->GetAvatarProperties();
 }
 
 TArray<FRpmPartnerAsset> URpmAvatarCreatorApi::GetFilteredPartnerAssets() const
