@@ -61,7 +61,6 @@ To add the AvatarCreator widget to your project simply copy the existing bluepri
 
 **AvatarCreator** is a widget that can be added to a map or another widget.
 Inside the AvatarCreatorDemo map we create and add the widget to the viewport.
-**AvatarCreator** can be customized by providing default values when the widget is created.
 We need to subscribe to the **Avatar Saved** event to get the URL when the avatar is saved.
 We need to subscribe to the **Avatar Selected** event as well to get the URL when the avatar is selected from the list of user avatars.
 Additionally, we can load an avatar with this URL afterward.
@@ -82,7 +81,6 @@ Customization options:
  - **Select Gender** Allows skipping the gender selection screen
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
- - **Default Avatar Ids** Specify the avatar ids that will be shown on the **Pick An Avatar** page. **Important** this field needs to be filled with the avatar ids from the demo map.
 
 ### Duplicate The Sample
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
