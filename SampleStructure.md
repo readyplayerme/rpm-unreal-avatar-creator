@@ -5,7 +5,7 @@ The avatar creator is the topmost widget that contains all the component subwidg
 It changes the visibility of the sub-widgets at runtime by using a simple state machine logic.
 It also creates an instance of the **AvatarCreatorApi** class, and provides it to the child widgets. **AvatarCreatorApi** class handles all the server requests.
 
-## Selection Screens(States)
+## Screens
 1. **Login** - Login by sending a one time code to user's email address.
 2. **User Avatars** - Select/edit/delete the previously created avatar from the list of avatars.
 3. **Gender Selection** - Select gender of the avatar.
