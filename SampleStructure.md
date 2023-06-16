@@ -16,16 +16,16 @@ It also creates an instance of the **AvatarCreatorApi** class and provides it to
    ![Screenshot 2023-06-15 130738](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/0d3a6bc0-3157-4331-a18d-a23cb1f421c3)
 5. [**Avatar Templates**](Content/Widgets/Pages/AvatarTemplates/WBP_PickAnAvatar.uasset) - Select the avatar template from the list.<br>
    ![Screenshot 2023-06-15 131216](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/30633ac4-a582-48d0-b196-b8d3ec7f056f)
-6. [**Selfie Suggestion**](Content/Widgets/Pages/WBP_SelfieSuggestion.uasset) - Landing page for taking a selfie and using it to generate the avatar.
+6. [**Selfie Suggestion**](Content/Widgets/Pages/WBP_SelfieSuggestion.uasset) - Landing page for taking a selfie and using it to generate the avatar.<br>
    ![Screenshot 2023-06-15 131051](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/466bc705-1ebe-4529-99d3-c1b24a194dfb)
-7. [**Take Selfie**](Content/Widgets/Pages/WBP_TakeSelfie.uasset) - Opens webcam and allows one to take a photo.
+7. [**Take Selfie**](Content/Widgets/Pages/WBP_TakeSelfie.uasset) - Opens webcam and allows one to take a photo.<br>
    ![Screenshot 2023-06-15 131145](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/8344793e-212c-4d59-85a0-7ef71fe1bfaf)
-8. [**Avatar Editor**](Content/Widgets/Editor/WBP_AvatarEditor.uasset) - Avatar editor, allows customization of the avatar.
+8. [**Avatar Editor**](Content/Widgets/Editor/WBP_AvatarEditor.uasset) - Avatar editor, allows customization of the avatar.<br>
    ![Screenshot 2023-06-15 131259](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/466ac898-52e1-483d-8ddd-ac938674b8a1)
 
 ## Navigation Panel
 The [navigation panel](Content/Widgets/WBP_NavigationPanel.uasset) contains the following buttons needed for the navigation between the scenes:
-**Back**, **Save**, **Profile** and optional **Close**. Their visibility is automatically toggled depending on the state of the avatar creator.
+**Back**, **Save**, **Profile** and optional **Close**. Their visibility is automatically toggled depending on the state of the avatar creator.<br>
 ![Screenshot 2023-06-15 140631](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/ac7a57f9-bc05-4a64-9213-4639f52e1df9)
 
 ## Navigation Switcher
@@ -58,11 +58,11 @@ The editor contains scroll boxes that contain buttons for avatar customization.
 2. **Outfit Assets ScrollBox** - Contains asset buttons for the selected outfit asset type.
 3. **Face Category ScrollBox** - Contains asset type panels for face - face shape, eyes, eyebrows, nose, mouth, beard, etc.
 4. **Face Assets Scrollbox** - Contains asset buttons for the selected face asset type.<br>
-5. **Color ScrollBox** - Eye color, Skin color, Hair color, etc.
+5. **Color ScrollBox** - Eye color, Skin color, Hair color, etc.<br>
 ![Screenshot 2023-06-16 091433](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/79ab6a11-eb1b-42be-99bf-b0b8b1582f8f)
 
 ### Powered By Badge
-**Powered By Badge** shows the brands of the asset providers for the outfits. It gets changed when the assets are changed.
+**Powered By Badge** shows the brands of the asset providers for the outfits. It gets changed when the assets are changed.<br>
 ![Screenshot 2023-06-16 091746](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/e7a96196-c183-46cb-9038-ae12b56af08d)
 
 ### Editor Buttons
