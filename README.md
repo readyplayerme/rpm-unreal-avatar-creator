@@ -84,11 +84,11 @@ Customization options:
 
 ### Custom Sample UI
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
-In this case, you will **not** be able to get the latest changes of this sample project UI.
+In this case, you will **not** be able to get the latest changes to this sample project UI.
 
-[**CustomizationGude.md**](CustomizationGude.md) document describes the ways of making a custom UI for the avatar creator.
+[**CustomizationGuide.md**](CustomizationGuide.md) document describes the ways of making a custom UI for the avatar creator.
 
-The structure of the sample is described in details in [**SampleStructure.md**](SampleStructure.md) document.
+The structure of the sample is described in detail in the [**SampleStructure.md**](SampleStructure.md) document.
 
 ## TODO
 
@@ -99,7 +99,7 @@ The structure of the sample is described in details in [**SampleStructure.md**](
 
 ## Known Issues
 
-If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest to avoid this issue.
+If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest stable release to avoid this issue.
 
 ### Webcam support
 Webcam functionality is currently available only on the Windows platform when using Unreal Engine 4.27.
