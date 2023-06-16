@@ -1,5 +1,8 @@
 ﻿# Sample Structure
 
+## Avatar Creator Api
+**Avatar Creator** sample uses **AvatarCreatorApi** C++ class for communicating with the **Ready Player Me** Backend. The plugin **Content** can be completely rewritten to suit your project needs while using the **AvatarCreatorApi** for communication with the Backend.
+
 ## Avatar Creator State Machine
 The [avatar creator](Content/Widgets/WBP_AvatarCreator.uasset) is the topmost widget that contains all the component sub-widgets: navigation panel, avatar editor, editor setup widgets as well as the loading screens and popups.
 It changes the visibility of the sub-widgets at runtime by using a simple state machine logic.
