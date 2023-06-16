@@ -15,7 +15,7 @@ To make a custom UI for the avatar creator, you need to do the following steps:
 1. Make sure that you have the [**ReadyPlayerMe**](https://github.com/readyplayerme/rpm-unreal-sdk) and [**RpmAvatarCreator**](https://github.com/readyplayerme/rpm-unreal-avatar-creator/) plugins set up for your project.
 2. Make a folder in your project's content folder and Duplicate the files from the [`RpmAvatarCreator` content](https://github.com/readyplayerme/rpm-unreal-avatar-creator/tree/master/Content) folder into it.
 3. Make sure that you can add the duplicated avatar creator widget to the viewport, and that there are no errors.
-4. Read the [SampleStructure.md](SampleStructure.md) readme file to better understand the components of the sample UI.
+4. Read the [SampleStructure.md](Documents/SampleStructure.md) readme file to better understand the components of the sample UI.
 5. When making cosmetic changes to the duplicated UI, make sure that the public variables of the UI blueprints are not removed. All the public variables have blueprint logic connected with them.
 6. If you still need to remove the public variables, make sure that you understand the blueprint logic connected with them.
 

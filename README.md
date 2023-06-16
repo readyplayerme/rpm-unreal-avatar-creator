@@ -86,9 +86,9 @@ Customization options:
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
 In this case, you will **not** be able to get the latest changes to this sample project UI.
 
-[**CustomizationGuide.md**](CustomizationGuide.md) document describes the ways of making a custom UI for the avatar creator.
+[**CustomizationGuide.md**](Documents/CustomizationGuide.md) document describes the ways of making a custom UI for the avatar creator.
 
-The structure of the sample is described in detail in the [**SampleStructure.md**](SampleStructure.md) document.
+The structure of the sample is described in detail in the [**SampleStructure.md**](Documents/SampleStructure.md) document.
 
 ## TODO
 
