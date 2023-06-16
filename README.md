@@ -82,12 +82,13 @@ Customization options:
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
 
-### Duplicate The Sample
+### Custom Sample UI
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
 In this case, you will **not** be able to get the latest changes of this sample project UI.
 
-### UI From Scratch
-**Avatar Creator** sample uses **AvatarCreatorApi** C++ class for communicating with the **Ready Player Me** Backend. The plugin **Content** can be completely rewritten to suit your project needs while using the **AvatarCreatorApi** for communication with the Backend.
+[**CustomizationGude.md**](CustomizationGude.md) document describes the ways of making a custom UI for the avatar creator.
+
+The structure of the sample is described in details in [**SampleStructure.md**](SampleStructure.md) document.
 
 ## TODO
 
