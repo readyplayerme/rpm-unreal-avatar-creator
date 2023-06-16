@@ -3,6 +3,12 @@
 The same UI of the custom avatar creator is entirely made with blueprints.
 This is done on purpose so that it would be easier to duplicate and customize it.
 
+## Requirements
+You are allowed to change the entire UI, the only thing that you are required to have in your custom implementation is the **Ready Player Me sign-in** button and **Ready Player Me account-creation** ui.
+This is a legal requirement from **Ready Player Me**.<br>
+![Screenshot 2023-06-16 105931](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/bc449b10-4455-48ef-aec9-6db7dd18448b)
+![Screenshot 2023-06-16 105914](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/44d495e8-9292-421c-8cb6-85a0015d4b88)
+
 ## Customization Steps
 To make a custom UI for the avatar creator, you need to do the following steps:
 
@@ -39,9 +45,3 @@ Keep an eye on the **RpmAvatarCreator** repository, to update your local version
 ## Functional Customization Example
 If you'd like to entirely get rid of the navigation panel, becausee your application already has a navigation panel, these are the steps that you need to do.
 AvatarCreator Widget uses the navigation panel for the button visibilities and responding the the clicked buttons. You need to replace the navigation panel reference in avatar creator with your own navigation panel. In your own navigation panel add buttons that you need(save, back, ...). Add a blueprint interface NavigationSwitcher to your navigation panel to have a connection with the AvatarCreator. Finally fix all the blueprint errors connected with the replaced navigation panel.
-
-## Constraints
-You are allowed to change the entire UI, the only thing that you are required to have in your custom implementation is the **Ready Player Me sign-in** button and **Ready Player Me account-creation** ui.
-This is a legal requirement from **ReadyPlayerMe**.<br>
-![Screenshot 2023-06-16 105931](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/bc449b10-4455-48ef-aec9-6db7dd18448b)
-![Screenshot 2023-06-16 105914](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/44d495e8-9292-421c-8cb6-85a0015d4b88)
