@@ -24,7 +24,7 @@ While duplicating the sample you will not be able to have up-to-date changes fro
 To have an up-to-date version of the custom avatar creator, the following steps are required:
 1. First follow the [**RpmAvatarCreator**](https://github.com/readyplayerme/rpm-unreal-avatar-creator/releases) repository to be notified about the new releases.
 2. Update the ReadyPlayerMe and RpmAvatarCreator plugins in your project to the latest released version.
-3. Open the [CHANGELOG.md](CHANGELOG.md) readme file to check the changes.
+3. Open the [CHANGELOG.md](../CHANGELOG.md) readme file to check the changes.
 4. Open the changed UI blueprint files that are mentioned in the readme.
 5. Try to apply the UI changes to your duplicated custom version of the avatar creator.
 
