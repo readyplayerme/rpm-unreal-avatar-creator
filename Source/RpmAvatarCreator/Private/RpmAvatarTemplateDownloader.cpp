@@ -5,15 +5,13 @@
 
 #include "Kismet/KismetRenderingLibrary.h"
 #include "Requests/RequestFactory.h"
-#include "Extractors\AvatarTemplateExtractor.h"
-#include "Misc/Paths.h"
+#include "Extractors/AvatarTemplateExtractor.h"
 
 namespace
 {
-	bool IsAvatarFiltered(const FString& ImageUrl, EAvatarGender Gender)
+	bool IsAvatarFiltered(EAvatarGender Gender, EAvatarGender SelectedGender)
 	{
-		const EAvatarGender TemplateGender = FPaths::GetBaseFilename(ImageUrl).Contains("female") ? EAvatarGender::Feminine : EAvatarGender::Masculine;
-		return TemplateGender == Gender || Gender == EAvatarGender::Undefined;
+		return Gender == SelectedGender || SelectedGender == EAvatarGender::Undefined;
 	}
 }
 
@@ -39,14 +37,14 @@ void URpmAvatarTemplateDownloader::DownloadTemplates(EAvatarGender Gender, const
 	}
 }
 
-bool URpmAvatarTemplateDownloader::IsValidAvatarTemplate(const FString& ImageUrl) const
+bool URpmAvatarTemplateDownloader::IsValidAvatarTemplate(const FString& ImageUrl, EAvatarGender Gender) const
 {
-	return ImageMap.Contains(ImageUrl) && IsAvatarFiltered(ImageUrl, SelectedGender);
+	return ImageMap.Contains(ImageUrl) && IsAvatarFiltered(Gender, SelectedGender);
 }
 
 TArray<FRpmAvatarTemplate> URpmAvatarTemplateDownloader::GetFilteredAvatarTemplates() const
 {
-	return AvatarTemplates.FilterByPredicate([this](const auto& Template){ return IsValidAvatarTemplate(Template.ImageUrl); });
+	return AvatarTemplates.FilterByPredicate([this](const auto& Template){ return IsValidAvatarTemplate(Template.ImageUrl, Template.Gender); });
 }
 
 bool URpmAvatarTemplateDownloader::AreAvatarsReady() const
@@ -72,7 +70,7 @@ void URpmAvatarTemplateDownloader::DownloadImages()
 {
 	for (const auto& Template : AvatarTemplates)
 	{
-		if (ImageMap.Contains(Template.ImageUrl) || !IsAvatarFiltered(Template.ImageUrl, SelectedGender))
+		if (ImageMap.Contains(Template.ImageUrl) || !IsAvatarFiltered(Template.Gender, SelectedGender))
 		{
 			continue;
 		}

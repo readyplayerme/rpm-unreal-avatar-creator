@@ -109,10 +109,6 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 		{
 			Asset.Icon = JsonObject->GetStringField("mask");
 		}
-		if (JsonObject->HasTypedField<EJson::String>("model"))
-		{
-			Asset.Model = JsonObject->GetStringField("model");
-		}
 		if (JsonObject->HasTypedField<EJson::Object>("badgeLogo"))
 		{
 			const auto BadgeLogoJson = JsonObject->GetObjectField("badgeLogo");

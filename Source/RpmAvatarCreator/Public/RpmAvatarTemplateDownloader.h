@@ -28,7 +28,7 @@ private:
 
 	void DownloadImages();
 	
-	bool IsValidAvatarTemplate(const FString& Id) const;
+	bool IsValidAvatarTemplate(const FString& Id, EAvatarGender Gender) const;
 
 	UPROPERTY()
 	TMap<FString, UTexture2D*> ImageMap;

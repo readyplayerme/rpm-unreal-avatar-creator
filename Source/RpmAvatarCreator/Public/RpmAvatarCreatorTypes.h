@@ -108,9 +108,6 @@ struct FRpmPartnerAsset
 	FString Icon;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
-	FString Model;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Badge;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
@@ -176,9 +173,13 @@ struct FRpmAvatarTemplate
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	UTexture2D* Image;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	EAvatarGender Gender;
+
 	FRpmAvatarTemplate()
 	{
 		Image = nullptr;
+		Gender = EAvatarGender::Undefined;
 	}
 };
 

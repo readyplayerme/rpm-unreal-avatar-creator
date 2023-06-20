@@ -35,13 +35,6 @@ First, duplicate the sample in your project. One by one open all the widgets tha
 Change the layout of the widgets, without removing the public variables.
 Keep an eye on the **RpmAvatarCreator** repository, to update your local version of avatar creator if a new version is released.
 
-## Cosmetic Customization Example
-Currently, the sample is designed for the landscape mode.
-If your application is made for portrait mode, you need to make your own custom version of the avatar creator UI.
-First, duplicate the sample in your project. One by one open all the widgets that don't look good on the portrait mode.
-Change the layout of the widgets, without removing the public variables.
-Keep an eye on the **RpmAvatarCreator** repository, to update your local version of avatar creator if a new version is released.
-
 ## Functional Customization Example
 If you'd like to entirely get rid of the navigation panel, because your application already has a navigation panel, these are the steps that you need to do.
 AvatarCreator Widget uses the navigation panel for button visibility and responding to the the clicked buttons.
