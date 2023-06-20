@@ -32,7 +32,7 @@ The [navigation panel](Content/Widgets/WBP_NavigationPanel.uasset) contains the 
 ![Screenshot 2023-06-15 140631](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/ac7a57f9-bc05-4a64-9213-4639f52e1df9)
 
 ## Navigation Switcher
-In order for the child widgets to be able to communicate with the avatar creator, they use an interface of the NavigationSwitcher.
+In order for the child widgets to be able to communicate with the avatar creator, they use the NavigationSwitcher interface.
 Avatar creator implements the NavigationSwitcher interface allowing the child widgets to send events.
 
 ## Preview Actor
@@ -40,7 +40,7 @@ The preview actor is spawned in the world when the avatar creator widget is open
 It also contains lights and a camera for rendering the avatar at runtime and displaying it in the avatar editor afterward.
 
 ## Popups
-The popups widgets are located in the [Popups](Content/Widgets/Popups) folder, they are needed to give the user information of the current sutatus of the avatar creator.
+The popups widgets are located in the [Popups](Content/Widgets/Popups) folder, they are needed to give the user information about the current status of the avatar creator.
 1. **Loading Screen** - Blocker screen that opens while the resources for the avatar editor are being downloaded.
 2. **Warning View** - Opens when a server request fails.
 3. **Preview Loading View** - Toggles a popup while the avatar is being updated, after the outfit change.

@@ -14,7 +14,7 @@ Please visit the online documentation and join our public `discord` community.
 
 ## Important
 
-The plugin is currently in the **alpha** stage. We recommend not using it in production until the stable version is released.
+The plugin is currently in **alpha** stage. We do recommend using it in production until the stable version is released.
 
 ## Dependencies
 - **ReadyPlayerMe** Unreal SDK, an open-source plugin that contains all the core functionality required for loading and displaying avatars.
@@ -34,7 +34,7 @@ The plugin is currently in the **alpha** stage. We recommend not using it in pro
 
 There are three ways you can add the **RpmAvatarCreator** plugin to your project. Add as submodules, paste the plugin inside of the **Plugins** folder, or add the blueprint version of the plugin to the Engine.
 
-- To add the plugin to your project as a submodule, run the following command in the terminal from your project folder. This is the preferred way of setting up the plugin.
+- To add the plugin to your project as a submodule, run the following command in the terminal from your project folder. This is the recommended way of setting up the plugin.
 
   ```
    git submodule add --name Plugins/RpmAvatarCreator -- https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator

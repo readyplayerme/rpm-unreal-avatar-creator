@@ -43,5 +43,8 @@ Change the layout of the widgets, without removing the public variables.
 Keep an eye on the **RpmAvatarCreator** repository, to update your local version of avatar creator if a new version is released.
 
 ## Functional Customization Example
-If you'd like to entirely get rid of the navigation panel, becausee your application already has a navigation panel, these are the steps that you need to do.
-AvatarCreator Widget uses the navigation panel for the button visibilities and responding the the clicked buttons. You need to replace the navigation panel reference in avatar creator with your own navigation panel. In your own navigation panel add buttons that you need(save, back, ...). Add a blueprint interface NavigationSwitcher to your navigation panel to have a connection with the AvatarCreator. Finally fix all the blueprint errors connected with the replaced navigation panel.
+If you'd like to entirely get rid of the navigation panel, because your application already has a navigation panel, these are the steps that you need to do.
+AvatarCreator Widget uses the navigation panel for button visibility and responding to the the clicked buttons.
+You need to replace the navigation panel reference in avatar creator with your own navigation panel.
+In your own navigation panel add buttons that you need(save, back, ...). Add a blueprint interface NavigationSwitcher to your navigation panel to have a connection with the AvatarCreator.
+Finally, fix all the blueprint errors connected with the replaced navigation panel.
