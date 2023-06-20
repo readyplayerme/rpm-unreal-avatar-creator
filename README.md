@@ -2,9 +2,9 @@
 
 ![Screenshot_20230221_044146](https://user-images.githubusercontent.com/3124894/229149244-df433bd5-b8f3-40ba-b87f-ce071ecdc773.png)
 
-Ready Player Me Avatar Creator is an extension to www.readyplayer.me avatar platform, which helps you create avatars.
+Ready Player Me Avatar Creator is an extension to [Ready Player Me](https://readyplayer.me/) avatar platform, which helps you create avatars.
 
-RpmAvatarCreator plugin is an in-engine implementation of the web avatar creator.
+The RpmAvatarCreator plugin is an in-engine implementation of the web avatar creator.
 
 Please visit the online documentation and join our public `discord` community.
 
@@ -14,12 +14,12 @@ Please visit the online documentation and join our public `discord` community.
 
 ## Important
 
-The plugin is currently in **alpha** stage. We recommend not to use it in the production until the stable version is released.
+The plugin is currently in **alpha** stage. We do recommend using it in production until the stable version is released.
 
 ## Dependencies
-- **ReadyPlayerMe** Unreal SDK, an open source plugin that contains all the core functionality required for loading and displaying avatars.
+- **ReadyPlayerMe** Unreal SDK, an open-source plugin that contains all the core functionality required for loading and displaying avatars.
   The plugin can be found on GitHub [here](https://github.com/readyplayerme/rpm-unreal-sdk).
-- **glTFRuntime** An open source third party plugin with functionality for downloading and importing assets from GLTF and GLB files.
+- **glTFRuntime** An open-source third-party plugin with functionality for downloading and importing assets from GLTF and GLB files.
   The plugin can be found on GitHub [here](https://github.com/rdeioris/glTFRuntime), but can also be purchased from the Unreal Marketplace.
 
 ### Requirements
@@ -34,7 +34,7 @@ The plugin is currently in **alpha** stage. We recommend not to use it in the pr
 
 There are three ways you can add the **RpmAvatarCreator** plugin to your project. Add as submodules, paste the plugin inside of the **Plugins** folder, or add the blueprint version of the plugin to the Engine.
 
-- To add the plugin to your project as a submodules, run the following command in the terminal from your project folder. This is preferred way of setting up the plugin.
+- To add the plugin to your project as a submodule, run the following command in the terminal from your project folder. This is the recommended way of setting up the plugin.
 
   ```
    git submodule add --name Plugins/RpmAvatarCreator -- https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator
@@ -57,18 +57,17 @@ To update the plugin submodule paste the following command in the terminal from 
 ## Quick Start
 
 A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
-To add the AvatarCreator widget to your project simply copy the existing blueprint logic from the demo map into your project.
+To add the AvatarCreator widget to your project, copy the existing blueprint logic from the demo map into your project.
 
 **AvatarCreator** is a widget that can be added to a map or another widget.
-Inside the AvatarCreatorDemo map we create and add the widget to the viewport.
-**AvatarCreator** can be customized by providing default values when the widget is created.
+Inside the AvatarCreatorDemo map, we create and add the widget to the viewport.
 We need to subscribe to the **Avatar Saved** event to get the URL when the avatar is saved.
 We need to subscribe to the **Avatar Selected** event as well to get the URL when the avatar is selected from the list of user avatars.
 Additionally, we can load an avatar with this URL afterward.
 
-![Screenshot_20230221_060932](https://user-images.githubusercontent.com/3124894/229149539-1ae0e7a5-c9ae-4671-b6e1-e267e14fd204.png)
+![Screenshot 2023-03-13 214816](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/ef82b2da-0bd5-4d65-ac88-a26d4129f221)
 
-Additionally if close button is enabled, we can subscribe to the **Close Button Clicked** event to be notified when the close button is clicked.
+Additionally, if the close button is enabled, we can subscribe to the **Close Button Clicked** event to be notified when the close button is clicked.
 This way we can close the widget and perform other actions.
 
 ## Customization Options
@@ -82,25 +81,25 @@ Customization options:
  - **Select Gender** Allows skipping the gender selection screen
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
- - **Default Avatar Ids** Specify the avatar ids that will be shown on the **Pick An Avatar** page. **Important** this field needs to be filled with the avatar ids from the demo map.
 
-### Duplicate The Sample
+### Custom Sample UI
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
-In this case, you will **not** be able to get the latest changes of this sample project UI.
+In this case, you will **not** be able to get the latest changes to this sample project UI.
 
-### UI From Scratch
-**Avatar Creator** sample uses **AvatarCreatorApi** C++ class for communicating with the **Ready Player Me** Backend. The plugin **Content** can be completely rewritten to suit your project needs while using the **AvatarCreatorApi** for communication with the Backend.
+[**CustomizationGuide.md**](Documentation/CustomizationGuide.md) document describes the ways of making a custom UI for the avatar creator.
+
+The structure of the sample is described in detail in the [**SampleStructure.md**](Documentation/SampleStructure.md) document.
 
 ## TODO
 
 - Fix the webcam support for Android
 - Fix the webcam support for UE5
-- Add shadow for the avatar in the avatar editor
+- Add a shadow for the avatar in the avatar editor
 - Add a sample for the VR
 
 ## Known Issues
 
-If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest to avoid this issue.
+If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest stable release to avoid this issue.
 
 ### Webcam support
 Webcam functionality is currently available only on the Windows platform when using Unreal Engine 4.27.
@@ -112,8 +111,8 @@ The sample doesn't provide an option to pick an image file that would be used fo
 Depending on the target platform, the file picker functionality and dependencies will be different.
 
 In case you require file picker functionality, you can either add an external plugin or create a platform-specific file picker.
-After implementing the platform-side file picking functionality, convert the selected image to a base64 string and pass it to the Base64Image property of the AvatarProperties in the AvatarCreatorApi.
-After implementing the file picking logic, you will need to modify the WBP_SelfieSuggestion widget and include a button for picking images.
+After implementing the platform-side file-picking functionality, convert the selected image to a base64 string and pass it to the Base64Image property of the AvatarProperties in the AvatarCreatorApi.
+After implementing the file-picking logic, you will need to modify the WBP_SelfieSuggestion widget and include a button for picking images.
 
 ## Links
 - [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine)
