@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] 2023-06-21
+
+## Added
+
+- Api for fetching avatar templates
+- [sample structure](Documentation/SampleStructure.md) and [customization guide](Documentation/CustomizationGuide.md) readme files
+- Request cancellation functionality, for canceling all the requests when the avatar creator is closed.
+- Signup popup, that appears after saving an avatar
+
+## Fixed
+
+- Fixed the preview actor scale for big avatars
+- Added Missing includes for UE5.2
+- UI Fixes for the sample project
+- Delete the avatar draft when the back button is clicked in the editor
+
+## Update
+
+- Replaced default avatars with avatar template implementation
+- Added `WBP_AssetHandler` widget for handling asset logic
+- Extracted `WBP_BadgeIcon` from the avatar editor
+
 ## [0.2.1] 2023-04-19
 
 ## Added
