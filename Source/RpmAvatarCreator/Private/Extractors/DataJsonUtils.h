@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RpmAvatarCreatorTypes.h"
+#include "Serialization/JsonSerializer.h"
 
 class FDataJsonUtils
 {

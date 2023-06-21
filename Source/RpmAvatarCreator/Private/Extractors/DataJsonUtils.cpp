@@ -5,7 +5,7 @@
 
 #include "Templates/SharedPointer.h"
 #include "Serialization/JsonReader.h"
-#include "Serialization/JsonSerializer.h"
+#include "RpmAvatarCreatorTypes.h"
 
 namespace
 {
