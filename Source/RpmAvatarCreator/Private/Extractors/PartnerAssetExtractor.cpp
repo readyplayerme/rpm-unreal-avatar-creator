@@ -36,6 +36,16 @@ namespace
 		{ERpmPartnerAssetColor::HairColor, "hair"},
 		{ERpmPartnerAssetColor::SkinColor, "skin"},
 	};
+
+	const FString JSON_FIELD_ASSET_TYPE = "assetType";
+	const FString JSON_FIELD_ID = "id";
+	const FString JSON_FIELD_NAME = "name";
+	const FString JSON_FIELD_GENDER = "gender";
+	const FString JSON_FIELD_ICON = "icon";
+	const FString JSON_FIELD_MASK = "mask";
+	const FString JSON_FIELD_BADGE_LOGO = "badgeLogo";
+	const FString JSON_FIELD_RESPONSIVE_IMAGE = "responsiveImage";
+	const FString JSON_FIELD_SRC = "src";
 }
 
 TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& JsonString)
@@ -80,48 +90,44 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 	{
 		FRpmPartnerAsset Asset;
 		const auto JsonObject = JsonValue->AsObject();
-		if (JsonObject->HasTypedField<EJson::String>("assetType"))
+		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_ASSET_TYPE))
 		{
-			const FString AssetTypeStr = JsonObject->GetStringField("assetType");
+			const FString AssetTypeStr = JsonObject->GetStringField(JSON_FIELD_ASSET_TYPE);
 			if (!STRING_TO_ASSET_TYPES_MAP.Contains(AssetTypeStr))
 			{
 				continue;
 			}
 			Asset.AssetType = STRING_TO_ASSET_TYPES_MAP[AssetTypeStr];
 		}
-		if (JsonObject->HasField("id"))
+		if (JsonObject->HasField(JSON_FIELD_ID))
 		{
-			Asset.Id = JsonObject->GetIntegerField("id");
+			Asset.Id = JsonObject->GetIntegerField(JSON_FIELD_ID);
 		}
-		if (JsonObject->HasTypedField<EJson::String>("name"))
+		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_NAME))
 		{
-			Asset.Name = JsonObject->GetStringField("name");
+			Asset.Name = JsonObject->GetStringField(JSON_FIELD_NAME);
 		}
-		if (JsonObject->HasTypedField<EJson::String>("gender"))
+		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_GENDER))
 		{
-			Asset.Gender = FPayloadExtractor::GetGenderFromString(JsonObject->GetStringField("gender"));
+			Asset.Gender = FPayloadExtractor::GetGenderFromString(JsonObject->GetStringField(JSON_FIELD_GENDER));
 		}
-		if (JsonObject->HasTypedField<EJson::String>("icon"))
+		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_ICON))
 		{
-			Asset.Icon = JsonObject->GetStringField("icon");
+			Asset.Icon = JsonObject->GetStringField(JSON_FIELD_ICON);
 		}
-		if (Asset.AssetType == ERpmPartnerAssetType::EyeColor && JsonObject->HasTypedField<EJson::String>("mask"))
+		if (Asset.AssetType == ERpmPartnerAssetType::EyeColor && JsonObject->HasTypedField<EJson::String>(JSON_FIELD_MASK))
 		{
-			Asset.Icon = JsonObject->GetStringField("mask");
+			Asset.Icon = JsonObject->GetStringField(JSON_FIELD_MASK);
 		}
-		if (JsonObject->HasTypedField<EJson::String>("model"))
+		if (JsonObject->HasTypedField<EJson::Object>(JSON_FIELD_BADGE_LOGO))
 		{
-			Asset.Model = JsonObject->GetStringField("model");
-		}
-		if (JsonObject->HasTypedField<EJson::Object>("badgeLogo"))
-		{
-			const auto BadgeLogoJson = JsonObject->GetObjectField("badgeLogo");
-			if (BadgeLogoJson->HasTypedField<EJson::Object>("responsiveImage"))
+			const auto BadgeLogoJson = JsonObject->GetObjectField(JSON_FIELD_BADGE_LOGO);
+			if (BadgeLogoJson->HasTypedField<EJson::Object>(JSON_FIELD_RESPONSIVE_IMAGE))
 			{
-				const auto ResponsiveImageJson = BadgeLogoJson->GetObjectField("responsiveImage");
-				if (ResponsiveImageJson->HasTypedField<EJson::String>("src"))
+				const auto ResponsiveImageJson = BadgeLogoJson->GetObjectField(JSON_FIELD_RESPONSIVE_IMAGE);
+				if (ResponsiveImageJson->HasTypedField<EJson::String>(JSON_FIELD_SRC))
 				{
-					Asset.Badge = ResponsiveImageJson->GetStringField("src");
+					Asset.Badge = ResponsiveImageJson->GetStringField(JSON_FIELD_SRC);
 				}
 			}
 		}
