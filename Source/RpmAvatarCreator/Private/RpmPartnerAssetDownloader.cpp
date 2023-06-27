@@ -73,7 +73,7 @@ void URpmPartnerAssetDownloader::DownloadIcons(EAvatarBodyType BodyType, EAvatar
 			continue;
 		}
 		FString IconRequestUrl = Asset.Icon;
-		IconRequestUrl = Asset.AssetType == ERpmPartnerAssetType::EyeColor ? EYE_MASK_CROP_PARAMS : "";
+		IconRequestUrl += Asset.AssetType == ERpmPartnerAssetType::EyeColor ? EYE_MASK_CROP_PARAMS : "";
 		auto IconRequest = RequestFactory->CreateImageRequest(IconRequestUrl);
 		IconRequests.Add(Asset.Icon, IconRequest);
 		IconRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnIconDownloadCompleted, Asset.Icon);
