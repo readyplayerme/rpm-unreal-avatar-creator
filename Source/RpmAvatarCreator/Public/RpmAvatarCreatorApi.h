@@ -63,6 +63,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Delete Avatar", AutoCreateRefTerm = "AvatarDeleteCompleted,Failed"))
 	void DeleteAvatar(const FString& AvatarId, bool bIsDraft, const FAvatarDeleteCompleted& AvatarDeleteCompleted, const FAvatarCreatorFailed& Failed);
 
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Locked Assets", AutoCreateRefTerm = "UpdateLockedAssetsCompleted,Failed"))
+	void UpdateLockedAssets(const FUpdateLockedAssetsCompleted& UpdateLockedAssetsCompleted, const FAvatarCreatorFailed& Failed);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me", Meta = (ExposeOnSpawn="true"))
 	class USkeleton* FullBodySkeleton;
 
