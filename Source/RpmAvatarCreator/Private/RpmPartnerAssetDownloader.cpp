@@ -10,6 +10,8 @@
 
 namespace
 {
+	const FString EYE_MASK_CROP_PARAMS = "?rect=155,152,204,204";
+
 	bool IsAssetFiltered(const FRpmPartnerAsset& Asset, EAvatarBodyType BodyType, EAvatarGender Gender)
 	{
 		const bool BodyTypeFiltered = !((Asset.AssetType == ERpmPartnerAssetType::Outfit && BodyType == EAvatarBodyType::HalfBody) ||
@@ -70,7 +72,9 @@ void URpmPartnerAssetDownloader::DownloadIcons(EAvatarBodyType BodyType, EAvatar
 		{
 			continue;
 		}
-		auto IconRequest = RequestFactory->CreateImageRequest(Asset.Icon);
+		FString IconRequestUrl = Asset.Icon;
+		IconRequestUrl += Asset.AssetType == ERpmPartnerAssetType::EyeColor ? EYE_MASK_CROP_PARAMS : "";
+		auto IconRequest = RequestFactory->CreateImageRequest(IconRequestUrl);
 		IconRequests.Add(Asset.Icon, IconRequest);
 		IconRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnIconDownloadCompleted, Asset.Icon);
 		IconRequest->Download();

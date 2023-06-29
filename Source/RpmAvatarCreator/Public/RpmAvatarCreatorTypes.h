@@ -92,29 +92,38 @@ struct FRpmPartnerAsset
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	int64 Id;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Name;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	ERpmPartnerAssetType AssetType;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	EAvatarGender Gender;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Icon;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Badge;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	UTexture2D* IconTexture;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	UTexture2D* BadgeTexture;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	bool bIsLocked;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	FString Price;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
+	bool bIsCustomizable;
 
 	FRpmPartnerAsset()
 	{
@@ -123,6 +132,8 @@ struct FRpmPartnerAsset
 		Gender = EAvatarGender::Undefined;
 		IconTexture = nullptr;
 		BadgeTexture = nullptr;
+		bIsLocked = false;
+		bIsCustomizable = true;
 	}
 };
 
@@ -230,6 +241,8 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarSaveCompleted, const FString&, Url);
 DECLARE_DYNAMIC_DELEGATE(FAvatarDeleteCompleted);
 
 DECLARE_DYNAMIC_DELEGATE(FAvatarEditorReady);
+
+DECLARE_DYNAMIC_DELEGATE(FUpdateLockedAssetsCompleted);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FUserAvatarsDownloadCompleted, const TArray<FRpmUserAvatar>&, UserAvatars);
 

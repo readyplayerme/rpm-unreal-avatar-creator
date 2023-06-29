@@ -46,6 +46,9 @@ namespace
 	const FString JSON_FIELD_BADGE_LOGO = "badgeLogo";
 	const FString JSON_FIELD_RESPONSIVE_IMAGE = "responsiveImage";
 	const FString JSON_FIELD_SRC = "src";
+	const FString JSON_FIELD_IS_LOCKED = "locked";
+	const FString JSON_FIELD_IS_LOCKED_CATEGORIES = "lockedCategories";
+	const FString JSON_FIELD_PRICE = "price";
 }
 
 TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& JsonString)
@@ -130,6 +133,18 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 					Asset.Badge = ResponsiveImageJson->GetStringField(JSON_FIELD_SRC);
 				}
 			}
+		}
+		if (JsonObject->HasTypedField<EJson::Boolean>(JSON_FIELD_IS_LOCKED))
+		{
+			Asset.bIsLocked = JsonObject->GetBoolField(JSON_FIELD_IS_LOCKED);
+		}
+		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_PRICE))
+		{
+			Asset.Price = JsonObject->GetStringField(JSON_FIELD_PRICE);
+		}
+		if (JsonObject->HasTypedField<EJson::Array>(JSON_FIELD_IS_LOCKED_CATEGORIES))
+		{
+			Asset.bIsCustomizable = JsonObject->GetArrayField(JSON_FIELD_IS_LOCKED_CATEGORIES).Num() == 0;
 		}
 		Assets.Add(Asset);
 	}

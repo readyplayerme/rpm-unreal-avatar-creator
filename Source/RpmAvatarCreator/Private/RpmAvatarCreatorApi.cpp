@@ -205,6 +205,11 @@ void URpmAvatarCreatorApi::DeleteAvatar(const FString& AvatarId, bool bIsDraft, 
 	AvatarRequestHandler->DeleteAvatar(AvatarId, bIsDraft, AvatarDeleteCompleted, Failed);
 }
 
+void URpmAvatarCreatorApi::UpdateLockedAssets(const FUpdateLockedAssetsCompleted& UpdateLockedAssetsCompleted, const FAvatarCreatorFailed& Failed)
+{
+	
+}
+
 TArray<FRpmPartnerAsset> URpmAvatarCreatorApi::GetFilteredPartnerAssets() const
 {
 	return AssetDownloader->GetFilteredAssets(AvatarProperties.BodyType, AvatarProperties.Gender);
