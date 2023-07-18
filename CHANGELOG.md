@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] 2023-07-18
+
+## Added
+- Support for the full-body costumes
+- AssetUnlockView that is shown when the locked asset is selected
+- Asset unlocked button click event
+- RpmAvatarEditorUI cpp class for handling the asset logic
+- AssetButtonUI and ColorButtonUI as the parent class for the assets
+
+## Fixed
+- UI fixes for UE5
+- Fixed layout for the category buttons
+
+## Update
+- Updated the steps to have the same background for all the steps
+- Updated the eye color texture fetching logic to fetch a cropped image
+- Updated asset selected icon
+
 ## [0.3.0] 2023-06-21
 
 ## Added
