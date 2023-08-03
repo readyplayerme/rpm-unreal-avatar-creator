@@ -14,6 +14,8 @@ public:
 
 	void SetPartnerDomain(const FString& Domain);
 
+	void SetAppId(const FString& Id);
+
 	void SetUserData(const FRpmUserData& UserData);
 
 	void SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed);
@@ -41,6 +43,7 @@ public:
 
 private:
 	FString PartnerDomain;
+	FString AppId;
 	FRpmUserData UserData;
 	FTokenRefreshed TokenRefreshedDelegate;
 	TSharedRef<FCancellationDelegate> CancellationDelegate;

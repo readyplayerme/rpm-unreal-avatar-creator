@@ -31,10 +31,11 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	AvatarRequestHandler->UserAvatarDownloader = UserAvatarDownloader;
 }
 
-void URpmAvatarCreatorApi::SetPartnerDomain(const FString& PartnerDomain)
+void URpmAvatarCreatorApi::SetAppSettings(const FString& PartnerDomain, const FString& AppId)
 {
 	AvatarProperties.Partner = PartnerDomain;
 	RequestFactory->SetPartnerDomain(PartnerDomain);
+	RequestFactory->SetAppId(AppId);
 	AuthManager->LoadUserData();
 }
 

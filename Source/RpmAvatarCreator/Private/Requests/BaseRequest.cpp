@@ -42,6 +42,10 @@ void FBaseRequest::Download()
 		const FString Authorization = FString::Printf(TEXT("Bearer %s"), *AuthToken);
 		DownloadRequest->SetHeader(TEXT("Authorization"), Authorization);
 	}
+	if (!AppId.IsEmpty())
+	{
+		DownloadRequest->SetHeader(TEXT("X-APP-ID"), AppId);
+	}
 	if (!Payload.IsEmpty())
 	{
 		DownloadRequest->SetHeader("Content-Type", "application/json");
@@ -93,4 +97,9 @@ int32 FBaseRequest::GetResponseCode() const
 void FBaseRequest::SetAuthToken(const FString& Token)
 {
 	AuthToken = Token;
+}
+
+void FBaseRequest::SetAppId(const FString& Id)
+{
+	AppId = Id;
 }

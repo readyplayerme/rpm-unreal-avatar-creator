@@ -20,6 +20,11 @@ void FRequestFactory::SetPartnerDomain(const FString& Domain)
 	PartnerDomain = Domain;
 }
 
+void FRequestFactory::SetAppId(const FString& Id)
+{
+	AppId = Id;
+}
+
 void FRequestFactory::SetUserData(const FRpmUserData& Data)
 {
 	UserData = Data;
@@ -62,7 +67,9 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarTemplatesRequest() const
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest() const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAssetEndpoint(PartnerDomain), UserData.Token));
+	const TSharedPtr<IBaseRequest> Request = MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAssetEndpoint(PartnerDomain), UserData.Token);
+	Request->SetAppId(AppId);
+	return CreateAuthorizedRequest(Request);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateColorRequest(const FString& AvatarId) const

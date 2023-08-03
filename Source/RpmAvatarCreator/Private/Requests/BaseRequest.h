@@ -30,6 +30,7 @@ public:
 	virtual const TArray<uint8>& GetContent() const override;
 	virtual int32 GetResponseCode() const override;
 	virtual void SetAuthToken(const FString& Token) override;
+	virtual void SetAppId(const FString& Id) override;
 
 protected:
 	virtual void OnReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bSuccess);
@@ -41,6 +42,7 @@ protected:
 
 	FString Url;
 	FString AuthToken;
+	FString AppId;
 	ERequestVerb RequestVerb = ERequestVerb::Get;
 	FString Payload = "";
 	float Timeout = -1.f;
