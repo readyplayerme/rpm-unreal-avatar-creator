@@ -45,7 +45,7 @@ void FBaseRequest::Download()
 	}
 	if (!AppId.IsEmpty())
 	{
-		DownloadRequest->SetHeader(TEXT("X-IDENTITY"), AppId);
+		DownloadRequest->SetHeader(TEXT("X-APP-ID"), AppId);
 	}
 	if (!Payload.IsEmpty())
 	{
