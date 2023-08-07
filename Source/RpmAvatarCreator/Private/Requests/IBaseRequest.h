@@ -4,6 +4,15 @@
 
 #include "CoreMinimal.h"
 
+enum class ERequestVerb
+{
+	Get,
+	Post,
+	Put,
+	Patch,
+	Delete
+};
+
 DECLARE_DELEGATE_OneParam(FFileDownloadCompleted, bool /*bSuccess*/);
 DECLARE_MULTICAST_DELEGATE(FCancellationDelegate);
 
@@ -21,5 +30,4 @@ public:
 	virtual const TArray<uint8>& GetContent() const = 0;
 	virtual int32 GetResponseCode() const = 0;
 	virtual void SetAuthToken(const FString& Token) = 0;
-	virtual void SetAppId(const FString& Id) = 0;
 };

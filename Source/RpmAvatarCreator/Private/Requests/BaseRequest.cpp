@@ -18,8 +18,9 @@ namespace
 	};
 }
 
-FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken, ERequestVerb RequestVerb, const FString& Payload, float Timeout)
+FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& AppId, const FString& Url, const FString& AuthToken, ERequestVerb RequestVerb, const FString& Payload, float Timeout)
 	: CancellationDelegate(CancellationDelegate)
+	, AppId(AppId)
 	, Url(Url)
 	, AuthToken(AuthToken)
 	, RequestVerb(RequestVerb)
@@ -44,7 +45,7 @@ void FBaseRequest::Download()
 	}
 	if (!AppId.IsEmpty())
 	{
-		DownloadRequest->SetHeader(TEXT("X-APP-ID"), AppId);
+		DownloadRequest->SetHeader(TEXT("X-IDENTITY"), AppId);
 	}
 	if (!Payload.IsEmpty())
 	{
@@ -97,9 +98,4 @@ int32 FBaseRequest::GetResponseCode() const
 void FBaseRequest::SetAuthToken(const FString& Token)
 {
 	AuthToken = Token;
-}
-
-void FBaseRequest::SetAppId(const FString& Id)
-{
-	AppId = Id;
 }

@@ -21,7 +21,6 @@ public:
 	virtual const TArray<uint8>& GetContent() const override;
 	virtual int32 GetResponseCode() const override;
 	virtual void SetAuthToken(const FString& Token) override {}
-	virtual void SetAppId(const FString& Id) override {}
 
 private:
 	void MainRequestCompleted(bool bSuccess);
