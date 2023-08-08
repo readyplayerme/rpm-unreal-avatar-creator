@@ -20,6 +20,8 @@ public:
 
 	void SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed);
 
+	void SetSessionExpiredDelegate(const FSessionExpired& SessionExpired);
+
 	void CancelRequests() const;
 
 	TSharedPtr<IBaseRequest> CreateAuthStartRequest(const FString& PayloadJson) const;
@@ -48,5 +50,6 @@ private:
 	FString AppId;
 	FRpmUserData UserData;
 	FTokenRefreshed TokenRefreshedDelegate;
+	FSessionExpired SessionExpiredDelegate;
 	TSharedRef<FCancellationDelegate> CancellationDelegate;
 };

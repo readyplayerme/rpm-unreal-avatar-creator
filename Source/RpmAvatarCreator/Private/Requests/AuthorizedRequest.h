@@ -3,6 +3,7 @@
 #pragma once
 
 #include "IBaseRequest.h"
+#include "RpmAvatarCreatorTypes.h"
 
 DECLARE_DELEGATE_TwoParams(FTokenRefreshed, const FString&, const FString&);
 
@@ -10,7 +11,7 @@ class FAuthorizedRequest : public IBaseRequest, public TSharedFromThis<FAuthoriz
 {
 public:
 	FAuthorizedRequest() = default;
-	FAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest, const TSharedPtr<IBaseRequest> RefreshRequest, const FTokenRefreshed& TokenRefreshedDelegate);
+	FAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest, const TSharedPtr<IBaseRequest> RefreshRequest, const FTokenRefreshed& TokenRefreshedDelegate, const FSessionExpired& SessionExpired);
 
 	virtual void Download() override;
 	virtual void CancelRequest() override;
@@ -31,4 +32,5 @@ private:
 	TSharedPtr<IBaseRequest> MainRequest;
 	TSharedPtr<IBaseRequest> TokenRefreshRequest;
 	FTokenRefreshed TokenRefreshedDelegate;
+	FSessionExpired SessionExpiredDelegate;
 };
