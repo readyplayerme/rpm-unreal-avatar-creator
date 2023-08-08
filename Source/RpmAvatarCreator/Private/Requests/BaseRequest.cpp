@@ -18,8 +18,9 @@ namespace
 	};
 }
 
-FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken, ERequestVerb RequestVerb, const FString& Payload, float Timeout)
+FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& AppId, const FString& Url, const FString& AuthToken, ERequestVerb RequestVerb, const FString& Payload, float Timeout)
 	: CancellationDelegate(CancellationDelegate)
+	, AppId(AppId)
 	, Url(Url)
 	, AuthToken(AuthToken)
 	, RequestVerb(RequestVerb)
@@ -41,6 +42,10 @@ void FBaseRequest::Download()
 	{
 		const FString Authorization = FString::Printf(TEXT("Bearer %s"), *AuthToken);
 		DownloadRequest->SetHeader(TEXT("Authorization"), Authorization);
+	}
+	if (!AppId.IsEmpty())
+	{
+		DownloadRequest->SetHeader(TEXT("X-APP-ID"), AppId);
 	}
 	if (!Payload.IsEmpty())
 	{

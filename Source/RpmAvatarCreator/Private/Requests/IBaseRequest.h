@@ -4,6 +4,15 @@
 
 #include "CoreMinimal.h"
 
+enum class ERequestVerb
+{
+	Get,
+	Post,
+	Put,
+	Patch,
+	Delete
+};
+
 DECLARE_DELEGATE_OneParam(FFileDownloadCompleted, bool /*bSuccess*/);
 DECLARE_MULTICAST_DELEGATE(FCancellationDelegate);
 

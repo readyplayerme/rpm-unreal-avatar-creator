@@ -14,11 +14,13 @@ public:
 
 	void SetPartnerDomain(const FString& Domain);
 
+	void SetAppId(const FString& Id);
+
 	void SetUserData(const FRpmUserData& UserData);
 
 	void SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed);
 
-	void CancelRequests();
+	void CancelRequests() const;
 
 	TSharedPtr<IBaseRequest> CreateAuthStartRequest(const FString& PayloadJson) const;
 	TSharedPtr<IBaseRequest> CreateConfirmCodeRequest(const FString& PayloadJson) const;
@@ -37,10 +39,13 @@ public:
 	TSharedPtr<IBaseRequest> CreateSaveAvatarRequest(const FString& AvatarId) const;
 	TSharedPtr<IBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId, bool bIsDraft) const;
 
-	TSharedPtr<IBaseRequest> CreateAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest) const;
+protected:
+	TSharedPtr<IBaseRequest> CreateBaseRequest(const FString& Url, ERequestVerb RequestVerb = ERequestVerb::Get, const FString& Payload = "", float Timeout = -1.f) const;
+	TSharedPtr<IBaseRequest> CreateAuthorizedRequest(const FString& Url, ERequestVerb RequestVerb = ERequestVerb::Get, const FString& Payload = "", float Timeout = -1.f) const;
 
 private:
 	FString PartnerDomain;
+	FString AppId;
 	FRpmUserData UserData;
 	FTokenRefreshed TokenRefreshedDelegate;
 	TSharedRef<FCancellationDelegate> CancellationDelegate;

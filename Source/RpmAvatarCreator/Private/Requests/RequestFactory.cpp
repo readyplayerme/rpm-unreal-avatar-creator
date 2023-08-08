@@ -20,6 +20,11 @@ void FRequestFactory::SetPartnerDomain(const FString& Domain)
 	PartnerDomain = Domain;
 }
 
+void FRequestFactory::SetAppId(const FString& Id)
+{
+	AppId = Id;
+}
+
 void FRequestFactory::SetUserData(const FRpmUserData& Data)
 {
 	UserData = Data;
@@ -30,97 +35,103 @@ void FRequestFactory::SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefr
 	TokenRefreshedDelegate = TokenRefreshed;
 }
 
-void FRequestFactory::CancelRequests()
+void FRequestFactory::CancelRequests() const
 {
 	CancellationDelegate->Broadcast();
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthStartRequest(const FString& PayloadJson) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAuthStartEndpoint(PartnerDomain), "", ERequestVerb::Post, PayloadJson);
+	return CreateBaseRequest(FEndpoints::GetAuthStartEndpoint(PartnerDomain), ERequestVerb::Post, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateConfirmCodeRequest(const FString& PayloadJson) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetConfirmCodeEndpoint(PartnerDomain), "", ERequestVerb::Post, PayloadJson);
+	return CreateBaseRequest(FEndpoints::GetConfirmCodeEndpoint(PartnerDomain), ERequestVerb::Post, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateTokenRefreshRequest() const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetTokenRefreshEndpoint(PartnerDomain), "", ERequestVerb::Post, FUserDataExtractor::MakeTokenRefreshPayload(UserData));
+	return CreateBaseRequest(FEndpoints::GetTokenRefreshEndpoint(PartnerDomain), ERequestVerb::Post, FUserDataExtractor::MakeTokenRefreshPayload(UserData));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthAnonymousRequest() const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAuthAnonymousEndpoint(PartnerDomain), "", ERequestVerb::Post);
+	return CreateBaseRequest(FEndpoints::GetAuthAnonymousEndpoint(PartnerDomain), ERequestVerb::Post);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarTemplatesRequest() const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAvatarTemplatesEndpoint(), UserData.Token));
+	return CreateAuthorizedRequest(FEndpoints::GetAvatarTemplatesEndpoint());
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest() const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAssetEndpoint(PartnerDomain), UserData.Token));
+	return CreateAuthorizedRequest(FEndpoints::GetAssetEndpoint(PartnerDomain));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateColorRequest(const FString& AvatarId) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetColorEndpoint(AvatarId), UserData.Token));
+	return CreateAuthorizedRequest(FEndpoints::GetColorEndpoint(AvatarId));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateImageRequest(const FString& IconUrl) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, IconUrl);
+	return CreateBaseRequest(IconUrl);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateRenderRequest(const FString& AvatarId) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetRenderEndpoint(AvatarId), "", ERequestVerb::Get, "", IMAGE_REQUEST_TIMEOUT);
+	return CreateBaseRequest(FEndpoints::GetRenderEndpoint(AvatarId), ERequestVerb::Get, "", IMAGE_REQUEST_TIMEOUT);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateUserAvatarsRequest() const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetUserAvatarsEndpoint(UserData.Id), UserData.Token));
+	return CreateAuthorizedRequest(FEndpoints::GetUserAvatarsEndpoint(UserData.Id));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarModelRequest(const FString& AvatarId, bool bIsPreview) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAvatarModelEndpoint(AvatarId, bIsPreview));
+	return CreateBaseRequest(FEndpoints::GetAvatarModelEndpoint(AvatarId, bIsPreview));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarMetadataRequest(const FString& AvatarId) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAvatarMetadataEndpoint(AvatarId));
+	return CreateBaseRequest(FEndpoints::GetAvatarMetadataEndpoint(AvatarId));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarCreateRequest(const FString& PayloadJson, const FString& TemplateId) const
 {
 	if (TemplateId.IsEmpty())
 	{
-		return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetCreateEndpoint(), UserData.Token, ERequestVerb::Post, PayloadJson));
+		return CreateAuthorizedRequest(FEndpoints::GetCreateEndpoint(), ERequestVerb::Post, PayloadJson);
 	}
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetAvatarTemplatesEndpoint(TemplateId), UserData.Token, ERequestVerb::Post, PayloadJson));
+	return CreateAuthorizedRequest(FEndpoints::GetAvatarTemplatesEndpoint(TemplateId), ERequestVerb::Post, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetUpdateAvatarEndpoint(AvatarId), UserData.Token, ERequestVerb::Patch, PayloadJson));
+	return CreateAuthorizedRequest(FEndpoints::GetUpdateAvatarEndpoint(AvatarId), ERequestVerb::Patch, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateSaveAvatarRequest(const FString& AvatarId) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetSaveAvatarEndpoint(AvatarId), UserData.Token, ERequestVerb::Put));
+	return CreateAuthorizedRequest(FEndpoints::GetSaveAvatarEndpoint(AvatarId), ERequestVerb::Put);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FString& AvatarId, bool bIsDraft) const
 {
-	return CreateAuthorizedRequest(MakeShared<FBaseRequest>(CancellationDelegate, FEndpoints::GetDeleteAvatarEndpoint(AvatarId, bIsDraft), UserData.Token, ERequestVerb::Delete));
+	return CreateAuthorizedRequest(FEndpoints::GetDeleteAvatarEndpoint(AvatarId, bIsDraft), ERequestVerb::Delete);
 }
 
-TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest) const
+TSharedPtr<IBaseRequest> FRequestFactory::CreateBaseRequest(const FString& Url, ERequestVerb RequestVerb, const FString& Payload, float Timeout) const
 {
+	return MakeShared<FBaseRequest>(CancellationDelegate, AppId, Url, "", RequestVerb, Payload, Timeout);
+}
+
+TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthorizedRequest(const FString& Url, ERequestVerb RequestVerb, const FString& Payload, float Timeout) const
+{
+	TSharedPtr<IBaseRequest> MainRequest = MakeShared<FBaseRequest>(CancellationDelegate, AppId, Url, UserData.Token, RequestVerb, Payload, Timeout);
 	if (!UserData.bIsExistingUser)
 	{
 		return MainRequest;
