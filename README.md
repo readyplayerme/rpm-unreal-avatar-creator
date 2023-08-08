@@ -77,6 +77,7 @@ When spawning the **Avatar Creator** widget, it's possible to configure it with 
 
 Customization options:
  - **Partner Domain** Specify your partner domain
+ - **App Id** Specify your app id. **App Id** can be found in the Ready Player Me studio.
  - **Select Body Type** Allows skipping the body type selection screen
  - **Select Gender** Allows skipping the gender selection screen
  - **Allow Close Button** Hides the close button
