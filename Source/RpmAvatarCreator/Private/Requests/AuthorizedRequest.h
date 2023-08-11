@@ -27,6 +27,9 @@ private:
 	void MainRequestCompleted(bool bSuccess);
 	void RefreshRequestCompleted(bool bSuccess);
 
+	void ExecuteRequestCompletedCallback(bool bSuccess);
+	void ExecuteSessionExpiredCallback();
+
 	FFileDownloadCompleted OnDownloadCompleted;
 
 	TSharedPtr<IBaseRequest> MainRequest;

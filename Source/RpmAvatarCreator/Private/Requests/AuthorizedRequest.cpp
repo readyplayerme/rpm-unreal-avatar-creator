@@ -25,17 +25,28 @@ void FAuthorizedRequest::MainRequestCompleted(bool bSuccess)
 		}
 		else
 		{
-			(void)SessionExpiredDelegate.ExecuteIfBound();
-			MainRequest.Reset();
-			OnDownloadCompleted.Unbind();
+			ExecuteSessionExpiredCallback();
 		}
 	}
 	else
 	{
-		(void)OnDownloadCompleted.ExecuteIfBound(bSuccess);
-		OnDownloadCompleted.Unbind();
-		TokenRefreshRequest.Reset();
+		ExecuteRequestCompletedCallback(bSuccess);
 	}
+}
+
+void FAuthorizedRequest::ExecuteRequestCompletedCallback(bool bSuccess)
+{
+	(void)OnDownloadCompleted.ExecuteIfBound(bSuccess);
+	OnDownloadCompleted.Unbind();
+	TokenRefreshRequest.Reset();
+}
+
+void FAuthorizedRequest::ExecuteSessionExpiredCallback()
+{
+	(void)SessionExpiredDelegate.ExecuteIfBound();
+	MainRequest.Reset();
+	OnDownloadCompleted.Unbind();
+	TokenRefreshRequest.Reset();
 }
 
 void FAuthorizedRequest::RefreshRequestCompleted(bool bSuccess)
@@ -54,15 +65,10 @@ void FAuthorizedRequest::RefreshRequestCompleted(bool bSuccess)
 	}
 	else if (TokenRefreshRequest->GetResponseCode() == EHttpResponseCodes::Denied && SessionExpiredDelegate.IsBound())
 	{
-		(void)SessionExpiredDelegate.ExecuteIfBound();
-		MainRequest.Reset();
-		TokenRefreshRequest.Reset();
-		OnDownloadCompleted.Unbind();
+		ExecuteSessionExpiredCallback();
 		return;
 	}
-	(void)OnDownloadCompleted.ExecuteIfBound(false);
-	OnDownloadCompleted.Unbind();
-	TokenRefreshRequest.Reset();
+	ExecuteRequestCompletedCallback(false);
 }
 
 FFileDownloadCompleted& FAuthorizedRequest::GetCompleteCallback()
