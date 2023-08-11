@@ -70,9 +70,9 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarTemplatesRequest() const
 	return CreateAuthorizedRequest(FEndpoints::GetAvatarTemplatesEndpoint());
 }
 
-TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest() const
+TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest(int32 Limit, int32 Page) const
 {
-	return CreateAuthorizedRequest(FEndpoints::GetAssetEndpoint(PartnerDomain));
+	return CreateAuthorizedRequest(FEndpoints::GetAssetEndpoint(Limit, Page, UserData.Id, AppId));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateColorRequest(const FString& AvatarId) const

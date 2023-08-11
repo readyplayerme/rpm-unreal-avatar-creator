@@ -46,4 +46,5 @@ private:
 	TSharedPtr<class FRequestFactory> RequestFactory;
 	TSharedPtr<class IBaseRequest> AssetRequest;
 	TMap<FString, TSharedPtr<class IBaseRequest>> IconRequests;
+	int32 CurrentPageIndex = 0;
 };

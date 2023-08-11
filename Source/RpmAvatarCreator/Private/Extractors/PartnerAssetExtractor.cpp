@@ -11,6 +11,17 @@
 
 namespace
 {
+	template <typename KeyType, typename ValueType>
+	TMap<ValueType, KeyType> GetReverseMapping(const TMap<KeyType, ValueType>& InMap)
+	{
+		TMap<ValueType, KeyType> ReverseMapping;
+		for (const auto& Item : InMap)
+		{
+			ReverseMapping.Add(Item.Value, Item.Key);
+		}
+		return ReverseMapping;
+	}
+
 	const TMap<FString, ERpmPartnerAssetType> STRING_TO_ASSET_TYPES_MAP =
 	{
 		{"beard", ERpmPartnerAssetType::BeardStyle},
@@ -29,6 +40,8 @@ namespace
 		{"shirt", ERpmPartnerAssetType::Shirt}
 	};
 
+	const TMap<ERpmPartnerAssetType, FString> ASSET_TYPES_TO_STRING_MAP = GetReverseMapping(STRING_TO_ASSET_TYPES_MAP);
+
 	const TMap<ERpmPartnerAssetColor, FString> COLOR_TO_STRING_MAP =
 	{
 		{ERpmPartnerAssetColor::BeardColor, "beard"},
@@ -37,18 +50,21 @@ namespace
 		{ERpmPartnerAssetColor::SkinColor, "skin"},
 	};
 
-	const FString JSON_FIELD_ASSET_TYPE = "assetType";
+	const FString JSON_FIELD_TYPE = "type";
 	const FString JSON_FIELD_ID = "id";
 	const FString JSON_FIELD_NAME = "name";
 	const FString JSON_FIELD_GENDER = "gender";
-	const FString JSON_FIELD_ICON = "icon";
-	const FString JSON_FIELD_MASK = "mask";
-	const FString JSON_FIELD_BADGE_LOGO = "badgeLogo";
-	const FString JSON_FIELD_RESPONSIVE_IMAGE = "responsiveImage";
-	const FString JSON_FIELD_SRC = "src";
+	const FString JSON_FIELD_ICON_URL = "iconUrl";
+	const FString JSON_FIELD_MASK_URL = "maskUrl";
+	const FString JSON_FIELD_BADGE_LOGO_URL = "badgeLogoUrl";
 	const FString JSON_FIELD_IS_LOCKED = "locked";
 	const FString JSON_FIELD_IS_LOCKED_CATEGORIES = "lockedCategories";
 	const FString JSON_FIELD_PRICE = "price";
+}
+
+FString FPartnerAssetExtractor::GetStringFromAssetType(ERpmPartnerAssetType AssetType)
+{
+	return ASSET_TYPES_TO_STRING_MAP[AssetType];
 }
 
 TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& JsonString)
@@ -83,19 +99,15 @@ TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& Js
 TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& JsonString)
 {
 	TArray<FRpmPartnerAsset> Assets;
-	TArray<TSharedPtr<FJsonValue>> JsonArray;
+	const TArray<TSharedPtr<FJsonValue>> JsonArray = FDataJsonUtils::ExtractDataArray(JsonString);
 
-	if (!FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(JsonString), JsonArray))
-	{
-		return {};
-	}
 	for (const auto& JsonValue : JsonArray)
 	{
 		FRpmPartnerAsset Asset;
 		const auto JsonObject = JsonValue->AsObject();
-		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_ASSET_TYPE))
+		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_TYPE))
 		{
-			const FString AssetTypeStr = JsonObject->GetStringField(JSON_FIELD_ASSET_TYPE);
+			const FString AssetTypeStr = JsonObject->GetStringField(JSON_FIELD_TYPE);
 			if (!STRING_TO_ASSET_TYPES_MAP.Contains(AssetTypeStr))
 			{
 				continue;
@@ -114,25 +126,17 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 		{
 			Asset.Gender = FPayloadExtractor::GetGenderFromString(JsonObject->GetStringField(JSON_FIELD_GENDER));
 		}
-		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_ICON))
+		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_ICON_URL))
 		{
-			Asset.Icon = JsonObject->GetStringField(JSON_FIELD_ICON);
+			Asset.IconUrl = JsonObject->GetStringField(JSON_FIELD_ICON_URL);
 		}
-		if (Asset.AssetType == ERpmPartnerAssetType::EyeColor && JsonObject->HasTypedField<EJson::String>(JSON_FIELD_MASK))
+		if (Asset.AssetType == ERpmPartnerAssetType::EyeColor && JsonObject->HasTypedField<EJson::String>(JSON_FIELD_MASK_URL))
 		{
-			Asset.Icon = JsonObject->GetStringField(JSON_FIELD_MASK);
+			Asset.IconUrl = JsonObject->GetStringField(JSON_FIELD_MASK_URL);
 		}
-		if (JsonObject->HasTypedField<EJson::Object>(JSON_FIELD_BADGE_LOGO))
+		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_BADGE_LOGO_URL))
 		{
-			const auto BadgeLogoJson = JsonObject->GetObjectField(JSON_FIELD_BADGE_LOGO);
-			if (BadgeLogoJson->HasTypedField<EJson::Object>(JSON_FIELD_RESPONSIVE_IMAGE))
-			{
-				const auto ResponsiveImageJson = BadgeLogoJson->GetObjectField(JSON_FIELD_RESPONSIVE_IMAGE);
-				if (ResponsiveImageJson->HasTypedField<EJson::String>(JSON_FIELD_SRC))
-				{
-					Asset.Badge = ResponsiveImageJson->GetStringField(JSON_FIELD_SRC);
-				}
-			}
+			Asset.BadgeUrl = JsonObject->GetStringField(JSON_FIELD_BADGE_LOGO_URL);
 		}
 		if (JsonObject->HasTypedField<EJson::Boolean>(JSON_FIELD_IS_LOCKED))
 		{

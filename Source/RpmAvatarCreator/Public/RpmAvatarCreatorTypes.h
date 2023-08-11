@@ -105,10 +105,10 @@ struct FRpmPartnerAsset
 	EAvatarGender Gender;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
-	FString Icon;
+	FString IconUrl;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
-	FString Badge;
+	FString BadgeUrl;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	UTexture2D* IconTexture;

@@ -10,7 +10,8 @@
 
 namespace
 {
-	const FString EYE_MASK_CROP_PARAMS = "?rect=155,152,204,204";
+	const FString EYE_MASK_CROP_PARAMS = "?rect=155,152,204,204&w=64";
+	const FString ASSET_ICON_PARAMS = "?w=64";
 
 	bool IsAssetFiltered(const FRpmPartnerAsset& Asset, EAvatarBodyType BodyType, EAvatarGender Gender)
 	{
@@ -28,7 +29,7 @@ void URpmPartnerAssetDownloader::SetRequestFactory(TSharedPtr<class FRequestFact
 
 void URpmPartnerAssetDownloader::DownloadAssets()
 {
-	AssetRequest = RequestFactory->CreateAssetRequest();
+	AssetRequest = RequestFactory->CreateAssetRequest(100, CurrentPageIndex + 1);
 	AssetRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnAssetsDownloadCompleted);
 	AssetRequest->Download();
 }
@@ -57,7 +58,18 @@ void URpmPartnerAssetDownloader::OnAssetsDownloadCompleted(bool bSuccess)
 {
 	if (bSuccess)
 	{
-		Assets = FPartnerAssetExtractor::ExtractAssets(AssetRequest->GetContentAsString());
+		const TArray<FRpmPartnerAsset> AssetChunk = FPartnerAssetExtractor::ExtractAssets(AssetRequest->GetContentAsString());
+		if (AssetChunk.Num() != 0)
+		{
+			Assets.Append(AssetChunk);
+			++CurrentPageIndex;
+			DownloadAssets();
+			return;
+		}
+	}
+	else
+	{
+		Assets.Empty();
 	}
 	AssetRequest.Reset();
 	(void)OnPartnerAssetsDownloaded.ExecuteIfBound(Assets.Num() != 0);
@@ -72,20 +84,20 @@ void URpmPartnerAssetDownloader::DownloadIcons(EAvatarBodyType BodyType, EAvatar
 		{
 			continue;
 		}
-		FString IconRequestUrl = Asset.Icon;
-		IconRequestUrl += Asset.AssetType == ERpmPartnerAssetType::EyeColor ? EYE_MASK_CROP_PARAMS : "";
+		FString IconRequestUrl = Asset.IconUrl;
+		IconRequestUrl += Asset.AssetType == ERpmPartnerAssetType::EyeColor ? EYE_MASK_CROP_PARAMS : ASSET_ICON_PARAMS;
 		auto IconRequest = RequestFactory->CreateImageRequest(IconRequestUrl);
-		IconRequests.Add(Asset.Icon, IconRequest);
-		IconRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnIconDownloadCompleted, Asset.Icon);
+		IconRequests.Add(Asset.IconUrl, IconRequest);
+		IconRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnIconDownloadCompleted, Asset.IconUrl);
 		IconRequest->Download();
-		if (!Asset.Badge.IsEmpty())
+		if (!Asset.BadgeUrl.IsEmpty())
 		{
-			auto BadgeRequest = RequestFactory->CreateImageRequest(Asset.Badge);
-			if (!IconRequests.Contains(Asset.Badge))
+			auto BadgeRequest = RequestFactory->CreateImageRequest(Asset.BadgeUrl + ASSET_ICON_PARAMS);
+			if (!IconRequests.Contains(Asset.BadgeUrl))
 			{
-				IconRequests.Add(Asset.Badge, BadgeRequest);
+				IconRequests.Add(Asset.BadgeUrl, BadgeRequest);
 			}
-			BadgeRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnIconDownloadCompleted, Asset.Badge);
+			BadgeRequest->GetCompleteCallback().BindUObject(this, &URpmPartnerAssetDownloader::OnIconDownloadCompleted, Asset.BadgeUrl);
 			BadgeRequest->Download();
 		}
 	}
@@ -114,13 +126,13 @@ void URpmPartnerAssetDownloader::OnIconDownloadCompleted(bool bSuccess, FString 
 	{
 		for (auto& Asset : Assets)
 		{
-			if (ImageMap.Contains(Asset.Icon))
+			if (ImageMap.Contains(Asset.IconUrl))
 			{
-				Asset.IconTexture = ImageMap[Asset.Icon];
+				Asset.IconTexture = ImageMap[Asset.IconUrl];
 			}
-			if (ImageMap.Contains(Asset.Badge))
+			if (ImageMap.Contains(Asset.BadgeUrl))
 			{
-				Asset.BadgeTexture = ImageMap[Asset.Badge];
+				Asset.BadgeTexture = ImageMap[Asset.BadgeUrl];
 			}
 		}
 		ImageMap.Empty();
