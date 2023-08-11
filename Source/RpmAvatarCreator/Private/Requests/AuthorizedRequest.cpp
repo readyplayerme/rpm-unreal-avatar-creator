@@ -6,10 +6,11 @@
 #include "Interfaces/IHttpResponse.h"
 #include "Extractors/UserDataExtractor.h"
 
-FAuthorizedRequest::FAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest, const TSharedPtr<IBaseRequest> RefreshRequest, const FTokenRefreshed& TokenRefreshedDelegate)
+FAuthorizedRequest::FAuthorizedRequest(TSharedPtr<IBaseRequest> MainRequest, const TSharedPtr<IBaseRequest> RefreshRequest, const FTokenRefreshed& TokenRefreshedDelegate, const FSessionExpired& SessionExpired)
 			: MainRequest(MainRequest)
 			, TokenRefreshRequest(RefreshRequest)
 			, TokenRefreshedDelegate(TokenRefreshedDelegate)
+			, SessionExpiredDelegate(SessionExpired)
 {
 }
 
@@ -17,14 +18,35 @@ void FAuthorizedRequest::MainRequestCompleted(bool bSuccess)
 {
 	if (!bSuccess && MainRequest->GetResponseCode() == EHttpResponseCodes::Denied && TokenRefreshedDelegate.IsBound())
 	{
-		TokenRefreshRequest->GetCompleteCallback().BindSP(AsShared(), &FAuthorizedRequest::RefreshRequestCompleted);
-		TokenRefreshRequest->Download();
-		return;
+		if (TokenRefreshRequest.IsValid())
+		{
+			TokenRefreshRequest->GetCompleteCallback().BindSP(AsShared(), &FAuthorizedRequest::RefreshRequestCompleted);
+			TokenRefreshRequest->Download();
+		}
+		else
+		{
+			ExecuteSessionExpiredCallback();
+		}
 	}
+	else
+	{
+		ExecuteRequestCompletedCallback(bSuccess);
+	}
+}
+
+void FAuthorizedRequest::ExecuteRequestCompletedCallback(bool bSuccess)
+{
 	(void)OnDownloadCompleted.ExecuteIfBound(bSuccess);
 	OnDownloadCompleted.Unbind();
 	TokenRefreshRequest.Reset();
-	TokenRefreshedDelegate.Unbind();
+}
+
+void FAuthorizedRequest::ExecuteSessionExpiredCallback()
+{
+	(void)SessionExpiredDelegate.ExecuteIfBound();
+	MainRequest.Reset();
+	OnDownloadCompleted.Unbind();
+	TokenRefreshRequest.Reset();
 }
 
 void FAuthorizedRequest::RefreshRequestCompleted(bool bSuccess)
@@ -36,16 +58,17 @@ void FAuthorizedRequest::RefreshRequestCompleted(bool bSuccess)
 		{
 			(void)TokenRefreshedDelegate.ExecuteIfBound(UserData.Token, UserData.RefreshToken);
 			TokenRefreshRequest.Reset();
-			TokenRefreshedDelegate.Unbind();
 			MainRequest->SetAuthToken(UserData.Token);
 			Download();
 			return;
 		}
 	}
-	(void)OnDownloadCompleted.ExecuteIfBound(false);
-	OnDownloadCompleted.Unbind();
-	TokenRefreshRequest.Reset();
-	TokenRefreshedDelegate.Unbind();
+	else if (TokenRefreshRequest->GetResponseCode() == EHttpResponseCodes::Denied && SessionExpiredDelegate.IsBound())
+	{
+		ExecuteSessionExpiredCallback();
+		return;
+	}
+	ExecuteRequestCompletedCallback(false);
 }
 
 FFileDownloadCompleted& FAuthorizedRequest::GetCompleteCallback()

@@ -254,4 +254,6 @@ DECLARE_DELEGATE_OneParam(FBaseRequestCompleted, bool);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FPreviewDownloadCompleted, const USkeletalMesh*, SkeletalMesh);
 
+DECLARE_DYNAMIC_DELEGATE(FSessionExpired);
+
 DECLARE_LOG_CATEGORY_EXTERN(LogRpmAvatarCreator, Log, All);

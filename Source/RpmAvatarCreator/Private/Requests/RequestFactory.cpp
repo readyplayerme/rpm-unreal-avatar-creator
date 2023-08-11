@@ -35,6 +35,11 @@ void FRequestFactory::SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefr
 	TokenRefreshedDelegate = TokenRefreshed;
 }
 
+void FRequestFactory::SetSessionExpiredDelegate(const FSessionExpired& SessionExpired)
+{
+	SessionExpiredDelegate = SessionExpired;
+}
+
 void FRequestFactory::CancelRequests() const
 {
 	CancellationDelegate->Broadcast();
@@ -132,9 +137,6 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateBaseRequest(const FString& Url, 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthorizedRequest(const FString& Url, ERequestVerb RequestVerb, const FString& Payload, float Timeout) const
 {
 	TSharedPtr<IBaseRequest> MainRequest = MakeShared<FBaseRequest>(CancellationDelegate, AppId, Url, UserData.Token, RequestVerb, Payload, Timeout);
-	if (!UserData.bIsExistingUser)
-	{
-		return MainRequest;
-	}
-	return MakeShared<FAuthorizedRequest>(MainRequest, CreateTokenRefreshRequest(), TokenRefreshedDelegate);
+	TSharedPtr<IBaseRequest> RefreshRequest = UserData.bIsExistingUser ? CreateTokenRefreshRequest() : nullptr;
+	return MakeShared<FAuthorizedRequest>(MainRequest, RefreshRequest, TokenRefreshedDelegate, SessionExpiredDelegate);
 }

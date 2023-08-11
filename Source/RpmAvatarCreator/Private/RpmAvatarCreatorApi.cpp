@@ -44,6 +44,11 @@ void URpmAvatarCreatorApi::SetPreviewDownloadedDelegate(const FPreviewDownloadCo
 	AvatarRequestHandler->OnPreviewDownloaded = PreviewDownloaded;
 }
 
+void URpmAvatarCreatorApi::SetSessionExpiredDelegate(const FSessionExpired& SessionExpired)
+{
+	RequestFactory->SetSessionExpiredDelegate(SessionExpired);
+}
+
 FRpmUserData URpmAvatarCreatorApi::GetUserData() const
 {
 	return AuthManager->GetUserData();
