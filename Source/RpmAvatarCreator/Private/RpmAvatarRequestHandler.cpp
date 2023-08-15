@@ -5,6 +5,7 @@
 
 #include "RpmUserAvatarDownloader.h"
 #include "glTFRuntimeFunctionLibrary.h"
+#include "RpmImageDownloader.h"
 #include "Requests/RequestFactory.h"
 #include "Requests/Endpoints.h"
 #include "Extractors/PayloadExtractor.h"
@@ -15,6 +16,7 @@ static const FString HALFBODY_BONE_NODE = "AvatarRoot";
 
 URpmAvatarRequestHandler::URpmAvatarRequestHandler()
 	: Mesh(nullptr)
+	, ImageDownloader(nullptr)
 	, bAvatarExists(false)
 	, bIsExistingAvatarUnchanged(false)
 {
@@ -23,6 +25,11 @@ URpmAvatarRequestHandler::URpmAvatarRequestHandler()
 void URpmAvatarRequestHandler::SetRequestFactory(TSharedPtr<class FRequestFactory> Factory)
 {
 	RequestFactory = Factory;
+}
+
+void URpmAvatarRequestHandler::SetUserAvatarDownloader(TSharedPtr<class FRpmUserAvatarDownloader> AvatarDownloader)
+{
+	UserAvatarDownloader = AvatarDownloader;
 }
 
 FBaseRequestCompleted& URpmAvatarRequestHandler::GetAvatarPropertiesDownloadedCallback()
@@ -112,9 +119,10 @@ void URpmAvatarRequestHandler::OnDeleteAvatarCompleted(bool bSuccess, FAvatarDel
 	}
 	else
 	{
-		if (!bIsDraft && IsValid(UserAvatarDownloader))
+		if (!bIsDraft)
 		{
 			UserAvatarDownloader->DeleteAvatar(AvatarId);
+			ImageDownloader->RemoveImage(AvatarId);
 		}
 		(void)AvatarDeleteCompleted.ExecuteIfBound();
 	}
@@ -140,9 +148,13 @@ void URpmAvatarRequestHandler::OnSaveAvatarCompleted(bool bSuccess, FAvatarSaveC
 	}
 	else
 	{
-		if (IsValid(UserAvatarDownloader))
+		if (!bAvatarExists)
 		{
 			UserAvatarDownloader->AddAvatar(AvatarProperties.Id, AvatarProperties.Partner);
+		}
+		else
+		{
+			ImageDownloader->RemoveImage(AvatarProperties.Id);
 		}
 		(void)AvatarSaveCompleted.ExecuteIfBound(FEndpoints::GetAvatarPublicUrl(AvatarProperties.Id));
 	}

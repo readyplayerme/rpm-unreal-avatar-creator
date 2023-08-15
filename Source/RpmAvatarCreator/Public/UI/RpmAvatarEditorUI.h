@@ -34,9 +34,6 @@ protected:
 	TMap<ERpmPartnerAssetColor, UWrapBox*> ColorContainerMap;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
-	class UTexture2D* ClearSelectionTexture;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	TSubclassOf<URpmAssetButtonUI> AssetButtonClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")

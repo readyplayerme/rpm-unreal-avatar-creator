@@ -60,6 +60,7 @@ namespace
 	const FString JSON_FIELD_IS_LOCKED = "locked";
 	const FString JSON_FIELD_IS_LOCKED_CATEGORIES = "lockedCategories";
 	const FString JSON_FIELD_PRICE = "price";
+	const FString EYE_MASK_CROP_PARAM = "?rect=155,152,204,204";
 }
 
 FString FPartnerAssetExtractor::GetStringFromAssetType(ERpmPartnerAssetType AssetType)
@@ -132,7 +133,7 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 		}
 		if (Asset.AssetType == ERpmPartnerAssetType::EyeColor && JsonObject->HasTypedField<EJson::String>(JSON_FIELD_MASK_URL))
 		{
-			Asset.IconUrl = JsonObject->GetStringField(JSON_FIELD_MASK_URL);
+			Asset.IconUrl = JsonObject->GetStringField(JSON_FIELD_MASK_URL) + EYE_MASK_CROP_PARAM;
 		}
 		if (JsonObject->HasTypedField<EJson::String>(JSON_FIELD_BADGE_LOGO_URL))
 		{

@@ -10,6 +10,7 @@
 #include "Requests/RequestFactory.h"
 #include "RpmUserAvatarDownloader.h"
 #include "RpmAvatarTemplateDownloader.h"
+#include "RpmImageDownloader.h"
 #include "Engine/SkeletalMesh.h"
 
 URpmAvatarCreatorApi::URpmAvatarCreatorApi()
@@ -19,16 +20,17 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	RequestFactory = MakeShared<FRequestFactory>();
 	AuthManager = MakeShared<FRpmAuthManager>(RequestFactory);
 	AuthManager->BindTokenRefreshDelegate();
+	ImageDownloader = NewObject<URpmImageDownloader>();
+	ImageDownloader->SetRequestFactory(RequestFactory);
 	ColorDownloader = MakeShared<FRpmColorDownloader>(RequestFactory);
-	AssetDownloader = NewObject<URpmPartnerAssetDownloader>();
-	AssetDownloader->SetRequestFactory(RequestFactory);
+	AssetDownloader = MakeShared<FRpmPartnerAssetDownloader>(RequestFactory);
 	AvatarTemplateDownloader = NewObject<URpmAvatarTemplateDownloader>();
 	AvatarTemplateDownloader->SetRequestFactory(RequestFactory);
-	UserAvatarDownloader = NewObject<URpmUserAvatarDownloader>();
-	UserAvatarDownloader->SetRequestFactory(RequestFactory);
+	UserAvatarDownloader = MakeShared<FRpmUserAvatarDownloader>(RequestFactory);
 	AvatarRequestHandler = NewObject<URpmAvatarRequestHandler>();
 	AvatarRequestHandler->SetRequestFactory(RequestFactory);
-	AvatarRequestHandler->UserAvatarDownloader = UserAvatarDownloader;
+	AvatarRequestHandler->SetUserAvatarDownloader(UserAvatarDownloader);
+	AvatarRequestHandler->ImageDownloader = ImageDownloader;
 }
 
 void URpmAvatarCreatorApi::SetAppSettings(const FString& PartnerDomain, const FString& AppId)
@@ -129,11 +131,6 @@ void URpmAvatarCreatorApi::ColorsDownloaded(bool bSuccess)
 	AvatarRequestHandler->DownloadModel(TargetSkeleton);
 }
 
-void URpmAvatarCreatorApi::IconsDownloaded(bool bSuccess)
-{
-	ExecuteEditorReadyCallback(bSuccess, ERpmAvatarCreatorError::AssetDownloadFailure);
-}
-
 void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess)
 {
 	if (!bSuccess)
@@ -141,8 +138,6 @@ void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess)
 		ExecuteEditorReadyCallback(false, ERpmAvatarCreatorError::AssetDownloadFailure);
 		return;
 	}
-	AssetDownloader->GetIconsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::IconsDownloaded);
-	AssetDownloader->DownloadIcons(AvatarProperties.BodyType, AvatarProperties.Gender);
 
 	ColorDownloader->GetCompleteCallback().BindUObject(this, &URpmAvatarCreatorApi::ColorsDownloaded);
 	ColorDownloader->DownloadColors(AvatarProperties.Id);
@@ -181,16 +176,6 @@ void URpmAvatarCreatorApi::DownloadUserAvatars(const FUserAvatarsDownloadComplet
 	UserAvatarDownloader->DownloadUserAvatars(DownloadCompleted, Failed);
 }
 
-void URpmAvatarCreatorApi::SetUserAvatarImageDownloadDelegate(const FUserAvatarImageDownloadCompleted& ImageDownloaded)
-{
-	UserAvatarDownloader->SetImageDownloadDelegate(ImageDownloaded);
-}
-
-void URpmAvatarCreatorApi::DownloadUserAvatarImages(const FString& Partner)
-{
-	UserAvatarDownloader->DownloadImages(Partner);
-}
-
 void URpmAvatarCreatorApi::UpdateAvatarAsset(ERpmPartnerAssetType AssetType, int64 AssetId)
 {
 	AvatarRequestHandler->UpdateAvatar(AssetType, AssetId);
@@ -214,6 +199,11 @@ void URpmAvatarCreatorApi::DeleteAvatar(const FString& AvatarId, bool bIsDraft, 
 void URpmAvatarCreatorApi::UpdateLockedAssets(const FUpdateLockedAssetsCompleted& UpdateLockedAssetsCompleted, const FAvatarCreatorFailed& Failed)
 {
 	
+}
+
+void URpmAvatarCreatorApi::DownloadImage(const FString& Url, int32 Size, const FImageDownloadCompleted& DownloadCompleted)
+{
+	return ImageDownloader->DownloadImage(Url, Size, DownloadCompleted);
 }
 
 TArray<FRpmPartnerAsset> URpmAvatarCreatorApi::GetFilteredPartnerAssets() const

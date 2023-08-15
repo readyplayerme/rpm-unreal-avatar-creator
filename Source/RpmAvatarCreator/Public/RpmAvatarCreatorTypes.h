@@ -111,12 +111,6 @@ struct FRpmPartnerAsset
 	FString BadgeUrl;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
-	UTexture2D* IconTexture;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
-	UTexture2D* BadgeTexture;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
 	bool bIsLocked;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Ready Player Me")
@@ -130,8 +124,6 @@ struct FRpmPartnerAsset
 		Id = 0;
 		AssetType = ERpmPartnerAssetType::FaceShape;
 		Gender = EAvatarGender::Undefined;
-		IconTexture = nullptr;
-		BadgeTexture = nullptr;
 		bIsLocked = false;
 		bIsCustomizable = true;
 	}
@@ -205,13 +197,8 @@ struct FRpmUserAvatar
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
 	FString Partner;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
-	UTexture2D* Image;
-
-	FRpmUserAvatar()
-	{
-		Image = nullptr;
-	}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
+	FString ImageUrl;
 };
 
 UENUM(BlueprintType)
@@ -246,7 +233,7 @@ DECLARE_DYNAMIC_DELEGATE(FUpdateLockedAssetsCompleted);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FUserAvatarsDownloadCompleted, const TArray<FRpmUserAvatar>&, UserAvatars);
 
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FUserAvatarImageDownloadCompleted, const FString&, AvatarId, UTexture2D*, Image);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FImageDownloadCompleted, UTexture2D*, Image);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FAvatarTemplatesDownloadCompleted, const TArray<FRpmAvatarTemplate>&, AvatarTemplates);
 

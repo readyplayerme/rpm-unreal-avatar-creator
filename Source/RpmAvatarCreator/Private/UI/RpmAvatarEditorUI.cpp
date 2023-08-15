@@ -47,11 +47,11 @@ void URpmAvatarEditorUI::AddClearSelectionButtons()
 		if (Pair.Key != ERpmPartnerAssetType::EyeColor && Pair.Key != ERpmPartnerAssetType::Shirt && Pair.Key != ERpmPartnerAssetType::Outfit)
 		{
 			FRpmPartnerAsset Asset;
-			Asset.IconTexture = ClearSelectionTexture;
 			Asset.AssetType = Pair.Key;
 			URpmAssetButtonUI* AssetButton = WidgetTree->ConstructWidget<URpmAssetButtonUI>(AssetButtonClass);
 			AssetButton->SetSelected(IsAssetSelected(Asset));
 			AssetButton->Asset = Asset;
+			AssetButton->AvatarCreatorApi = AvatarCreatorApi;
 			AssetButton->UpdateUI();
 			Pair.Value->AddChildToWrapBox(AssetButton);
 			AssetButton->AssetButtonSelected.AddDynamic(this, &URpmAvatarEditorUI::OnAssetButtonClicked);
@@ -74,6 +74,7 @@ void URpmAvatarEditorUI::AddAssetButtons()
 				const bool IsSelected = IsAssetSelected(Asset);
 				AssetButton->SetSelected(IsSelected);
 				AssetButton->Asset = Asset;
+				AssetButton->AvatarCreatorApi = AvatarCreatorApi;
 				AssetButton->UpdateUI();
 				Pair.Value->AddChildToWrapBox(AssetButton);
 				AssetButton->AssetButtonSelected.AddDynamic(this, &URpmAvatarEditorUI::OnAssetButtonClicked);
