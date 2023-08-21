@@ -56,6 +56,8 @@ private:
 
 	void AddAssetButtons();
 
+	void AddAssetButton(const FRpmPartnerAsset& Asset, UWrapBox* WrapBox);
+
 	void AddColorButtons();
 
 	bool IsAssetSelected(const FRpmPartnerAsset& Asset) const;
