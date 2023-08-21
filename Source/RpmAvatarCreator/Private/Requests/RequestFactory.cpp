@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "BaseRequest.h"
 #include "Endpoints.h"
+#include "ReadyPlayerMeSettings.h"
 #include "Extractors/UserDataExtractor.h"
 
 constexpr float IMAGE_REQUEST_TIMEOUT = 60.f;
@@ -18,11 +19,6 @@ FRequestFactory::FRequestFactory()
 void FRequestFactory::SetPartnerDomain(const FString& Domain)
 {
 	PartnerDomain = Domain;
-}
-
-void FRequestFactory::SetAppId(const FString& Id)
-{
-	AppId = Id;
 }
 
 void FRequestFactory::SetUserData(const FRpmUserData& Data)
@@ -72,6 +68,8 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarTemplatesRequest() const
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest(int32 Limit, int32 Page) const
 {
+	const UReadyPlayerMeSettings* Settings = GetDefault<UReadyPlayerMeSettings>();
+	const FString AppId = IsValid(Settings) ? Settings->AppId : "";
 	return CreateAuthorizedRequest(FEndpoints::GetAssetEndpoint(Limit, Page, UserData.Id, AppId));
 }
 
@@ -131,12 +129,12 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FStrin
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateBaseRequest(const FString& Url, ERequestVerb RequestVerb, const FString& Payload, float Timeout) const
 {
-	return MakeShared<FBaseRequest>(CancellationDelegate, AppId, Url, "", RequestVerb, Payload, Timeout);
+	return MakeShared<FBaseRequest>(CancellationDelegate, Url, "", RequestVerb, Payload, Timeout);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthorizedRequest(const FString& Url, ERequestVerb RequestVerb, const FString& Payload, float Timeout) const
 {
-	TSharedPtr<IBaseRequest> MainRequest = MakeShared<FBaseRequest>(CancellationDelegate, AppId, Url, UserData.Token, RequestVerb, Payload, Timeout);
+	TSharedPtr<IBaseRequest> MainRequest = MakeShared<FBaseRequest>(CancellationDelegate, Url, UserData.Token, RequestVerb, Payload, Timeout);
 	TSharedPtr<IBaseRequest> RefreshRequest = UserData.bIsExistingUser ? CreateTokenRefreshRequest() : nullptr;
 	return MakeShared<FAuthorizedRequest>(MainRequest, RefreshRequest, TokenRefreshedDelegate, SessionExpiredDelegate);
 }

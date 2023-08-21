@@ -15,8 +15,8 @@ class RPMAVATARCREATOR_API URpmAvatarCreatorApi : public UObject
 public:
 	URpmAvatarCreatorApi();
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set App Settings"))
-	void SetAppSettings(const FString& PartnerDomain, const FString& AppId);
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Partner Domain"))
+	void SetPartnerDomain(const FString& PartnerDomain);
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Preview Downloaded Delegate"))
 	void SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded);
@@ -54,12 +54,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download User Avatars"))
 	void DownloadUserAvatars(const FUserAvatarsDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set User Avatar Image Download Delegate"))
-	void SetUserAvatarImageDownloadDelegate(const FUserAvatarImageDownloadCompleted& ImageDownloaded);
-
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download User Avatar Images"))
-	void DownloadUserAvatarImages(const FString& Partner);
-
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Save Avatar"))
 	void SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed);
 
@@ -81,6 +75,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	FString SelectedAvatarTemplateId;
 
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Image"))
+	void DownloadImage(const FString& Url, int32 Size, const FImageDownloadCompleted& DownloadCompleted);
+
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Filtered Partner Assets"))
 	TArray<FRpmPartnerAsset> GetFilteredPartnerAssets() const;
 
@@ -97,9 +94,6 @@ private:
 	void AssetsDownloaded(bool bSuccess);
 
 	UFUNCTION()
-	void IconsDownloaded(bool bSuccess);
-
-	UFUNCTION()
 	void ModelDownloaded(bool bSuccess);
 
 	UFUNCTION()
@@ -113,14 +107,15 @@ private:
 
 	TSharedPtr<class FRpmColorDownloader> ColorDownloader;
 
+	TSharedPtr<class FRpmPartnerAssetDownloader> AssetDownloader;
+
+	TSharedPtr<class FRpmUserAvatarDownloader> UserAvatarDownloader;
+
 	UPROPERTY()
-	class URpmPartnerAssetDownloader* AssetDownloader;
+	class URpmImageDownloader* ImageDownloader;
 
 	UPROPERTY()
 	class URpmAvatarTemplateDownloader* AvatarTemplateDownloader;
-
-	UPROPERTY()
-	class URpmUserAvatarDownloader* UserAvatarDownloader;
 
 	UPROPERTY()
 	class URpmAvatarRequestHandler* AvatarRequestHandler;
