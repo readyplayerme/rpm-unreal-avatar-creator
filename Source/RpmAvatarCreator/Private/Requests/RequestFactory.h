@@ -14,8 +14,6 @@ public:
 
 	void SetPartnerDomain(const FString& Domain);
 
-	void SetAppId(const FString& Id);
-
 	void SetUserData(const FRpmUserData& UserData);
 
 	void SetTokenRefreshedDelegate(const FTokenRefreshed& TokenRefreshed);
@@ -47,7 +45,6 @@ protected:
 
 private:
 	FString PartnerDomain;
-	FString AppId;
 	FRpmUserData UserData;
 	FTokenRefreshed TokenRefreshedDelegate;
 	FSessionExpired SessionExpiredDelegate;

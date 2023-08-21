@@ -4,6 +4,7 @@
 #include "BaseRequest.h"
 
 #include "HttpModule.h"
+#include "ReadyPlayerMeSettings.h"
 #include "Interfaces/IHttpResponse.h"
 
 namespace
@@ -16,11 +17,14 @@ namespace
 		{ERequestVerb::Patch, "PATCH"},
 		{ERequestVerb::Delete, "DELETE"}
 	};
+
+	const FString HEADER_AUTHORIZATION = "Authorization";
+	const FString HEADER_APP_ID = "X-APP-ID";
+	const FString HEADER_CONTENT_TYPE = "Content-Type";
 }
 
-FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& AppId, const FString& Url, const FString& AuthToken, ERequestVerb RequestVerb, const FString& Payload, float Timeout)
+FBaseRequest::FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken, ERequestVerb RequestVerb, const FString& Payload, float Timeout)
 	: CancellationDelegate(CancellationDelegate)
-	, AppId(AppId)
 	, Url(Url)
 	, AuthToken(AuthToken)
 	, RequestVerb(RequestVerb)
@@ -41,15 +45,16 @@ void FBaseRequest::Download()
 	if (!AuthToken.IsEmpty())
 	{
 		const FString Authorization = FString::Printf(TEXT("Bearer %s"), *AuthToken);
-		DownloadRequest->SetHeader(TEXT("Authorization"), Authorization);
+		DownloadRequest->SetHeader(HEADER_AUTHORIZATION, Authorization);
 	}
-	if (!AppId.IsEmpty())
+	const UReadyPlayerMeSettings* Settings = GetDefault<UReadyPlayerMeSettings>();
+	if (IsValid(Settings))
 	{
-		DownloadRequest->SetHeader(TEXT("X-APP-ID"), AppId);
+		DownloadRequest->SetHeader(HEADER_APP_ID, Settings->AppId);
 	}
 	if (!Payload.IsEmpty())
 	{
-		DownloadRequest->SetHeader("Content-Type", "application/json");
+		DownloadRequest->SetHeader(HEADER_CONTENT_TYPE, "application/json");
 		DownloadRequest->SetContentAsString(Payload);
 	}
 	DownloadRequest->OnProcessRequestComplete().BindSP(AsShared(), &FBaseRequest::OnReceived);

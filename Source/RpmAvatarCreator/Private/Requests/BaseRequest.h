@@ -10,7 +10,7 @@ class FBaseRequest : public IBaseRequest, public TSharedFromThis<FBaseRequest>
 {
 public:
 	FBaseRequest() = default;
-	FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& AppId, const FString& Url, const FString& AuthToken = "", ERequestVerb RequestVerb = ERequestVerb::Get, const FString& Payload = "", float Timeout = -1.f);
+	FBaseRequest(const TSharedRef<FCancellationDelegate>& CancellationDelegate, const FString& Url, const FString& AuthToken = "", ERequestVerb RequestVerb = ERequestVerb::Get, const FString& Payload = "", float Timeout = -1.f);
 
 	virtual void Download() override;
 	virtual void CancelRequest() override;
@@ -30,7 +30,6 @@ protected:
 	TSharedRef<FCancellationDelegate> CancellationDelegate;
 	FDelegateHandle CancellationHandle;
 
-	FString AppId;
 	FString Url;
 	FString AuthToken;
 	ERequestVerb RequestVerb = ERequestVerb::Get;

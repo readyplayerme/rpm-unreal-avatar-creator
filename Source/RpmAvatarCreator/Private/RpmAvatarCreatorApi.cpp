@@ -3,6 +3,7 @@
 
 #include "RpmAvatarCreatorApi.h"
 
+#include "ReadyPlayerMeSettings.h"
 #include "RpmPartnerAssetDownloader.h"
 #include "RpmColorDownloader.h"
 #include "RpmAuthManager.h"
@@ -33,12 +34,14 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	AvatarRequestHandler->ImageDownloader = ImageDownloader;
 }
 
-void URpmAvatarCreatorApi::SetAppSettings(const FString& PartnerDomain, const FString& AppId)
+void URpmAvatarCreatorApi::SetPartnerDomain(const FString& PartnerDomain)
 {
 	AvatarProperties.Partner = PartnerDomain;
 	RequestFactory->SetPartnerDomain(PartnerDomain);
-	RequestFactory->SetAppId(AppId);
 	AuthManager->LoadUserData();
+	const UReadyPlayerMeSettings* Settings = GetDefault<UReadyPlayerMeSettings>();
+	const bool bIsAppIdSet = IsValid(Settings) && !Settings->AppId.IsEmpty();
+	checkf(bIsAppIdSet, TEXT("AppId is required for the avatar creator. Set your ReadyPlayerMe AppId in the project settings"));
 }
 
 void URpmAvatarCreatorApi::SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded)

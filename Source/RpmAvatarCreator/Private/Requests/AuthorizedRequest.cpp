@@ -85,7 +85,10 @@ void FAuthorizedRequest::Download()
 void FAuthorizedRequest::CancelRequest()
 {
 	MainRequest->CancelRequest();
-	TokenRefreshRequest->CancelRequest();
+	if (TokenRefreshRequest)
+	{
+		TokenRefreshRequest->CancelRequest();
+	}
 }
 
 FString FAuthorizedRequest::GetContentAsString() const
