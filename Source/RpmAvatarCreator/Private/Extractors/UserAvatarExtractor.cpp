@@ -4,6 +4,7 @@
 #include "UserAvatarExtractor.h"
 
 #include "DataJsonUtils.h"
+#include "Requests/Endpoints.h"
 #include "Templates/SharedPointer.h"
 
 namespace
@@ -24,6 +25,7 @@ TArray<FRpmUserAvatar> FUserAvatarExtractor::ExtractUserAvatars(const FString& J
 			FRpmUserAvatar UserAvatar;
 			UserAvatar.Partner = JsonObject->GetStringField(JSON_FIELD_PARTNER);
 			UserAvatar.Id = JsonObject->GetStringField(JSON_FIELD_ID);
+			UserAvatar.ImageUrl = FEndpoints::GetRenderEndpoint(UserAvatar.Id);
 			UserAvatars.Add(UserAvatar);
 		}
 	}

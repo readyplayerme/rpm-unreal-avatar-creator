@@ -10,6 +10,8 @@ class FPayloadExtractor
 public:
 	static EAvatarGender GetGenderFromString(const FString& GenderStr);
 
+	static FString GetStringFromGender(EAvatarGender Gender);
+
 	static FRpmAvatarProperties ExtractPayload(const FString& JsonString);
 	
 	static FString MakeCreatePayload(const FRpmAvatarProperties& AvatarProperties);

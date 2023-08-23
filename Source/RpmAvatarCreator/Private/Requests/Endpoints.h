@@ -17,8 +17,8 @@ public:
 
 	static FString GetAvatarTemplatesEndpoint(const FString& TemplateId = "");
 
-	static FString GetAssetEndpoint(const FString& Subdomain);
-	
+	static FString GetAssetEndpoint(int32 Limit, int32 Page, const FString& UserId, const FString& AppId);
+
 	static FString GetColorEndpoint(const FString& AvatarId);
 
 	static FString GetAvatarPublicUrl(const FString& AvatarId);

@@ -47,14 +47,8 @@ void URpmAvatarEditorUI::AddClearSelectionButtons()
 		if (Pair.Key != ERpmPartnerAssetType::EyeColor && Pair.Key != ERpmPartnerAssetType::Shirt && Pair.Key != ERpmPartnerAssetType::Outfit)
 		{
 			FRpmPartnerAsset Asset;
-			Asset.IconTexture = ClearSelectionTexture;
 			Asset.AssetType = Pair.Key;
-			URpmAssetButtonUI* AssetButton = WidgetTree->ConstructWidget<URpmAssetButtonUI>(AssetButtonClass);
-			AssetButton->SetSelected(IsAssetSelected(Asset));
-			AssetButton->Asset = Asset;
-			AssetButton->UpdateUI();
-			Pair.Value->AddChildToWrapBox(AssetButton);
-			AssetButton->AssetButtonSelected.AddDynamic(this, &URpmAvatarEditorUI::OnAssetButtonClicked);
+			AddAssetButton(Asset, Pair.Value);
 		}
 	}
 }
@@ -69,21 +63,26 @@ void URpmAvatarEditorUI::AddAssetButtons()
 		{
 			if (Asset.AssetType == Pair.Key)
 			{
-				auto& ButtonClass = Asset.AssetType == ERpmPartnerAssetType::EyeColor ? EyeColorButtonClass : AssetButtonClass;
-				URpmAssetButtonUI* AssetButton = WidgetTree->ConstructWidget<URpmAssetButtonUI>(ButtonClass);
-				const bool IsSelected = IsAssetSelected(Asset);
-				AssetButton->SetSelected(IsSelected);
-				AssetButton->Asset = Asset;
-				AssetButton->UpdateUI();
-				Pair.Value->AddChildToWrapBox(AssetButton);
-				AssetButton->AssetButtonSelected.AddDynamic(this, &URpmAvatarEditorUI::OnAssetButtonClicked);
-				if (IsSelected && !Asset.bIsCustomizable)
+				AddAssetButton(Asset, Pair.Value);
+				if (IsAssetSelected(Asset) && !Asset.bIsCustomizable)
 				{
 					bIsCustomizableAssetSelected = false;
 				}
 			}
 		}
 	}
+}
+
+void URpmAvatarEditorUI::AddAssetButton(const FRpmPartnerAsset& Asset, UWrapBox* WrapBox)
+{
+	const auto& ButtonClass = Asset.AssetType == ERpmPartnerAssetType::EyeColor ? EyeColorButtonClass : AssetButtonClass;
+	URpmAssetButtonUI* AssetButton = WidgetTree->ConstructWidget<URpmAssetButtonUI>(ButtonClass);
+	AssetButton->SetSelected(IsAssetSelected(Asset));
+	AssetButton->Asset = Asset;
+	AssetButton->AvatarCreatorApi = AvatarCreatorApi;
+	AssetButton->UpdateUI();
+	WrapBox->AddChildToWrapBox(AssetButton);
+	AssetButton->AssetButtonSelected.AddDynamic(this, &URpmAvatarEditorUI::OnAssetButtonClicked);
 }
 
 void URpmAvatarEditorUI::OnAssetButtonClicked(const FRpmPartnerAsset& Asset)

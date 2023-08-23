@@ -83,6 +83,11 @@ EAvatarGender FPayloadExtractor::GetGenderFromString(const FString& GenderStr)
 	return StringToGender(GenderStr);
 }
 
+FString FPayloadExtractor::GetStringFromGender(EAvatarGender Gender)
+{
+	return GenderToString(Gender);
+}
+
 FRpmAvatarProperties FPayloadExtractor::ExtractPayload(const FString& JsonString)
 {
 	const TSharedPtr<FJsonObject> DataObject = FDataJsonUtils::ExtractDataObject(JsonString);

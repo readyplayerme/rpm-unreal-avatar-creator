@@ -17,6 +17,8 @@ public:
 
 	void SetRequestFactory(TSharedPtr<class FRequestFactory> Factory);
 
+	void SetUserAvatarDownloader(TSharedPtr<class FRpmUserAvatarDownloader> AvatarDownloader);
+
 	void CreateAvatar(const FRpmAvatarProperties& Properties, const FString& TemplateId);
 
 	void UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId);
@@ -37,7 +39,7 @@ public:
 	USkeletalMesh* Mesh;
 	
 	UPROPERTY()
-	class URpmUserAvatarDownloader* UserAvatarDownloader;
+	class URpmImageDownloader* ImageDownloader;
 	
 	UPROPERTY()
 	FPreviewDownloadCompleted OnPreviewDownloaded;
@@ -78,6 +80,7 @@ private:
 	FBaseRequestCompleted OnAvatarPreviewDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
+	TSharedPtr<class FRpmUserAvatarDownloader> UserAvatarDownloader;
 	TSharedPtr<class IBaseRequest> AvatarMetadataRequest;
 	TSharedPtr<class IBaseRequest> UpdateAvatarRequest;
 	TSharedPtr<class IBaseRequest> SaveAvatarRequest;
