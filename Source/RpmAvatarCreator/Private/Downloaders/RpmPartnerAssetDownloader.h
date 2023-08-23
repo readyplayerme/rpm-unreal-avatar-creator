@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "RpmAvatarCreatorTypes.h"
 
-class RPMAVATARCREATOR_API FRpmPartnerAssetDownloader : public TSharedFromThis<FRpmPartnerAssetDownloader>
+class FRpmPartnerAssetDownloader : public TSharedFromThis<FRpmPartnerAssetDownloader>
 {
 public:
 	FRpmPartnerAssetDownloader(TSharedPtr<class FRequestFactory> RequestFactory);

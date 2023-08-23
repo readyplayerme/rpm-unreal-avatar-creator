@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "RpmAvatarCreatorTypes.h"
 
-class RPMAVATARCREATOR_API FRpmColorDownloader : public TSharedFromThis<FRpmColorDownloader>
+class FRpmColorDownloader : public TSharedFromThis<FRpmColorDownloader>
 {
 public:
 	FRpmColorDownloader(TSharedPtr<class FRequestFactory> RequestFactory);
