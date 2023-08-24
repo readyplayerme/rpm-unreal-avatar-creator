@@ -14,7 +14,11 @@ Please visit the online documentation and join our public `discord` community.
 
 ## Important
 
-The plugin is currently in **alpha** stage. We do recommend using it in production until the stable version is released.
+The plugin is currently in **Alpha** stage. We don't recommend using it in production until the stable version is released.
+
+**AvatarCreator** requires the **App Id** property to be set.
+Make sure that you set the AppId of your application in the `project settings > Game > Ready Player Me > App Id`.
+You can find the AppId of your application in the [Studio](https://studio.readyplayer.me/applications)
 
 ## Dependencies
 - **ReadyPlayerMe** Unreal SDK, an open-source plugin that contains all the core functionality required for loading and displaying avatars.
@@ -56,6 +60,8 @@ To update the plugin submodule paste the following command in the terminal from 
 
 ## Quick Start
 
+Make sure that **Avatar Id** is set for your project.
+
 A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
 To add the AvatarCreator widget to your project, copy the existing blueprint logic from the demo map into your project.
 
@@ -77,11 +83,11 @@ When spawning the **Avatar Creator** widget, it's possible to configure it with 
 
 Customization options:
  - **Partner Domain** Specify your partner domain
- - **App Id** Specify your app id. **App Id** can be found in the Ready Player Me studio.
  - **Select Body Type** Allows skipping the body type selection screen
  - **Select Gender** Allows skipping the gender selection screen
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
+ - **Avatar Id** (Experimental) Allows opening the editor directly to edit the specified avatar. **Note:** this property will only work if the user is logged in.
 
 ### Custom Sample UI
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.

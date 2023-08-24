@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.0] 2023-08-24
+
+## Breaking
+- AppId parameter is required by the avatar creator. It can be set in the **Project Setting > Game > Ready Player Me**
+
+## Fixed
+- Logout the user when the session expires
+- Disabled the left moue drag. Use scroll and right mouse button drag instead
+- Replaced the asset endpoint with the new endpoint
+- Refactored image downloading logic to exclude unused images
+- Updated the animation of the preview avatar
+
 ## [0.4.0] 2023-07-18
 
 ## Added

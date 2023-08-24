@@ -3,7 +3,7 @@
 
 #include "RpmAvatarRequestHandler.h"
 
-#include "RpmUserAvatarDownloader.h"
+#include "Downloaders/RpmUserAvatarDownloader.h"
 #include "glTFRuntimeFunctionLibrary.h"
 #include "RpmImageDownloader.h"
 #include "Requests/RequestFactory.h"

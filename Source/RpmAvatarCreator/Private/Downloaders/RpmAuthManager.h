@@ -6,7 +6,7 @@
 #include "RpmAvatarCreatorTypes.h"
 #include "Requests/AuthorizedRequest.h"
 
-class RPMAVATARCREATOR_API FRpmAuthManager : public TSharedFromThis<FRpmAuthManager>
+class FRpmAuthManager : public TSharedFromThis<FRpmAuthManager>
 {
 public:
 	FRpmAuthManager(TSharedPtr<class FRequestFactory> RequestFactory);
