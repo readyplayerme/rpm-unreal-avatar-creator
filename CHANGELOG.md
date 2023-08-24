@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.5.0] 2023-08-24
 
 ## Breaking
-- AppId parameter is required to be set in ReadyPlayerMe sdk
+- AppId parameter is required by the avatar creator. It can be set in the **Project Setting > Game > Ready Player Me**
 
 ## Fixed
 - Logout the user when the session expires
