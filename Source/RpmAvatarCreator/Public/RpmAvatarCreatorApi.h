@@ -88,17 +88,9 @@ public:
 
 private:
 	UFUNCTION()
-	void ColorsDownloaded(bool bSuccess);
-
-	UFUNCTION()
-	void AssetsDownloaded(bool bSuccess);
-
-	UFUNCTION()
-	void ModelDownloaded(bool bSuccess);
-
-	UFUNCTION()
 	void PropertiesDownloaded(bool bSuccess, ERpmAvatarCreatorError Error);
 
+	UFUNCTION()
 	void ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarCreatorError Error);
 
 	TSharedPtr<class FRequestFactory> RequestFactory;

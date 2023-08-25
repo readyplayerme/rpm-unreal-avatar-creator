@@ -12,7 +12,7 @@ public:
 
 	void DownloadAssets();
 
-	TArray<FRpmPartnerAsset> Assets;
+	void ClearAssets();
 
 	TArray<FRpmPartnerAsset> GetFilteredAssets(EAvatarBodyType BodyType, EAvatarGender Gender) const;
 
@@ -22,6 +22,8 @@ public:
 
 private:
 	void OnAssetsDownloadCompleted(bool bSuccess);
+
+	TArray<FRpmPartnerAsset> Assets;
 
 	FBaseRequestCompleted OnPartnerAssetsDownloaded;
 

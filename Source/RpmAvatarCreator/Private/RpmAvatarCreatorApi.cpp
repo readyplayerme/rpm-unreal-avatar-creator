@@ -76,7 +76,9 @@ void URpmAvatarCreatorApi::ConfirmActivationCode(const FString& Code, const FAut
 
 void URpmAvatarCreatorApi::LogOut()
 {
+	RequestFactory->CancelRequests();
 	AuthManager->Logout();
+	AssetDownloader->ClearAssets();
 	const FString Partner = AvatarProperties.Partner;
 	AvatarProperties = {};
 	AvatarProperties.Partner = Partner;
@@ -93,15 +95,13 @@ void URpmAvatarCreatorApi::PropertiesDownloaded(bool bSuccess, ERpmAvatarCreator
 	AvatarProperties = AvatarRequestHandler->GetAvatarProperties();
 	AvatarRequestHandler->Mesh = nullptr;
 
-	if (AssetDownloader->Assets.Num() == 0)
-	{
-		AssetDownloader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::AssetsDownloaded);
-		AssetDownloader->DownloadAssets();
-	}
-	else
-	{
-		AssetsDownloaded(true);
-	}
+	AssetDownloader->GetPartnerAssetsDownloadCallback().BindUObject(this, &URpmAvatarCreatorApi::ExecuteEditorReadyCallback, ERpmAvatarCreatorError::AssetDownloadFailure);
+	AssetDownloader->DownloadAssets();
+	ColorDownloader->GetCompleteCallback().BindUObject(this, &URpmAvatarCreatorApi::ExecuteEditorReadyCallback, ERpmAvatarCreatorError::ColorDownloadFailure);
+	ColorDownloader->DownloadColors(AvatarProperties.Id);
+	AvatarRequestHandler->GetAvatarPreviewDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::ExecuteEditorReadyCallback, ERpmAvatarCreatorError::AvatarPreviewFailure);
+	USkeleton* TargetSkeleton = AvatarProperties.BodyType == EAvatarBodyType::HalfBody ? HalfBodySkeleton : FullBodySkeleton;
+	AvatarRequestHandler->DownloadModel(TargetSkeleton);
 }
 
 void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, const FAvatarCreatorFailed& Failed)
@@ -122,45 +122,21 @@ void URpmAvatarCreatorApi::PrepareEditor(const FAvatarEditorReady& EditorReady, 
 	}
 }
 
-void URpmAvatarCreatorApi::ColorsDownloaded(bool bSuccess)
-{
-	if (!bSuccess)
-	{
-		ExecuteEditorReadyCallback(false, ERpmAvatarCreatorError::ColorDownloadFailure);
-		return;
-	}
-	AvatarRequestHandler->GetAvatarPreviewDownloadedCallback().BindUObject(this, &URpmAvatarCreatorApi::ModelDownloaded);
-	USkeleton* TargetSkeleton = AvatarProperties.BodyType == EAvatarBodyType::HalfBody ? HalfBodySkeleton : FullBodySkeleton;
-	AvatarRequestHandler->DownloadModel(TargetSkeleton);
-}
-
-void URpmAvatarCreatorApi::AssetsDownloaded(bool bSuccess)
-{
-	if (!bSuccess)
-	{
-		ExecuteEditorReadyCallback(false, ERpmAvatarCreatorError::AssetDownloadFailure);
-		return;
-	}
-
-	ColorDownloader->GetCompleteCallback().BindUObject(this, &URpmAvatarCreatorApi::ColorsDownloaded);
-	ColorDownloader->DownloadColors(AvatarProperties.Id);
-}
-
-void URpmAvatarCreatorApi::ModelDownloaded(bool bSuccess)
-{
-	ExecuteEditorReadyCallback(bSuccess, ERpmAvatarCreatorError::AvatarPreviewFailure);
-}
-
 void URpmAvatarCreatorApi::ExecuteEditorReadyCallback(bool bSuccess, ERpmAvatarCreatorError Error)
 {
+	if (!OnEditorReady.IsBound())
+	{
+		return;
+	}
 	if (!bSuccess)
 	{
 		(void)OnEditorFailed.ExecuteIfBound(Error);
 		OnEditorFailed.Clear();
 		OnEditorReady.Clear();
+		RequestFactory->CancelRequests();
 		return;
 	}
-	if (AssetDownloader->AreAssetsReady() && IsValid(AvatarRequestHandler->Mesh))
+	if (AssetDownloader->AreAssetsReady() && IsValid(AvatarRequestHandler->Mesh) && ColorDownloader->GetColors().Num() > 0)
 	{
 		(void)OnEditorReady.ExecuteIfBound();
 		(void)AvatarRequestHandler->OnPreviewDownloaded.ExecuteIfBound(AvatarRequestHandler->Mesh);
