@@ -119,7 +119,7 @@ Depending on the target platform, the file picker functionality and dependencies
 
 In case you require file picker functionality, you can either add an external plugin or create a platform-specific file picker.
 After implementing the platform-side file-picking functionality, convert the selected image to a base64 string and pass it to the Base64Image property of the AvatarProperties in the AvatarCreatorApi.
-After implementing the file-picking logic, you will need to modify the WBP_SelfieSuggestion widget and include a button for picking images.
+After implementing the file-picking logic, you will need to modify the WBP_RPM_SelfieSuggestion widget and include a button for picking images.
 
 ## Links
 - [Documentation](https://docs.readyplayer.me/ready-player-me/integration-guides/unreal-engine)
