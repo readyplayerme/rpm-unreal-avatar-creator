@@ -24,9 +24,24 @@ FRpmPartnerAssetDownloader::FRpmPartnerAssetDownloader(TSharedPtr<FRequestFactor
 
 void FRpmPartnerAssetDownloader::DownloadAssets()
 {
+	if (AreAssetsReady())
+	{
+		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(true);
+		OnPartnerAssetsDownloaded.Unbind();
+		return;
+	}
+	if (Assets.Num() == 0)
+	{
+		CurrentPageIndex = 0;
+	}
 	AssetRequest = RequestFactory->CreateAssetRequest(100, CurrentPageIndex + 1);
 	AssetRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmPartnerAssetDownloader::OnAssetsDownloadCompleted);
 	AssetRequest->Download();
+}
+
+void FRpmPartnerAssetDownloader::ClearAssets()
+{
+	Assets.Empty();
 }
 
 TArray<FRpmPartnerAsset> FRpmPartnerAssetDownloader::GetFilteredAssets(EAvatarBodyType BodyType, EAvatarGender Gender) const
@@ -36,7 +51,7 @@ TArray<FRpmPartnerAsset> FRpmPartnerAssetDownloader::GetFilteredAssets(EAvatarBo
 
 bool FRpmPartnerAssetDownloader::AreAssetsReady() const
 {
-	return !AssetRequest.IsValid();
+	return !AssetRequest.IsValid() && Assets.Num() > 0;
 }
 
 FBaseRequestCompleted& FRpmPartnerAssetDownloader::GetPartnerAssetsDownloadCallback()
