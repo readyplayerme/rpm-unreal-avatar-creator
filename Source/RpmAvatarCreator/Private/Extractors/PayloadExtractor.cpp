@@ -67,6 +67,9 @@ namespace
 		{ERpmPartnerAssetType::LipShape, "lipShape"},
 		{ERpmPartnerAssetType::NoseShape, "noseShape"},
 		{ERpmPartnerAssetType::Outfit, "outfit"},
+		{ERpmPartnerAssetType::Top, "top"},
+		{ERpmPartnerAssetType::Bottom, "bottom"},
+		{ERpmPartnerAssetType::Footwear, "footwear"},
 		{ERpmPartnerAssetType::Shirt, "shirt"}
 	};
 	const TMap<ERpmPartnerAssetColor, FString> ASSET_COLOR_TO_STRING_MAP =

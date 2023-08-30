@@ -37,6 +37,9 @@ namespace
 		{"lipshape", ERpmPartnerAssetType::LipShape},
 		{"noseshape", ERpmPartnerAssetType::NoseShape},
 		{"outfit", ERpmPartnerAssetType::Outfit},
+		{"top", ERpmPartnerAssetType::Top},
+		{"bottom", ERpmPartnerAssetType::Bottom},
+		{"footwear", ERpmPartnerAssetType::Footwear},
 		{"shirt", ERpmPartnerAssetType::Shirt}
 	};
 

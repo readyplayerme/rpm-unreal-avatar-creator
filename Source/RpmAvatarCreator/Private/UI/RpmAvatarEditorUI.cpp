@@ -5,17 +5,35 @@
 #include "Blueprint/WidgetTree.h"
 #include "Components/WrapBox.h"
 
+static const TSet<ERpmPartnerAssetType> EXCLUDE_CLEAR_SELECTION_ASSETS =
+{
+	ERpmPartnerAssetType::EyeColor,
+	ERpmPartnerAssetType::Shirt,
+	ERpmPartnerAssetType::Outfit,
+	ERpmPartnerAssetType::Top,
+	ERpmPartnerAssetType::Bottom,
+	ERpmPartnerAssetType::Footwear
+};
+
 void URpmAvatarEditorUI::SetupAssets()
 {
 	ClearContainers();
 	AddClearSelectionButtons();
 	AddAssetButtons();
 	AddColorButtons();
+	bAreModularAssetsDisabled = AssetContainerMap[ERpmPartnerAssetType::Top]->GetChildrenCount() == 0 &&
+		AssetContainerMap[ERpmPartnerAssetType::Bottom]->GetChildrenCount() == 0 &&
+		AssetContainerMap[ERpmPartnerAssetType::Footwear]->GetChildrenCount() == 0;
 }
 
 bool URpmAvatarEditorUI::IsCustomizableAssetSelected() const
 {
 	return bIsCustomizableAssetSelected;
+}
+
+bool URpmAvatarEditorUI::AreModularAssetsDisabled() const
+{
+	return bAreModularAssetsDisabled;
 }
 
 UWrapBox* URpmAvatarEditorUI::GetColorContainerByColor(ERpmPartnerAssetColor Color) const
@@ -44,7 +62,7 @@ void URpmAvatarEditorUI::AddClearSelectionButtons()
 {
 	for (const auto Pair : AssetContainerMap)
 	{
-		if (Pair.Key != ERpmPartnerAssetType::EyeColor && Pair.Key != ERpmPartnerAssetType::Shirt && Pair.Key != ERpmPartnerAssetType::Outfit)
+		if (!EXCLUDE_CLEAR_SELECTION_ASSETS.Contains(Pair.Key))
 		{
 			FRpmPartnerAsset Asset;
 			Asset.AssetType = Pair.Key;
