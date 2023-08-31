@@ -16,9 +16,9 @@ FRequestFactory::FRequestFactory()
 {
 }
 
-void FRequestFactory::SetPartnerDomain(const FString& Domain)
+void FRequestFactory::SetSubdomain(const FString& InSubdomain)
 {
-	PartnerDomain = Domain;
+	Subdomain = InSubdomain;
 }
 
 void FRequestFactory::SetUserData(const FRpmUserData& Data)
@@ -43,22 +43,22 @@ void FRequestFactory::CancelRequests() const
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthStartRequest(const FString& PayloadJson) const
 {
-	return CreateBaseRequest(FEndpoints::GetAuthStartEndpoint(PartnerDomain), ERequestVerb::Post, PayloadJson);
+	return CreateBaseRequest(FEndpoints::GetAuthStartEndpoint(Subdomain), ERequestVerb::Post, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateConfirmCodeRequest(const FString& PayloadJson) const
 {
-	return CreateBaseRequest(FEndpoints::GetConfirmCodeEndpoint(PartnerDomain), ERequestVerb::Post, PayloadJson);
+	return CreateBaseRequest(FEndpoints::GetConfirmCodeEndpoint(Subdomain), ERequestVerb::Post, PayloadJson);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateTokenRefreshRequest() const
 {
-	return CreateBaseRequest(FEndpoints::GetTokenRefreshEndpoint(PartnerDomain), ERequestVerb::Post, FUserDataExtractor::MakeTokenRefreshPayload(UserData));
+	return CreateBaseRequest(FEndpoints::GetTokenRefreshEndpoint(Subdomain), ERequestVerb::Post, FUserDataExtractor::MakeTokenRefreshPayload(UserData));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAuthAnonymousRequest() const
 {
-	return CreateBaseRequest(FEndpoints::GetAuthAnonymousEndpoint(PartnerDomain), ERequestVerb::Post);
+	return CreateBaseRequest(FEndpoints::GetAuthAnonymousEndpoint(Subdomain), ERequestVerb::Post);
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarTemplatesRequest() const

@@ -12,7 +12,7 @@ class FRequestFactory
 public:
 	FRequestFactory();
 
-	void SetPartnerDomain(const FString& Domain);
+	void SetSubdomain(const FString& InSubdomain);
 
 	void SetUserData(const FRpmUserData& UserData);
 
@@ -44,7 +44,7 @@ protected:
 	TSharedPtr<IBaseRequest> CreateAuthorizedRequest(const FString& Url, ERequestVerb RequestVerb = ERequestVerb::Get, const FString& Payload = "", float Timeout = -1.f) const;
 
 private:
-	FString PartnerDomain;
+	FString Subdomain;
 	FRpmUserData UserData;
 	FTokenRefreshed TokenRefreshedDelegate;
 	FSessionExpired SessionExpiredDelegate;
