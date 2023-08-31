@@ -27,6 +27,9 @@ protected:
 	UFUNCTION(BlueprintPure, Category = "Ready Player Me", meta = (DisplayName = "Is Customizable Asset Selected"))
 	bool IsCustomizableAssetSelected() const;
 
+	UFUNCTION(BlueprintPure, Category = "Ready Player Me", meta = (DisplayName = "Are Modular Outfits Disabled"))
+	bool AreModularOutfitsDisabled() const;
+
 	UPROPERTY(BlueprintReadWrite, Category="Ready Player Me")
 	TMap<ERpmPartnerAssetType, class UWrapBox*> AssetContainerMap;
 
@@ -64,6 +67,8 @@ private:
 
 	void SetAssetSelectedPin(const FRpmPartnerAsset& Asset);
 
+	void RemoveAssetSelectedPin(ERpmPartnerAssetType AssetType);
+
 	void SetColorSelectedPin(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
 
 	UFUNCTION()
@@ -73,4 +78,5 @@ private:
 	void OnColorButtonClicked(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
 
 	bool bIsCustomizableAssetSelected = true;
+	bool bAreModularOutfitsDisabled = false;
 };

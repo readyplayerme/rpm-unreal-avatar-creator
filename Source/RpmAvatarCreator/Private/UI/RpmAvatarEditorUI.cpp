@@ -5,17 +5,35 @@
 #include "Blueprint/WidgetTree.h"
 #include "Components/WrapBox.h"
 
+static const TSet<ERpmPartnerAssetType> EXCLUDE_CLEAR_SELECTION_ASSETS =
+{
+	ERpmPartnerAssetType::EyeColor,
+	ERpmPartnerAssetType::Shirt,
+	ERpmPartnerAssetType::Outfit,
+	ERpmPartnerAssetType::Top,
+	ERpmPartnerAssetType::Bottom,
+	ERpmPartnerAssetType::Footwear
+};
+
 void URpmAvatarEditorUI::SetupAssets()
 {
 	ClearContainers();
 	AddClearSelectionButtons();
 	AddAssetButtons();
 	AddColorButtons();
+	bAreModularOutfitsDisabled = AssetContainerMap[ERpmPartnerAssetType::Top]->GetChildrenCount() == 0 ||
+		AssetContainerMap[ERpmPartnerAssetType::Bottom]->GetChildrenCount() == 0 ||
+		AssetContainerMap[ERpmPartnerAssetType::Footwear]->GetChildrenCount() == 0;
 }
 
 bool URpmAvatarEditorUI::IsCustomizableAssetSelected() const
 {
 	return bIsCustomizableAssetSelected;
+}
+
+bool URpmAvatarEditorUI::AreModularOutfitsDisabled() const
+{
+	return bAreModularOutfitsDisabled;
 }
 
 UWrapBox* URpmAvatarEditorUI::GetColorContainerByColor(ERpmPartnerAssetColor Color) const
@@ -44,7 +62,7 @@ void URpmAvatarEditorUI::AddClearSelectionButtons()
 {
 	for (const auto Pair : AssetContainerMap)
 	{
-		if (Pair.Key != ERpmPartnerAssetType::EyeColor && Pair.Key != ERpmPartnerAssetType::Shirt && Pair.Key != ERpmPartnerAssetType::Outfit)
+		if (!EXCLUDE_CLEAR_SELECTION_ASSETS.Contains(Pair.Key))
 		{
 			FRpmPartnerAsset Asset;
 			Asset.AssetType = Pair.Key;
@@ -90,6 +108,19 @@ void URpmAvatarEditorUI::OnAssetButtonClicked(const FRpmPartnerAsset& Asset)
 	AssetSelected(Asset);
 	AvatarCreatorApi->UpdateAvatarAsset(Asset.AssetType, Asset.Id);
 	SetAssetSelectedPin(Asset);
+	if (!bAreModularOutfitsDisabled)
+	{
+		if (Asset.AssetType == ERpmPartnerAssetType::Outfit)
+		{
+			RemoveAssetSelectedPin(ERpmPartnerAssetType::Top);
+			RemoveAssetSelectedPin(ERpmPartnerAssetType::Bottom);
+			RemoveAssetSelectedPin(ERpmPartnerAssetType::Footwear);
+		}
+		else if (Asset.AssetType == ERpmPartnerAssetType::Top || Asset.AssetType == ERpmPartnerAssetType::Bottom || Asset.AssetType == ERpmPartnerAssetType::Footwear)
+		{
+			RemoveAssetSelectedPin(ERpmPartnerAssetType::Outfit);
+		}
+	}
 }
 
 bool URpmAvatarEditorUI::IsAssetSelected(const FRpmPartnerAsset& Asset) const
@@ -109,6 +140,16 @@ void URpmAvatarEditorUI::SetAssetSelectedPin(const FRpmPartnerAsset& Asset)
 		URpmAssetButtonUI* AssetButton = Cast<URpmAssetButtonUI>(Widget);
 		const bool IsSelected = AssetButton->Asset.Id == Asset.Id && AssetButton->Asset.AssetType == Asset.AssetType;
 		AssetButton->SetSelected(IsSelected);
+	}
+}
+
+void URpmAvatarEditorUI::RemoveAssetSelectedPin(ERpmPartnerAssetType AssetType)
+{
+	const UWrapBox* AssetContainer = GetAssetContainerByAsset(AssetType);
+	for (UWidget* Widget : AssetContainer->GetAllChildren())
+	{
+		URpmAssetButtonUI* AssetButton = Cast<URpmAssetButtonUI>(Widget);
+		AssetButton->SetSelected(false);
 	}
 }
 

@@ -58,6 +58,9 @@ enum class ERpmPartnerAssetType : uint8
 	LipShape,
 	NoseShape,
 	Outfit,
+	Top,
+	Bottom,
+	Footwear,
 	Shirt
 };
 
