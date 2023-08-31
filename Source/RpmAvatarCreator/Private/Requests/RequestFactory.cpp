@@ -66,11 +66,11 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarTemplatesRequest() const
 	return CreateAuthorizedRequest(FEndpoints::GetAvatarTemplatesEndpoint());
 }
 
-TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest(int32 Limit, int32 Page) const
+TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest(const FString& AssetTypeStr, int32 Limit, int32 Page) const
 {
 	const UReadyPlayerMeSettings* Settings = GetDefault<UReadyPlayerMeSettings>();
 	const FString AppId = IsValid(Settings) ? Settings->AppId : "";
-	return CreateAuthorizedRequest(FEndpoints::GetAssetEndpoint(Limit, Page, UserData.Id, AppId));
+	return CreateAuthorizedRequest(FEndpoints::GetAssetEndpoint(AssetTypeStr, Limit, Page, UserData.Id, AppId));
 }
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateColorRequest(const FString& AvatarId) const

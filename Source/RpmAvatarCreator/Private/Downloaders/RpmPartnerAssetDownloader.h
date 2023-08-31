@@ -21,13 +21,12 @@ public:
 	bool AreAssetsReady() const;
 
 private:
-	void OnAssetsDownloadCompleted(bool bSuccess);
+	void OnAssetsDownloadCompleted(bool bSuccess, ERpmPartnerAssetType AssetType);
 
 	TArray<FRpmPartnerAsset> Assets;
 
 	FBaseRequestCompleted OnPartnerAssetsDownloaded;
 
 	TSharedPtr<class FRequestFactory> RequestFactory;
-	TSharedPtr<class IBaseRequest> AssetRequest;
-	int32 CurrentPageIndex = 0;
+	TMap<ERpmPartnerAssetType, TSharedPtr<class IBaseRequest>> AssetRequests;
 };
