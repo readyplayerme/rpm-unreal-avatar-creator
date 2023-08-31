@@ -21,8 +21,8 @@ void URpmAvatarEditorUI::SetupAssets()
 	AddClearSelectionButtons();
 	AddAssetButtons();
 	AddColorButtons();
-	bAreModularOutfitsDisabled = AssetContainerMap[ERpmPartnerAssetType::Top]->GetChildrenCount() == 0 &&
-		AssetContainerMap[ERpmPartnerAssetType::Bottom]->GetChildrenCount() == 0 &&
+	bAreModularOutfitsDisabled = AssetContainerMap[ERpmPartnerAssetType::Top]->GetChildrenCount() == 0 ||
+		AssetContainerMap[ERpmPartnerAssetType::Bottom]->GetChildrenCount() == 0 ||
 		AssetContainerMap[ERpmPartnerAssetType::Footwear]->GetChildrenCount() == 0;
 }
 
