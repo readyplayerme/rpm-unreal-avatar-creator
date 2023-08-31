@@ -159,6 +159,16 @@ FString FPayloadExtractor::MakeUpdatePayload(ERpmPartnerAssetType AssetType, int
 	const TSharedPtr<FJsonObject> AssetsObject = MakeShared<FJsonObject>();
 	const FString AssetIdStr = AssetId != 0 ? FString::FromInt(AssetId) : "";
 	AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[AssetType], AssetIdStr);
+	if (AssetType == ERpmPartnerAssetType::Top || AssetType == ERpmPartnerAssetType::Bottom || AssetType == ERpmPartnerAssetType::Footwear)
+	{
+		AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[ERpmPartnerAssetType::Outfit], "");
+	}
+	else if (AssetType == ERpmPartnerAssetType::Outfit)
+	{
+		AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[ERpmPartnerAssetType::Top], "");
+		AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[ERpmPartnerAssetType::Bottom], "");
+		AssetsObject->SetStringField(ASSET_TYPE_TO_STRING_MAP[ERpmPartnerAssetType::Footwear], "");
+	}
 	return MakeUpdatePayload(AssetsObject);
 }
 
