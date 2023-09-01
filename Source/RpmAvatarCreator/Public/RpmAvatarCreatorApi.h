@@ -15,8 +15,8 @@ class RPMAVATARCREATOR_API URpmAvatarCreatorApi : public UObject
 public:
 	URpmAvatarCreatorApi();
 
-	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Partner Domain"))
-	void SetPartnerDomain(const FString& PartnerDomain);
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Initialize"))
+	void Initialize(const FString& Subdomain);
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Preview Downloaded Delegate"))
 	void SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded);
