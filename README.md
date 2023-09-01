@@ -1,6 +1,6 @@
 # Ready Player Me Avatar Creator
 
-![Screenshot_20230221_044146](https://user-images.githubusercontent.com/3124894/229149244-df433bd5-b8f3-40ba-b87f-ce071ecdc773.png)
+![Screenshot 2023-09-01 093029](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/41f339cf-8254-47e6-a0f8-d1338870ee64)
 
 Ready Player Me Avatar Creator is an extension to [Ready Player Me](https://readyplayer.me/) avatar platform, which helps you create avatars.
 
@@ -14,7 +14,7 @@ Please visit the online documentation and join our public `discord` community.
 
 ## Important
 
-- The plugin is currently in **Beta** stage. We recommend not to use it in the production until the stable version is released.
+- The plugin is currently in the **Beta** stage. We recommend not to use it in production until the stable version is released.
 
 - **AvatarCreator** requires the **App Id** property to be set.
   Make sure that you set the AppId of your application in the `project settings > Game > Ready Player Me > App Id`.
@@ -64,6 +64,7 @@ Make sure that **Avatar Id** is set for your project.
 
 A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
 The avatar creator will not run properly until the **AppId** is set in the project settings, and **Subdomain** is set when constructing the widget.
+The **AppId** should belong to the **Subdomain** otherwise the avatar creator will fail.
 To add the AvatarCreator widget to your project, copy the existing blueprint logic from the demo map into your project.
 
 **AvatarCreator** is a widget that can be added to a map or another widget.
@@ -72,7 +73,7 @@ We need to subscribe to the **Avatar Saved** event to get the URL when the avata
 We need to subscribe to the **Avatar Selected** event as well to get the URL when the avatar is selected from the list of user avatars.
 Additionally, we can load an avatar with this URL afterward.
 
-![Screenshot 2023-03-13 214816](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/ef82b2da-0bd5-4d65-ac88-a26d4129f221)
+![Screenshot 2023-09-01 093125](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/7ff6f026-a4ab-4149-bfd4-16b255d9b079)
 
 Additionally, if the close button is enabled, we can subscribe to the **Close Button Clicked** event to be notified when the close button is clicked.
 This way we can close the widget and perform other actions.
