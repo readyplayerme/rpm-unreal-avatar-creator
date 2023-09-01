@@ -63,6 +63,12 @@ namespace
 	const FString JSON_FIELD_IS_LOCKED = "locked";
 	const FString JSON_FIELD_IS_LOCKED_CATEGORIES = "lockedCategories";
 	const FString JSON_FIELD_PRICE = "price";
+
+	const FString JSON_PAGINATION = "pagination";
+	const FString JSON_TOTAL_PAGES = "totalPages";
+	const FString JSON_PAGE = "page";
+	const FString JSON_HAS_NEXT_PAGE = "hasNextPage";
+
 	const FString EYE_MASK_CROP_PARAM = "?rect=155,152,204,204";
 }
 
@@ -100,9 +106,9 @@ TArray<FRpmColorPalette> FPartnerAssetExtractor::ExtractColors(const FString& Js
 	return Colors;
 }
 
-TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& JsonString)
+FAssetPaginationData FPartnerAssetExtractor::ExtractAssets(const FString& JsonString)
 {
-	TArray<FRpmPartnerAsset> Assets;
+	FAssetPaginationData PaginationData;
 	const TArray<TSharedPtr<FJsonValue>> JsonArray = FDataJsonUtils::ExtractDataArray(JsonString);
 
 	for (const auto& JsonValue : JsonArray)
@@ -154,7 +160,15 @@ TArray<FRpmPartnerAsset> FPartnerAssetExtractor::ExtractAssets(const FString& Js
 		{
 			Asset.bIsCustomizable = JsonObject->GetArrayField(JSON_FIELD_IS_LOCKED_CATEGORIES).Num() == 0;
 		}
-		Assets.Add(Asset);
+		PaginationData.Assets.Add(Asset);
 	}
-	return Assets;
+	TSharedPtr<FJsonObject> JsonObject;
+	if (FJsonSerializer::Deserialize(TJsonReaderFactory<>::Create(JsonString), JsonObject) && JsonObject->HasField("pagination"))
+	{
+		const TSharedPtr<FJsonObject> PaginationJson = JsonObject->GetObjectField(JSON_PAGINATION);
+		PaginationData.TotalPages = PaginationJson->GetNumberField(JSON_TOTAL_PAGES);
+		PaginationData.CurrentPage = PaginationJson->GetNumberField(JSON_PAGE);
+		PaginationData.bHasNextPage = PaginationJson->GetBoolField(JSON_HAS_NEXT_PAGE);
+	}
+	return PaginationData;
 }

@@ -17,7 +17,7 @@ public:
 
 	static FString GetAvatarTemplatesEndpoint(const FString& TemplateId = "");
 
-	static FString GetAssetEndpoint(int32 Limit, int32 Page, const FString& UserId, const FString& AppId);
+	static FString GetAssetEndpoint(const FString& AssetTypeStr, int32 Limit, int32 Page, const FString& UserId, const FString& AppId);
 
 	static FString GetColorEndpoint(const FString& AvatarId);
 

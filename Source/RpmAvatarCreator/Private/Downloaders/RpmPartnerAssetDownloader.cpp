@@ -15,6 +15,7 @@ namespace
 		const bool GenderFiltered = Asset.Gender == Gender || Asset.Gender == EAvatarGender::Undefined;
 		return BodyTypeFiltered && GenderFiltered;
 	}
+	constexpr int ASSET_REQUEST_LIMIT = 100;
 }
 
 FRpmPartnerAssetDownloader::FRpmPartnerAssetDownloader(TSharedPtr<FRequestFactory> RequestFactory)
@@ -30,13 +31,14 @@ void FRpmPartnerAssetDownloader::DownloadAssets()
 		OnPartnerAssetsDownloaded.Unbind();
 		return;
 	}
-	if (Assets.Num() == 0)
+	for (uint8 AssetTypeInt = 0; AssetTypeInt <= static_cast<uint8>(ERpmPartnerAssetType::Shirt); AssetTypeInt++)
 	{
-		CurrentPageIndex = 0;
+		ERpmPartnerAssetType AssetType = static_cast<ERpmPartnerAssetType>(AssetTypeInt);
+		auto AssetRequest = RequestFactory->CreateAssetRequest(FPartnerAssetExtractor::GetStringFromAssetType(AssetType), ASSET_REQUEST_LIMIT, 1);
+		AssetRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmPartnerAssetDownloader::OnAssetsDownloadCompleted, AssetType);
+		AssetRequests.Add(AssetType, AssetRequest);
+		AssetRequest->Download();
 	}
-	AssetRequest = RequestFactory->CreateAssetRequest(100, CurrentPageIndex + 1);
-	AssetRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmPartnerAssetDownloader::OnAssetsDownloadCompleted);
-	AssetRequest->Download();
 }
 
 void FRpmPartnerAssetDownloader::ClearAssets()
@@ -51,7 +53,7 @@ TArray<FRpmPartnerAsset> FRpmPartnerAssetDownloader::GetFilteredAssets(EAvatarBo
 
 bool FRpmPartnerAssetDownloader::AreAssetsReady() const
 {
-	return !AssetRequest.IsValid() && Assets.Num() > 0;
+	return AssetRequests.Num() == 0 && Assets.Num() > 0;
 }
 
 FBaseRequestCompleted& FRpmPartnerAssetDownloader::GetPartnerAssetsDownloadCallback()
@@ -59,24 +61,38 @@ FBaseRequestCompleted& FRpmPartnerAssetDownloader::GetPartnerAssetsDownloadCallb
 	return OnPartnerAssetsDownloaded;
 }
 
-void FRpmPartnerAssetDownloader::OnAssetsDownloadCompleted(bool bSuccess)
+void FRpmPartnerAssetDownloader::OnAssetsDownloadCompleted(bool bSuccess, ERpmPartnerAssetType AssetType)
 {
 	if (bSuccess)
 	{
-		const TArray<FRpmPartnerAsset> AssetChunk = FPartnerAssetExtractor::ExtractAssets(AssetRequest->GetContentAsString());
-		if (AssetChunk.Num() != 0)
+		if (AssetRequests.Contains(AssetType))
 		{
-			Assets.Append(AssetChunk);
-			++CurrentPageIndex;
-			DownloadAssets();
-			return;
+			auto AssetRequest = AssetRequests[AssetType];
+			const FAssetPaginationData PaginationData = FPartnerAssetExtractor::ExtractAssets(AssetRequest->GetContentAsString());
+			if (PaginationData.Assets.Num() != 0)
+			{
+				Assets.Append(PaginationData.Assets);
+			}
+			AssetRequests.Remove(AssetType);
+			if (PaginationData.bHasNextPage)
+			{
+				AssetRequest = RequestFactory->CreateAssetRequest(FPartnerAssetExtractor::GetStringFromAssetType(AssetType), ASSET_REQUEST_LIMIT, PaginationData.CurrentPage + 1);
+				AssetRequest->GetCompleteCallback().BindSP(AsShared(), &FRpmPartnerAssetDownloader::OnAssetsDownloadCompleted, AssetType);
+				AssetRequests.Add(AssetType, AssetRequest);
+				AssetRequest->Download();
+			}
+			if (AssetRequests.Num() == 0)
+			{
+				(void)OnPartnerAssetsDownloaded.ExecuteIfBound(true);
+				OnPartnerAssetsDownloaded.Unbind();
+			}
 		}
 	}
 	else
 	{
 		Assets.Empty();
+		AssetRequests.Empty();
+		(void)OnPartnerAssetsDownloaded.ExecuteIfBound(false);
+		OnPartnerAssetsDownloaded.Unbind();
 	}
-	AssetRequest.Reset();
-	(void)OnPartnerAssetsDownloaded.ExecuteIfBound(Assets.Num() != 0);
-	OnPartnerAssetsDownloaded.Unbind();
 }

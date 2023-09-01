@@ -6,7 +6,7 @@
 static const TCHAR* API_ENDPOINT = TEXT("https://{0}.readyplayer.me/api{1}");
 static const TCHAR* AVATAR_API_V2_ENDPOINT = TEXT("https://api.readyplayer.me/v2/avatars");
 static const TCHAR* AVATAR_API_V1_ENDPOINT = TEXT("https://api.readyplayer.me/v1/avatars");
-static const TCHAR* ASSET_ENDPOINT = TEXT("https://api.readyplayer.me/v1/assets?limit={0}&page={1}&filter=viewable-by-user-and-app&filterUserId={2}&filterApplicationId={3}");
+static const TCHAR* ASSET_ENDPOINT = TEXT("https://api.readyplayer.me/v1/assets?type={0}&limit={1}&page={2}&filter=viewable-by-user-and-app&filterUserId={3}&filterApplicationId={4}");
 static const TCHAR* REQUEST_OPTIMIZATION_PARAMS = TEXT("morphTargets=none&textureAtlas=none&textureSizeLimit=512&useHands=false");
 static const TCHAR* MODELS_URL_PREFIX = TEXT("https://models.readyplayer.me");
 
@@ -30,9 +30,9 @@ FString FEndpoints::GetTokenRefreshEndpoint(const FString& Subdomain)
 	return FString::Format(API_ENDPOINT, {Subdomain, TEXT("/auth/refresh")});
 }
 
-FString FEndpoints::GetAssetEndpoint(int32 Limit, int32 Page, const FString& UserId, const FString& AppId)
+FString FEndpoints::GetAssetEndpoint(const FString& AssetTypeStr, int32 Limit, int32 Page, const FString& UserId, const FString& AppId)
 {
-	return FString::Format(ASSET_ENDPOINT, {Limit, Page, UserId, AppId});
+	return FString::Format(ASSET_ENDPOINT, { AssetTypeStr, Limit, Page, UserId, AppId});
 }
 
 FString FEndpoints::GetColorEndpoint(const FString& AvatarId)
