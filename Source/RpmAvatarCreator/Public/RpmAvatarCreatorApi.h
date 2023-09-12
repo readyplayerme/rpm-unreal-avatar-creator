@@ -16,7 +16,7 @@ public:
 	URpmAvatarCreatorApi();
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Initialize"))
-	void Initialize(const FString& Subdomain);
+	void Initialize();
 
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Set Preview Downloaded Delegate"))
 	void SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded);
