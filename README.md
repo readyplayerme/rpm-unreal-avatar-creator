@@ -89,7 +89,10 @@ Customization options:
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
  - **Avatar Id** (Experimental) Allows opening the editor directly to edit the specified avatar. **Note:** this property will only work if the user is logged in.
- - **Preview Avatar** Allows customization for the render environment and actor. It can also be used to simulate a mirror in VR. Duplicate the default render actor, modify it and use your actor instead. If not set, the default render actor will be spawned.
+
+The sample also provides a function **Override Preview Avatar** that allows customization for the render environment and actor.
+It can also be used to simulate a mirror in VR. Duplicate the default render actor, modify it and use your actor instead.
+If not set, the default render actor will be spawned.
 
 ### Custom Sample UI
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.
