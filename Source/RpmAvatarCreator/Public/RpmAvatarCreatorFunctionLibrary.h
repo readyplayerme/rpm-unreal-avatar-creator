@@ -22,4 +22,8 @@ public:
 	/** Get avatar Url from avatar id. */
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Get Avatar Url From Avatar Id"))
 	static FString GetAvatarUrl(const FString& AvatarId);
+
+	/** Get skeletal mesh from the skeletal mesh component. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Ready Player Me", meta = (DisplayName = "Get Skeletal Mesh From Component"))
+	static class USkeletalMesh* GetSkeletalMeshFromComponent(const class USkeletalMeshComponent* Component);
 };

@@ -34,16 +34,16 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 	AvatarRequestHandler->ImageDownloader = ImageDownloader;
 }
 
-void URpmAvatarCreatorApi::Initialize(const FString& Subdomain)
+void URpmAvatarCreatorApi::Initialize()
 {
-	FString TrimmedSubdomain = Subdomain.TrimStartAndEnd();
-	checkf(!TrimmedSubdomain.IsEmpty(), TEXT("Application subdomain is required for the avatar creator. Find the subdomain of your application from the Ready Player Me studio website, and set it when constructing the avatar creator widget"));
-	AvatarProperties.Partner = TrimmedSubdomain;
-	RequestFactory->SetSubdomain(TrimmedSubdomain);
-	AuthManager->LoadUserData();
 	const UReadyPlayerMeSettings* Settings = GetDefault<UReadyPlayerMeSettings>();
+	const bool bIsSubdomainSet = IsValid(Settings) && !Settings->Subdomain.IsEmpty();
+	checkf(bIsSubdomainSet, TEXT("Application subdomain is required for the avatar creator. Find the subdomain of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > Subdomain"));
 	const bool bIsAppIdSet = IsValid(Settings) && !Settings->AppId.IsEmpty();
 	checkf(bIsAppIdSet, TEXT("AppId is required for the avatar creator. Find the AppId of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > AppId"));
+	AvatarProperties.Partner = Settings->Subdomain;
+	RequestFactory->SetSubdomain(Settings->Subdomain);
+	AuthManager->LoadUserData();
 }
 
 void URpmAvatarCreatorApi::SetPreviewDownloadedDelegate(const FPreviewDownloadCompleted& PreviewDownloaded)
