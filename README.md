@@ -63,8 +63,8 @@ To update the plugin submodule paste the following command in the terminal from 
 Make sure that **Avatar Id** is set for your project.
 
 A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
-The avatar creator will not run properly until the **AppId** is set in the project settings, and **Subdomain** is set when constructing the widget.
-The **AppId** should belong to the **Subdomain** otherwise the avatar creator will fail.
+The avatar creator will not run properly until the **AppId** and **Subdomain** of your application are set in the project settings. You can find them in **Ready Player Me Studio** website.
+The **AppId** and **Subdomain** should belong to the same application otherwise the avatar creator will fail.
 To add the AvatarCreator widget to your project, copy the existing blueprint logic from the demo map into your project.
 
 **AvatarCreator** is a widget that can be added to a map or another widget.
@@ -84,12 +84,12 @@ This way we can close the widget and perform other actions.
 When spawning the **Avatar Creator** widget, it's possible to configure it with the specified parameters.
 
 Customization options:
- - **Subdomain** Specify your subdomain. You can find it in **Ready Player Me Studio** website
  - **Select Body Type** Allows skipping the body type selection screen
  - **Select Gender** Allows skipping the gender selection screen
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
  - **Avatar Id** (Experimental) Allows opening the editor directly to edit the specified avatar. **Note:** this property will only work if the user is logged in.
+ - **Preview Avatar** Allows customization for the render environment and actor. It can also be used to simulate a mirror in VR. Duplicate the default render actor, modify it and use your actor instead. If not set, the default render actor will be spawned.
 
 ### Custom Sample UI
 The plugin **Content** represents a sample project, if you want to have a completely different UI, you can duplicate the sample project and change the UI.

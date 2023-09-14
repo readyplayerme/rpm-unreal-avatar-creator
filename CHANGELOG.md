@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] 2023-09-14
+
+## Breaking
+- Subdomain parameter is removed from the avatar creator widget constructor. Subdomain needs to be set in the project settings.
+
+## Added
+- Added Ability to render any kind of environment and actor, without modifying the sample.
+
+## Fixed
+- Updated avatar loading popup UI
+- Fixed deprecation warnings for UE5.2
+- Cleared the code text field when retrying to log in
+
 ## [1.0.0] 2023-09-01
 
 ## Breaking

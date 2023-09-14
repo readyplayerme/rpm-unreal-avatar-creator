@@ -17,6 +17,7 @@ static const FString HALFBODY_BONE_NODE = "AvatarRoot";
 URpmAvatarRequestHandler::URpmAvatarRequestHandler()
 	: Mesh(nullptr)
 	, ImageDownloader(nullptr)
+	, TargetSkeleton(nullptr)
 	, bAvatarExists(false)
 	, bIsExistingAvatarUnchanged(false)
 {
