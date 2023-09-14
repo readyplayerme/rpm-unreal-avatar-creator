@@ -38,7 +38,7 @@ void URpmAvatarCreatorApi::Initialize()
 {
 	const UReadyPlayerMeSettings* Settings = GetDefault<UReadyPlayerMeSettings>();
 	const bool bIsSubdomainSet = IsValid(Settings) && !Settings->Subdomain.IsEmpty();
-	checkf(!bIsSubdomainSet, TEXT("Application subdomain is required for the avatar creator. Find the subdomain of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > Subdomain"));
+	checkf(bIsSubdomainSet, TEXT("Application subdomain is required for the avatar creator. Find the subdomain of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > Subdomain"));
 	const bool bIsAppIdSet = IsValid(Settings) && !Settings->AppId.IsEmpty();
 	checkf(bIsAppIdSet, TEXT("AppId is required for the avatar creator. Find the AppId of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > AppId"));
 	AvatarProperties.Partner = Settings->Subdomain;
