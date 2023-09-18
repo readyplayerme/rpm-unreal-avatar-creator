@@ -38,6 +38,7 @@ public:
 	TSharedPtr<IBaseRequest> CreateUpdateAvatarRequest(const FString& AvatarId, const FString& PayloadJson) const;
 	TSharedPtr<IBaseRequest> CreateSaveAvatarRequest(const FString& AvatarId) const;
 	TSharedPtr<IBaseRequest> CreateDeleteAvatarRequest(const FString& AvatarId, bool bIsDraft) const;
+	TSharedPtr<IBaseRequest> CreatePrecompileRequest(const FString& AvatarId, const FString& PayloadJson) const;
 
 protected:
 	TSharedPtr<IBaseRequest> CreateBaseRequest(const FString& Url, ERequestVerb RequestVerb = ERequestVerb::Get, const FString& Payload = "", float Timeout = -1.f) const;

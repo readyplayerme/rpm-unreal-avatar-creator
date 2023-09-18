@@ -48,6 +48,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Update Avatar Color"))
 	void UpdateAvatarColor(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
 
+	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Precompile Avatar"))
+	void PrecompileAvatar(ERpmPartnerAssetType AssetType);
+
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Avatar Templates"))
 	void DownloadAvatarTemplates(const FAvatarTemplatesDownloadCompleted& DownloadCompleted, const FAvatarCreatorFailed& Failed);
 
