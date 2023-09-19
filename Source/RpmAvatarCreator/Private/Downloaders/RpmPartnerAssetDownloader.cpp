@@ -83,7 +83,7 @@ void FRpmPartnerAssetDownloader::OnAssetsDownloadCompleted(bool bSuccess, ERpmPa
 			}
 			if (AssetRequests.Num() == 0)
 			{
-				(void)OnPartnerAssetsDownloaded.ExecuteIfBound(true);
+				(void)OnPartnerAssetsDownloaded.ExecuteIfBound(Assets.Num() != 0);
 				OnPartnerAssetsDownloaded.Unbind();
 			}
 		}
