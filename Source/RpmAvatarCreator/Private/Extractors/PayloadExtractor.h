@@ -21,4 +21,6 @@ public:
 	static FString MakeUpdatePayload(ERpmPartnerAssetColor AssetColor, int32 ColorId);
 
 	static FString MakeUpdatePayload(const TSharedPtr<class FJsonObject> AssetsObject);
+
+	static FString MakePrecompilePayload(ERpmPartnerAssetType PrecompileAssetType, const TArray<FRpmPartnerAsset>& FilteredAssets);
 };

@@ -21,6 +21,8 @@ public:
 
 	void CreateAvatar(const FRpmAvatarProperties& Properties, const FString& TemplateId);
 
+	void Precompile(ERpmPartnerAssetType AssetType, const TArray<FRpmPartnerAsset>& FilteredAssets);
+
 	void UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId);
 
 	void UpdateAvatar(ERpmPartnerAssetColor AssetColor, int32 ColorIndex);
@@ -64,6 +66,9 @@ private:
 	UFUNCTION()
 	void OnPropertiesRequestCompleted(bool bSuccess);
 
+	UFUNCTION()
+	void OnPrecompileCompleted(bool bSuccess);
+
 	void UpdateAvatar(const FString& Payload);
 
 	void LoadGlb(const TArray<uint8>& Data);
@@ -86,4 +91,5 @@ private:
 	TSharedPtr<class IBaseRequest> SaveAvatarRequest;
 	TSharedPtr<class IBaseRequest> DeleteAvatarRequest;
 	TSharedPtr<class IBaseRequest> AvatarModelRequest;
+	TSharedPtr<class IBaseRequest> PrecompileRequest;
 };

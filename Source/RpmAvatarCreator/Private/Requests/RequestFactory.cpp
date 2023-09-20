@@ -127,6 +127,11 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateDeleteAvatarRequest(const FStrin
 	return CreateAuthorizedRequest(FEndpoints::GetDeleteAvatarEndpoint(AvatarId, bIsDraft), ERequestVerb::Delete);
 }
 
+TSharedPtr<IBaseRequest> FRequestFactory::CreatePrecompileRequest(const FString& AvatarId, const FString& PayloadJson) const
+{
+	return CreateAuthorizedRequest(FEndpoints::GetPrecompileEndpoint(AvatarId), ERequestVerb::Post, PayloadJson);
+}
+
 TSharedPtr<IBaseRequest> FRequestFactory::CreateBaseRequest(const FString& Url, ERequestVerb RequestVerb, const FString& Payload, float Timeout) const
 {
 	return MakeShared<FBaseRequest>(CancellationDelegate, Url, "", RequestVerb, Payload, Timeout);

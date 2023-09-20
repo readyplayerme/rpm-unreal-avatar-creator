@@ -179,3 +179,18 @@ FString FPayloadExtractor::MakeUpdatePayload(ERpmPartnerAssetColor AssetColor, i
 	return MakeUpdatePayload(AssetsObject);
 }
 
+FString FPayloadExtractor::MakePrecompilePayload(ERpmPartnerAssetType PrecompileAssetType, const TArray<FRpmPartnerAsset>& FilteredAssets)
+{
+	TArray<TSharedPtr<FJsonValue>> PreloadAssetString;
+	for (const FRpmPartnerAsset& Asset : FilteredAssets)
+	{
+		if (PrecompileAssetType == Asset.AssetType)
+		{
+			const FString AssetStr = FString::Printf(TEXT("%lld"), Asset.Id);
+			PreloadAssetString.Add(MakeShared<FJsonValueString>(AssetStr));
+		}
+	}
+	const TSharedPtr<FJsonObject> DataObject = MakeShared<FJsonObject>();
+	DataObject->SetArrayField(ASSET_TYPE_TO_STRING_MAP[PrecompileAssetType], PreloadAssetString);
+	return FDataJsonUtils::MakeDataPayload(DataObject);
+}

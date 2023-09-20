@@ -67,6 +67,23 @@ FRpmAvatarProperties URpmAvatarRequestHandler::GetAvatarProperties() const
 	return AvatarProperties;
 }
 
+void URpmAvatarRequestHandler::Precompile(ERpmPartnerAssetType AssetType, const TArray<FRpmPartnerAsset>& FilteredAssets)
+{
+	if (PrecompileRequest)
+	{
+		PrecompileRequest->GetCompleteCallback().Unbind();
+		PrecompileRequest->CancelRequest();
+	}
+	PrecompileRequest = RequestFactory->CreatePrecompileRequest(AvatarProperties.Id, FPayloadExtractor::MakePrecompilePayload(AssetType, FilteredAssets));
+	PrecompileRequest->GetCompleteCallback().BindUObject(this, &URpmAvatarRequestHandler::OnPrecompileCompleted);
+	PrecompileRequest->Download();
+}
+
+void URpmAvatarRequestHandler::OnPrecompileCompleted(bool bSuccess)
+{
+	PrecompileRequest.Reset();
+}
+
 void URpmAvatarRequestHandler::UpdateAvatar(ERpmPartnerAssetType AssetType, int64 AssetId)
 {
 	AvatarProperties.Assets.FindOrAdd(AssetType) = AssetId;

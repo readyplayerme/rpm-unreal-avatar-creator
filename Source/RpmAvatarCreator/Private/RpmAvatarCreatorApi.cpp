@@ -167,6 +167,11 @@ void URpmAvatarCreatorApi::UpdateAvatarColor(ERpmPartnerAssetColor AssetColor, i
 	AvatarRequestHandler->UpdateAvatar(AssetColor, ColorIndex);
 }
 
+void URpmAvatarCreatorApi::PrecompileAvatar(ERpmPartnerAssetType AssetType)
+{
+	AvatarRequestHandler->Precompile(AssetType, AssetDownloader->GetFilteredAssets(AvatarProperties.BodyType, AvatarProperties.Gender));
+}
+
 void URpmAvatarCreatorApi::SaveAvatar(const FAvatarSaveCompleted& AvatarSaveCompleted, const FAvatarCreatorFailed& Failed)
 {
 	AvatarRequestHandler->SaveAvatar(AvatarSaveCompleted, Failed);
