@@ -13,6 +13,10 @@ public:
 	FRequestFactory();
 
 	void SetSubdomain(const FString& InSubdomain);
+	FString GetSubdomain() const;
+
+	void SetAppId(const FString& InAppId);
+	FString GetAppId() const;
 
 	void SetUserData(const FRpmUserData& UserData);
 
@@ -46,6 +50,7 @@ protected:
 
 private:
 	FString Subdomain;
+	FString AppId;
 	FRpmUserData UserData;
 	FTokenRefreshed TokenRefreshedDelegate;
 	FSessionExpired SessionExpiredDelegate;

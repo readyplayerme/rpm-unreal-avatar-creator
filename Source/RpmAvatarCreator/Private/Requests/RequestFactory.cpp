@@ -6,7 +6,6 @@
 #include "CoreMinimal.h"
 #include "BaseRequest.h"
 #include "Endpoints.h"
-#include "ReadyPlayerMeSettings.h"
 #include "Extractors/UserDataExtractor.h"
 
 constexpr float IMAGE_REQUEST_TIMEOUT = 60.f;
@@ -19,6 +18,21 @@ FRequestFactory::FRequestFactory()
 void FRequestFactory::SetSubdomain(const FString& InSubdomain)
 {
 	Subdomain = InSubdomain;
+}
+
+FString FRequestFactory::GetSubdomain() const
+{
+	return Subdomain;
+}
+
+void FRequestFactory::SetAppId(const FString& InAppId)
+{
+	AppId = InAppId;
+}
+
+FString FRequestFactory::GetAppId() const
+{
+	return AppId;
 }
 
 void FRequestFactory::SetUserData(const FRpmUserData& Data)
@@ -68,8 +82,6 @@ TSharedPtr<IBaseRequest> FRequestFactory::CreateAvatarTemplatesRequest() const
 
 TSharedPtr<IBaseRequest> FRequestFactory::CreateAssetRequest(const FString& AssetTypeStr, int32 Limit, int32 Page) const
 {
-	const UReadyPlayerMeSettings* Settings = GetDefault<UReadyPlayerMeSettings>();
-	const FString AppId = IsValid(Settings) ? Settings->AppId : "";
 	return CreateAuthorizedRequest(FEndpoints::GetAssetEndpoint(AssetTypeStr, Limit, Page, UserData.Id, AppId));
 }
 

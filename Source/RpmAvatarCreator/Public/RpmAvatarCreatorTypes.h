@@ -27,7 +27,10 @@ struct FRpmUserData
 	FString RefreshToken;
 
 	UPROPERTY()
-	FString Partner;
+	FString Subdomain;
+
+	UPROPERTY()
+	FString AppId;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Ready Player Me")
 	FString Name;
