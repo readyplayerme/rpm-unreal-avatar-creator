@@ -65,6 +65,8 @@ void FRpmAuthManager::ConfirmActivationCodeCompleted(bool bSuccess)
 		return;
 	}
 	UserData = FUserDataExtractor::ExtractUserData(AuthRequest->GetContentAsString());
+	UserData.AppId = RequestFactory->GetAppId();
+	UserData.Subdomain = RequestFactory->GetSubdomain();
 	RequestFactory->SetUserData(UserData);
 	SaveUserData();
 	(void)OnAuthenticationCompleted.ExecuteIfBound();
@@ -85,6 +87,8 @@ void FRpmAuthManager::AuthAnonymousCompleted(bool bSuccess)
 	if (bSuccess)
 	{
 		UserData = FUserDataExtractor::ExtractAnonymousUserData(AuthRequest->GetContentAsString());
+		UserData.AppId = RequestFactory->GetAppId();
+		UserData.Subdomain = RequestFactory->GetSubdomain();
 	}
 	bSuccess &= UserData.bIsAuthenticated;
 
@@ -116,8 +120,15 @@ void FRpmAuthManager::LoadUserData()
 	const URpmUserDataSaveGame* SaveGame = Cast<URpmUserDataSaveGame>(UGameplayStatics::LoadGameFromSlot(USER_DATA_SLOT, 0));
 	if (SaveGame)
 	{
-		UserData = SaveGame->UserData;
-		RequestFactory->SetUserData(UserData);
+		if (SaveGame->UserData.AppId != RequestFactory->GetAppId() || SaveGame->UserData.Subdomain != RequestFactory->GetSubdomain())
+		{
+			UGameplayStatics::DeleteGameInSlot(USER_DATA_SLOT, 0);
+		}
+		else
+		{
+			UserData = SaveGame->UserData;
+			RequestFactory->SetUserData(UserData);
+		}
 	}
 }
 

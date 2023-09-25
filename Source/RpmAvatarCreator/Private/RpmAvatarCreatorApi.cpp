@@ -37,11 +37,16 @@ URpmAvatarCreatorApi::URpmAvatarCreatorApi()
 void URpmAvatarCreatorApi::Initialize()
 {
 	const UReadyPlayerMeSettings* Settings = GetDefault<UReadyPlayerMeSettings>();
-	const bool bIsSubdomainSet = IsValid(Settings) && !Settings->Subdomain.IsEmpty();
-	checkf(bIsSubdomainSet, TEXT("Application subdomain is required for the avatar creator. Find the subdomain of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > Subdomain"));
-	const bool bIsAppIdSet = IsValid(Settings) && !Settings->AppId.IsEmpty();
-	checkf(bIsAppIdSet, TEXT("AppId is required for the avatar creator. Find the AppId of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > AppId"));
+	if (!IsValid(Settings) || Settings->Subdomain.IsEmpty())
+	{
+		UE_LOG(LogRpmAvatarCreator, Error, TEXT("Application subdomain is required for the avatar creator. Find the subdomain of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > Subdomain"));
+	}
+	if (!IsValid(Settings) || Settings->AppId.IsEmpty())
+	{
+		UE_LOG(LogRpmAvatarCreator, Error, TEXT("AppId is required for the avatar creator. Find the AppId of your application from the Ready Player Me studio website, and set it in your project settings under the ReadyPlayerMe > AppId"));
+	}
 	AvatarProperties.Partner = Settings->Subdomain;
+	RequestFactory->SetAppId(Settings->AppId);
 	RequestFactory->SetSubdomain(Settings->Subdomain);
 	AuthManager->LoadUserData();
 }
