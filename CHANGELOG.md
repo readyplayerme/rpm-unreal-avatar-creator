@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.0] 2023-09-26
+
+## Breaking
+- Removed body type selection screen.
+
+## Added
+- Asset precompile, this will allow faster response time when the assets are selected.
+
+## Fixed
+- Removed the saved files when the Subdomain or AppId is changed
+- Change the error with the warning when AppId or Subdomain is not set
+
 ## [1.1.0] 2023-09-14
 
 ## Breaking

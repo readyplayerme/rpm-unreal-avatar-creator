@@ -16,9 +16,9 @@ Please visit the online documentation and join our public `discord` community.
 
 - The plugin is currently in the **Beta** stage. We recommend not to use it in production until the stable version is released.
 
-- **AvatarCreator** requires the **App Id** property to be set.
-  Make sure that you set the AppId of your application in the `project settings > Game > Ready Player Me > App Id`.
-  You can find the AppId of your application in the [Studio](https://studio.readyplayer.me/applications)
+- **AvatarCreator** requires **App Id** and **Subdomain** property to be set.
+  Make sure that you set the AppId and Subdomain of your application in the `project settings > Game > Ready Player Me`.
+  You can find the AppId and Subdomain of your application in the [Studio](https://studio.readyplayer.me/applications)
 
 ## Dependencies
 - **ReadyPlayerMe** Unreal SDK, an open-source plugin that contains all the core functionality required for loading and displaying avatars.
@@ -36,31 +36,19 @@ Please visit the online documentation and join our public `discord` community.
 
 ### Add RpmAvatarCreator plugin
 
-There are three ways you can add the **RpmAvatarCreator** plugin to your project. Add as submodules, paste the plugin inside of the **Plugins** folder, or add the blueprint version of the plugin to the Engine.
+To add the **RpmAvatarCreator** plugin to your project:
+ - Create a **Plugins** folder from the root of your project.
+ - Download the **Source Code** zip file from the latest release of the [RpmAvatarCreator](https://github.com/readyplayerme/rpm-unreal-avatar-creator.git) plugins into it.
+ - Rename the **rpm-unreal-avatar-creator** plugin folder to the **RpmAvatarCreator**. Make sure that the plugin doesn't have a nested folder.
 
-- To add the plugin to your project as a submodule, run the following command in the terminal from your project folder. This is the recommended way of setting up the plugin.
-
+### (Optional) Add RpmAvatarCreator plugin as submodule
+Alternatively, instead of direct download, you can add the plugin to your git-managed project as a submodule.
+To do so, run the following command in the terminal from your project folder.
   ```
    git submodule add --name Plugins/RpmAvatarCreator -- https://github.com/readyplayerme/rpm-unreal-avatar-creator.git Plugins/RpmAvatarCreator
   ```
 
-- To clone the plugin into your project, run the following command in the terminal from your project folder.
-
-- To paste the plugin inside of the Plugins folder, create a **Plugins** folder from the root of your project, download the latest tags of the [RpmAvatarCreator](https://github.com/readyplayerme/rpm-unreal-avatar-creator.git) plugins into it. Rename the **rpm-unreal-avatar-creator** plugin folder to the **RpmAvatarCreator**.
-
-- To add the blueprint version of the plugin, find the plugin attached in the [Latest Release](https://github.com/readyplayerme/rpm-unreal-avatar-creator/releases/latest), add it to the Plugins/Runtime folder of the installed Unreal Engine.
-
-### Update RpmAvatarCreator plugin submodule
-
-To update the plugin submodule paste the following command in the terminal from your project folder. This will fetch and switch the plugin repositories to the latest stable release.
-
-  ```
-  cd Plugins/RpmAvatarCreator ; git fetch --tags ; git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) ; cd ../..
-  ```
-
 ## Quick Start
-
-Make sure that **Avatar Id** is set for your project.
 
 A demo map is included in the plugin for demonstrating how the **Sample Avatar Creator** opens at runtime. It is located in the `RpmAvatarCreator\Content\Maps` folder.
 The avatar creator will not run properly until the **AppId** and **Subdomain** of your application are set in the project settings. You can find them in **Ready Player Me Studio** website.
@@ -84,10 +72,10 @@ This way we can close the widget and perform other actions.
 When spawning the **Avatar Creator** widget, it's possible to configure it with the specified parameters.
 
 Customization options:
- - **Select Body Type** Allows skipping the body type selection screen
  - **Select Gender** Allows skipping the gender selection screen
  - **Allow Close Button** Hides the close button
  - **Allow Webcam** Enables the selfie selection screen if the webcam is available
+ - **Is Half Body** If true, half body avatar will be created
  - **Avatar Id** (Experimental) Allows opening the editor directly to edit the specified avatar. **Note:** this property will only work if the user is logged in.
 
 The sample also provides a function **Override Preview Avatar** that allows customization for the render environment and actor.
@@ -106,12 +94,7 @@ The structure of the sample is described in detail in the [**SampleStructure.md*
 
 - Fix the webcam support for Android
 - Fix the webcam support for UE5
-- Add a shadow for the avatar in the avatar editor
 - Add a sample for the VR
-
-## Known Issues
-
-If you are using a version of glTFRuntime 20230225 or prior, you might encounter a visual artifact where the avatar's head material looks dark or shadowed. Please update glTFRuntime to the latest stable release to avoid this issue.
 
 ### Webcam support
 Webcam functionality is currently available only on the Windows platform when using Unreal Engine 4.27.
