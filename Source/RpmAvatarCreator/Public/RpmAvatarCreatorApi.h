@@ -78,6 +78,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ready Player Me")
 	FString SelectedAvatarTemplateId;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ready Player Me")
+	EAvatarBodyType BodyType;
+
 	UFUNCTION(BlueprintCallable, Category = "Ready Player Me", meta = (DisplayName = "Download Image"))
 	void DownloadImage(const FString& Url, int32 Size, const FImageDownloadCompleted& DownloadCompleted);
 
