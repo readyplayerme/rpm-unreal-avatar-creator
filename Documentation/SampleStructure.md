@@ -15,15 +15,13 @@ It also creates an instance of the **AvatarCreatorApi** class and provides it to
    ![Screenshot 2023-06-15 131508](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/b2d256e8-bce8-46ea-8406-3be7c99588c8)
 3. [**Gender Selection**](../Content/Widgets/Pages/WBP_RPM_GenderSelection.uasset) - Select gender of the avatar.<br>
    ![Screenshot 2023-06-15 131027](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/960d8ca3-5ebe-4349-a833-8193cebf1db8)
-4. [**BodyType Selection**](../Content/Widgets/Pages/WBP_RPM_BodyTypeSelection.uasset) - Select the body type of the avatar - full-body or half-body.<br>
-   ![Screenshot 2023-06-15 130738](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/0d3a6bc0-3157-4331-a18d-a23cb1f421c3)
-5. [**Avatar Templates**](../Content/Widgets/Pages/AvatarTemplates/WBP_RPM_PickAnAvatar.uasset) - Select the avatar template from the list.<br>
+4. [**Avatar Templates**](../Content/Widgets/Pages/AvatarTemplates/WBP_RPM_PickAnAvatar.uasset) - Select the avatar template from the list.<br>
    ![Screenshot 2023-06-15 131216](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/30633ac4-a582-48d0-b196-b8d3ec7f056f)
-6. [**Selfie Suggestion**](../Content/Widgets/Pages/WBP_RPM_SelfieSuggestion.uasset) - Landing page for taking a selfie and using it to generate the avatar.<br>
+5. [**Selfie Suggestion**](../Content/Widgets/Pages/WBP_RPM_SelfieSuggestion.uasset) - Landing page for taking a selfie and using it to generate the avatar.<br>
    ![Screenshot 2023-06-15 131051](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/466bc705-1ebe-4529-99d3-c1b24a194dfb)
-7. [**Take Selfie**](../Content/Widgets/Pages/WBP_RPM_TakeSelfie.uasset) - Opens webcam and allows one to take a photo.<br>
+6. [**Take Selfie**](../Content/Widgets/Pages/WBP_RPM_TakeSelfie.uasset) - Opens webcam and allows one to take a photo.<br>
    ![Screenshot 2023-06-15 131145](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/8344793e-212c-4d59-85a0-7ef71fe1bfaf)
-8. [**Avatar Editor**](../Content/Widgets/Editor/WBP_RPM_AvatarEditor.uasset) - Avatar editor, allows customization of the avatar.<br>
+7. [**Avatar Editor**](../Content/Widgets/Editor/WBP_RPM_AvatarEditor.uasset) - Avatar editor, allows customization of the avatar.<br>
    ![Screenshot 2023-06-15 131259](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/466ac898-52e1-483d-8ddd-ac938674b8a1)
 
 ## Navigation Panel
@@ -36,8 +34,9 @@ In order for the child widgets to be able to communicate with the avatar creator
 Avatar creator implements the NavigationSwitcher interface allowing the child widgets to send events.
 
 ## Preview Actor
-The preview actor is spawned in the world when the avatar creator widget is opened. It contains one half and one full-body avatar.
-It also contains lights and a camera for rendering the avatar at runtime and displaying it in the avatar editor afterward.
+The preview actor is spawned in the world when the avatar creator widget is opened. It contains avatar mesh,
+lights and a camera for rendering the avatar at runtime and displaying it in the avatar editor afterward.
+There is also a possibility to override the preview avatar by injecting a custom one. To do so, call the **Override Preview Avatar** function of the avatar creator.
 
 ## Popups
 The popups widgets are located in the [Popups](../Content/Widgets/Popups) folder, they are needed to give the user information about the current status of the avatar creator.
