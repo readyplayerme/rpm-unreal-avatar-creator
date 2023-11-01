@@ -1,4 +1,10 @@
-# Ready Player Me Avatar Creator
+# Ready Player Me Avatar Creator DEPRECATED
+
+**This repository has been deprecated as it has been merged into [Ready Player Me SDK](https://github.com/readyplayerme/rpm-unreal-sdk).**
+
+Please note that this repository is no longer actively maintained or supported. We recommend that you update to Ready Player Me SDK 2.0 or later.
+
+For historical purposes, the code and documentation will remain available in this repository.
 
 ![Screenshot 2023-09-01 093029](https://github.com/readyplayerme/rpm-unreal-avatar-creator/assets/3124894/41f339cf-8254-47e6-a0f8-d1338870ee64)
 
